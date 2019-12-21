@@ -10,7 +10,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
 use SpaceCode\Maia\Contracts\Permission as PermissionContract;
 
-class PermissionServiceProvider extends ServiceProvider
+class MaiaServiceProvider extends ServiceProvider
 {
     public function boot(PermissionRegistrar $permissionLoader, Filesystem $filesystem)
     {
@@ -28,6 +28,7 @@ class PermissionServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->commands([
+                Commands\Install::class,
                 Commands\CacheReset::class,
                 Commands\CreateRole::class,
                 Commands\CreatePermission::class,
