@@ -4,7 +4,7 @@ namespace SpaceCode\Maia;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
-use Illuminate\Filesystem\Filesystem;
+//use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
@@ -12,37 +12,47 @@ use SpaceCode\Maia\Contracts\Permission as PermissionContract;
 
 class MaiaServiceProvider extends ServiceProvider
 {
-    public function boot(PermissionRegistrar $permissionLoader, Filesystem $filesystem)
+    public function boot(PermissionRegistrar $permissionLoader)
     {
         if (isNotLumen()) {
-            $this->publishes([
-                __DIR__.'/../config/maia.php' => config_path('maia.php'),
-            ], 'config');
-
-            $this->publishes([
-                __DIR__.'/../database/migrations/create_permission_tables.php.stub' => $this->getMigrationFileName($filesystem),
-            ], 'migrations');
-
+            if ($this->app->runningInConsole()) {
+                $this->registerPublishing();
+            }
             $this->registerMacroHelpers();
         }
-
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                Commands\Install::class,
-                Commands\CacheReset::class,
-                Commands\CreateRole::class,
-                Commands\CreatePermission::class,
-                Commands\ShowPermission::class,
-            ]);
-        }
-
         $this->registerModelBindings();
-
         $permissionLoader->registerPermissions();
-
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
         });
+    }
+
+    /**
+     * Register the package's publishable resources.
+     *
+     * @return void
+     */
+    protected function registerPublishing()
+    {
+        $this->publishes([
+            __DIR__.'/../config/maia.php' => config_path('maia.php'),
+        ], 'maia-config');
+
+//        $this->publishes([
+//            __DIR__.'/../public' => public_path('vendor/nova'),
+//        ], 'maia-assets');
+
+//        $this->publishes([
+//            __DIR__.'/../resources/lang' => resource_path('lang/vendor/nova'),
+//        ], 'maia-lang');
+
+//        $this->publishes([
+//            __DIR__.'/../resources/views/partials' => resource_path('views/vendor/nova/partials'),
+//        ], 'maia-views');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations' => database_path('migrations'),
+        ], 'maia-migrations');
     }
 
     public function register()
@@ -53,6 +63,15 @@ class MaiaServiceProvider extends ServiceProvider
                 'maia'
             );
         }
+
+        $this->commands([
+            Commands\Install::class,
+            Commands\Publish::class,
+            Commands\CacheReset::class,
+            Commands\CreateRole::class,
+            Commands\CreatePermission::class,
+            Commands\ShowPermission::class,
+        ]);
 
         $this->registerBladeExtensions();
     }
@@ -145,22 +164,5 @@ class MaiaServiceProvider extends ServiceProvider
 
             return $this;
         });
-    }
-
-    /**
-     * Returns existing migration file if found, else uses the current timestamp.
-     *
-     * @param Filesystem $filesystem
-     * @return string
-     */
-    protected function getMigrationFileName(Filesystem $filesystem): string
-    {
-        $timestamp = date('Y_m_d_His');
-
-        return Collection::make($this->app->databasePath().DIRECTORY_SEPARATOR.'migrations'.DIRECTORY_SEPARATOR)
-            ->flatMap(function ($path) use ($filesystem) {
-                return $filesystem->glob($path.'*_create_permission_tables.php');
-            })->push($this->app->databasePath()."/migrations/{$timestamp}_create_permission_tables.php")
-            ->first();
     }
 }

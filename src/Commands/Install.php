@@ -3,39 +3,41 @@
 namespace SpaceCode\Maia\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Console\DetectsApplicationNamespace;
 use Illuminate\Filesystem\Filesystem;
-use SpaceCode\Maia\PermissionRegistrar;
-use SpaceCode\Maia\MaiaServiceProvider;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 class Install extends Command
 {
+    use DetectsApplicationNamespace;
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'maia:install';
 
-    protected $description = 'Install an application';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Install all of the Maia resources';
 
     /**
-     * @param Filesystem $filesystem
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * Execute the console command.
+     *
+     * @return void
      */
-    public function fire(Filesystem $filesystem)
-    {
-        return $this->handle($filesystem);
-    }
-
-    /**
-     * @param Filesystem $filesystem
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function handle(Filesystem $filesystem)
+    public function handle()
     {
         if (!file_exists(public_path('storage'))) {
+            $this->comment('Creating the symbolic link...');
             $this->call('storage:link');
         }
-        $this->call('vendor:publish', ['--provider' => MaiaServiceProvider::class, '--force' => true]);
-        $this->call('migrate');
-        $dump_autoload = new Process('/usr/local/bin/composer dump-autoload -o');
-        $dump_autoload->run();
-        $this->info('Maia successfully installed.');
+        $this->callSilent('maia:publish');
+        $this->info('Maia scaffolding installed successfully.');
     }
 }
