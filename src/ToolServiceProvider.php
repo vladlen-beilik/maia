@@ -20,6 +20,18 @@ class ToolServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->registerPublishing();
         }
+        if (! $this->app->configurationIsCached()) {
+            $this->mergeConfigFrom(__DIR__.'/../config/maia.php', 'maia');
+        }
+
+        $this->commands([
+            Commands\CacheReset::class,
+            Commands\CreateRole::class,
+            Commands\CreatePermission::class,
+            Commands\ShowPermission::class,
+            Commands\PublishCommand::class,
+        ]);
+
         $this->app->booted(function () {
             $this->routes();
         });
@@ -30,6 +42,7 @@ class ToolServiceProvider extends ServiceProvider
         });
         $this->registerMacroHelpers();
         $this->registerModelBindings();
+        $this->registerBladeExtensions();
         $permissionLoader->registerPermissions();
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
@@ -83,20 +96,7 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/maia.php',
-            'maia'
-        );
-
-        $this->commands([
-            Commands\CacheReset::class,
-            Commands\CreateRole::class,
-            Commands\CreatePermission::class,
-            Commands\ShowPermission::class,
-            Commands\PublishCommand::class,
-        ]);
-
-        $this->registerBladeExtensions();
+        //
     }
 
     protected function registerModelBindings()
