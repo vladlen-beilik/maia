@@ -3,9 +3,12 @@
 namespace Laravel\Nova\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Console\DetectsApplicationNamespace;
 
-class Publish extends Command
+class PublishCommand extends Command
 {
+    use DetectsApplicationNamespace;
+
     /**
      * The name and signature of the console command.
      *
@@ -18,7 +21,7 @@ class Publish extends Command
      *
      * @var string
      */
-    protected $description = 'Publish all of the Ьфшф resources';
+    protected $description = 'Publish all of the Maia resources';
 
     /**
      * Execute the console command.

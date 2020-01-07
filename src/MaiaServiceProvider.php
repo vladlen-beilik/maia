@@ -91,7 +91,7 @@ class MaiaServiceProvider extends ServiceProvider
 
         $this->commands([
             Commands\Install::class,
-            Commands\Publish::class,
+            Commands\PublishCommand::class,
             Commands\CacheReset::class,
             Commands\CreateRole::class,
             Commands\CreatePermission::class,

@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
-class Install extends Command
+class InstallCommand extends Command
 {
     use DetectsApplicationNamespace;
 
