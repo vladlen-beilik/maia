@@ -28,28 +28,6 @@ class MaiaServiceProvider extends ServiceProvider
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
         });
-
-        $this->app->booted(function () {
-            $this->routes();
-        });
-        Gate::policy(config('maia.permission.models.permission'), PermissionPolicy::class);
-        Gate::policy(config('maia.permission.models.role'), RolePolicy::class);
-        Nova::serving(function (ServingNova $event) {
-            //
-        });
-    }
-
-    /**
-     * Register the tool's routes.
-     *
-     * @return void
-     */
-    protected function routes()
-    {
-        if ($this->app->routesAreCached()) {
-            return;
-        }
-        //
     }
 
     /**
