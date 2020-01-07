@@ -2,6 +2,7 @@
 
 namespace SpaceCode\Maia;
 
+use Gate;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 //use Illuminate\Filesystem\Filesystem;
@@ -9,6 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
 use SpaceCode\Maia\Contracts\Permission as PermissionContract;
+use Laravel\Nova\Events\ServingNova;
+use Laravel\Nova\Nova;
 
 class MaiaServiceProvider extends ServiceProvider
 {
@@ -25,6 +28,28 @@ class MaiaServiceProvider extends ServiceProvider
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
         });
+
+        $this->app->booted(function () {
+            $this->routes();
+        });
+        Gate::policy(config('maia.permission.models.permission'), PermissionPolicy::class);
+        Gate::policy(config('maia.permission.models.role'), RolePolicy::class);
+        Nova::serving(function (ServingNova $event) {
+            //
+        });
+    }
+
+    /**
+     * Register the tool's routes.
+     *
+     * @return void
+     */
+    protected function routes()
+    {
+        if ($this->app->routesAreCached()) {
+            return;
+        }
+        //
     }
 
     /**

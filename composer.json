@@ -42,7 +42,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "SpaceCode\\Maia\\MaiaServiceProvider"
+                "SpaceCode\\Maia\\MaiaServiceProvider",
+                "SpaceCode\\Maia\\ToolServiceProvider"
             ]
         }
     },
