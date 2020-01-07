@@ -1,14 +1,11 @@
 <?php
 
-namespace Laravel\Nova\Console;
+namespace SpaceCode\Maia\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Console\DetectsApplicationNamespace;
 
 class PublishCommand extends Command
 {
-    use DetectsApplicationNamespace;
-
     /**
      * The name and signature of the console command.
      *
@@ -34,19 +31,28 @@ class PublishCommand extends Command
             '--tag' => 'maia-config',
             '--force' => $this->option('force'),
         ]);
+
+//        $this->call('vendor:publish', [
+//            '--tag' => 'maia-assets',
+//            '--force' => true,
+//        ]);
+
         $this->call('vendor:publish', [
-            '--tag' => 'maia-assets',
+            '--tag' => 'maia-migrations',
             '--force' => true,
         ]);
+
         $this->call('vendor:publish', [
             '--tag' => 'maia-lang',
             '--force' => $this->option('force'),
         ]);
-        $this->call('vendor:publish', [
-            '--tag' => 'maia-views',
-            '--force' => $this->option('force'),
-        ]);
-        $this->call('migrate');
+
+//        $this->call('vendor:publish', [
+//            '--tag' => 'nova-views',
+//            '--force' => $this->option('force'),
+//        ]);
+
         $this->call('view:clear');
+        $this->call('migrate');
     }
 }
