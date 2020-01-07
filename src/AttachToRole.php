@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Select;
 class AttachToRole extends Action
 {
     use InteractsWithQueue, Queueable, SerializesModels;
+
     /**
      * Perform the action on the given models.
      *

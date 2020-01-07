@@ -1,12 +1,14 @@
 <?php
+
 declare(strict_types=1);
+
 namespace SpaceCode\Maia;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-
 class PermissionPolicy
 {
     use HandlesAuthorization;
+
     public function viewAny(): bool
     {
         return true;

@@ -5,10 +5,9 @@ namespace SpaceCode\Maia;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use SpaceCode\Maia\Models\Role as RoleModel;
-use SpaceCode\Maia\PermissionRegistrar;
-use SpaceCode\Maia\Traits\HasPermissions;
-
+use Spatie\Permission\Models\Role as RoleModel;
+use Spatie\Permission\PermissionRegistrar;
+use Spatie\Permission\Traits\HasPermissions;
 class RoleBooleanGroup extends BooleanGroup
 {
     public function __construct($name, $attribute = null, callable $resolveCallback = null)

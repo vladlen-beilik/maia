@@ -15,15 +15,15 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'nova-permission-tool');
-//        $this->publishes([
-//            __DIR__.'/../resources/lang' => resource_path('lang/vendor/nova-permission-tool'),
-//        ], 'nova-permission-tool-lang');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'maia');
+        $this->publishes([
+            __DIR__.'/../resources/lang' => resource_path('lang/vendor/maia'),
+        ], 'maia-lang');
         $this->app->booted(function () {
             $this->routes();
         });
-        Gate::policy(config('maia.permission.models.permission'), PermissionPolicy::class);
-        Gate::policy(config('maia.permission.models.role'), RolePolicy::class);
+        Gate::policy(config('permission.models.permission'), PermissionPolicy::class);
+        Gate::policy(config('permission.models.role'), RolePolicy::class);
         Nova::serving(function (ServingNova $event) {
             //
         });

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 namespace SpaceCode\Maia;
 
 use Laravel\Nova\Nova;
-use SpaceCode\Maia\PermissionRegistrar;
+use Spatie\Permission\PermissionRegistrar;
 
 class ForgetCachedPermissions
 {
