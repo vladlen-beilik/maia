@@ -12,7 +12,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Spatie\Permission\PermissionRegistrar;
+use SpaceCode\Maia\PermissionRegistrar;
 
 class Role extends Resource
 {
@@ -21,7 +21,7 @@ class Role extends Resource
      *
      * @var string
      */
-    public static $model = \Spatie\Permission\Models\Role::class;
+    public static $model = \SpaceCode\Maia\Models\Role::class;
     /**
      * The single value that should be used to represent the resource when being displayed.
      *

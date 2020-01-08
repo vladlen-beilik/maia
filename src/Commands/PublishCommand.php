@@ -53,6 +53,7 @@ class PublishCommand extends Command
 //        ]);
 
         $this->call('view:clear');
+        $this->call('config:clear');
         $this->call('migrate');
     }
 }

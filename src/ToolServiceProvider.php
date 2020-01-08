@@ -65,7 +65,7 @@ class ToolServiceProvider extends ServiceProvider
 //        ], 'nova-assets');
 
         $this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/maia'),
+            __DIR__.'/../lang' => resource_path('lang/vendor/maia'),
         ], 'maia-lang');
 
 //        $this->publishes([

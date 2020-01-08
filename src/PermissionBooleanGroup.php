@@ -5,9 +5,9 @@ namespace SpaceCode\Maia;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\Permission\Models\Permission as PermissionModel;
-use Spatie\Permission\PermissionRegistrar;
-use Spatie\Permission\Traits\HasPermissions;
+use SpaceCode\Maia\Models\Permission as PermissionModel;
+use SpaceCode\Maia\PermissionRegistrar;
+use SpaceCode\Maia\Traits\HasPermissions;
 
 class PermissionBooleanGroup extends BooleanGroup
 {

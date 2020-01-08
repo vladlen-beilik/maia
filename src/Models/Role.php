@@ -68,7 +68,7 @@ class Role extends Model implements RoleContract
      * @param string $name
      * @param string|null $guardName
      *
-     * @return \SpaceCode\Maia\Contracts\Role|\Spatie\Permission\Models\Role
+     * @return \SpaceCode\Maia\Contracts\Role|\SpaceCode\Maia\Models\Role
      *
      * @throws \SpaceCode\Maia\Exceptions\RoleDoesNotExist
      */

@@ -18,7 +18,7 @@ return [
         'display_permission_in_exception' => false,
         'cache' => [
             'expiration_time' => \DateInterval::createFromDateString('24 hours'),
-            'key' => 'spatie.permission.cache',
+            'key' => 'maia.permission.cache',
             'model_key' => 'name',
             'store' => 'default',
         ],
