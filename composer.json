@@ -21,6 +21,9 @@
     ],
     "require": {
         "php": "^7.2",
+        "fideloper/proxy": "^4.0",
+        "laravel/framework": "5.8.*",
+        "laravel/nova": "~2.0",
         "illuminate/support": "5.6.*|5.7.*|5.8.*|6.*",
         "illuminate/http": "5.6.*|5.7.*|5.8.*|6.*",
         "illuminate/auth": "^5.8|^6.0",
