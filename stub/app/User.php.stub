@@ -1,121 +1,64 @@
 <?php
 
-namespace App\Nova;
+namespace App;
 
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\ID;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Avatar;
-use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Panel;
-use SpaceCode\Maia\PermissionBooleanGroup;
-use SpaceCode\Maia\RoleBooleanGroup;
-use Laravel\Nova\Fields\MorphToMany;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use SpaceCode\Maia\Traits\HasRoles;
 
-class User extends Resource
+class User extends Authenticatable
 {
-    /**
-     * @var string
-     */
-    public static $model = 'App\\User';
-
-    /**
-     * @var string
-     */
-    public static $title = 'name';
+    use Notifiable;
+    use HasRoles;
 
     /**
      * @var array
      */
-    public static $search = [
-        'id', 'name', 'email',
+    protected $fillable = [
+        'name', 'email', 'password',
     ];
 
     /**
-     * @param Request $request
-     * @return array
+     * @var array
      */
-    public function fields(Request $request)
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    /**
+     * @return MorphToMany
+     */
+    public function roles(): MorphToMany
     {
-        $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'));
-        $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'));
-        if(Auth::id() === $this->id) {
-            $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'))->hideWhenUpdating();
-            $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'))->hideWhenUpdating();
-        }
-        return [
-            ID::make()->sortable(),
-            Avatar::make(__('maia::resources.avatar'))
-                ->path('avatars'),
-            Text::make(__('maia::resources.name'))
-                ->sortable()
-                ->rules('required', 'max:255'),
-            Text::make(__('maia::resources.email'))
-                ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
-            $RoleBooleanGroup,
-            $PermissionBooleanGroup,
-            Password::make(__('maia::resources.password'))
-                ->onlyOnForms()
-                ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
-            new Panel(__('maia::resources.full_name'), $this->fullnameFields()),
-            MorphToMany::make(__('maia::resources.roles'), 'roles', \SpaceCode\Maia\Role::class),
-            MorphToMany::make(__('maia::resources.permissions'), 'permissions', \SpaceCode\Maia\Permission::class)
-        ];
+        return $this->morphToMany(
+            config('maia.models.role'),
+            'model',
+            config('maia.table_names.model_has_roles'),
+            config('maia.permission.column_names.model_morph_key'),
+            'role_id'
+        );
     }
 
     /**
-     * @param Request $request
-     * @return array
+     * @return MorphToMany
      */
-    public function cards(Request $request)
+    public function permissions(): MorphToMany
     {
-        return [];
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function filters(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function lenses(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function actions(Request $request)
-    {
-        return [];
-    }
-
-    /**
-     * @return array
-     */
-    protected function fullnameFields()
-    {
-        return [
-            Text::make(__('maia::resources.first_name'))
-                ->hideFromIndex(),
-            Text::make(__('maia::resources.last_name'))
-                ->hideFromIndex(),
-            Text::make(__('maia::resources.middle_name'))
-                ->hideFromIndex(),
-        ];
+        return $this->morphToMany(
+            config('maia.models.permission'),
+            'model',
+            config('maia.table_names.model_has_permissions'),
+            config('maia.permission.column_names.model_morph_key'),
+            'permission_id'
+        );
     }
 }
