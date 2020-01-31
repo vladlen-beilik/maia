@@ -61,11 +61,11 @@ class Permission extends Resource
     }
     public static function label()
     {
-        return __('maia::resources.Permissions');
+        return __('maia::resources.permissions');
     }
     public static function singularLabel()
     {
-        return __('maia::resources.Permission');
+        return __('maia::resources.permission');
     }
     /**
      * Get the fields displayed by the resource.
@@ -81,22 +81,22 @@ class Permission extends Resource
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
         return [
             ID::make()->sortable(),
-            Text::make(__('maia::permissions.name'), 'name')
+            Text::make(__('maia::resources.name'), 'name')
                 ->rules(['required', 'string', 'max:255'])
-                ->creationRules('unique:'.config('permission.table_names.permissions'))
-                ->updateRules('unique:'.config('permission.table_names.permissions').',name,{{resourceId}}'),
-            Text::make(__('maia::permissions.display_name'), function () {
-                return __('maia::permissions.display_names.'.$this->name);
+                ->creationRules('unique:'.config('maia.table_names.permissions'))
+                ->updateRules('unique:'.config('maia.table_names.permissions').',name,{{resourceId}}'),
+            Text::make(__('maia::resources.display_name'), function () {
+                return __('maia::resources.display_names.'.$this->name);
             })->canSee(function () {
-                return is_array(__('maia::permissions.display_names'));
+                return is_array(__('maia::resources.display_names'));
             }),
-            Select::make(__('maia::permissions.guard_name'), 'guard_name')
+            Select::make(__('maia::resources.guard_name'), 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)]),
-            DateTime::make(__('maia::permissions.created_at'), 'created_at')->exceptOnForms(),
-            DateTime::make(__('maia::permissions.updated_at'), 'updated_at')->exceptOnForms(),
-            RoleBooleanGroup::make('Roles'),
-            MorphToMany::make($userResource::label(), 'users', $userResource)
+            DateTime::make(__('maia::resources.created_at'), 'created_at')->exceptOnForms(),
+            DateTime::make(__('maia::resources.updated_at'), 'updated_at')->exceptOnForms(),
+            RoleBooleanGroup::make(__('maia::resources.roles')),
+            MorphToMany::make(__('maia::resources.' . strtolower($userResource::label())), 'users', $userResource)
                 ->searchable()
                 ->singularLabel($userResource::singularLabel()),
         ];

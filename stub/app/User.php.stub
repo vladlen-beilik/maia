@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Nova;
+
+use Illuminate\Support\Facades\Auth;
+use Laravel\Nova\Fields\ID;
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Avatar;
+use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Panel;
+use SpaceCode\Maia\PermissionBooleanGroup;
+use SpaceCode\Maia\RoleBooleanGroup;
+use Laravel\Nova\Fields\MorphToMany;
+
+class User extends Resource
+{
+    /**
+     * @var string
+     */
+    public static $model = 'App\\User';
+
+    /**
+     * @var string
+     */
+    public static $title = 'name';
+
+    /**
+     * @var array
+     */
+    public static $search = [
+        'id', 'name', 'email',
+    ];
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function fields(Request $request)
+    {
+        $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'));
+        $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'));
+        if(Auth::id() === $this->id) {
+            $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'))->hideWhenUpdating();
+            $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'))->hideWhenUpdating();
+        }
+        return [
+            ID::make()->sortable(),
+            Avatar::make(__('maia::resources.avatar'))
+                ->path('avatars'),
+            Text::make(__('maia::resources.name'))
+                ->sortable()
+                ->rules('required', 'max:255'),
+            Text::make(__('maia::resources.email'))
+                ->sortable()
+                ->rules('required', 'email', 'max:254')
+                ->creationRules('unique:users,email')
+                ->updateRules('unique:users,email,{{resourceId}}'),
+            $RoleBooleanGroup,
+            $PermissionBooleanGroup,
+            Password::make(__('maia::resources.password'))
+                ->onlyOnForms()
+                ->creationRules('required', 'string', 'min:8')
+                ->updateRules('nullable', 'string', 'min:8'),
+            new Panel(__('maia::resources.full_name'), $this->fullnameFields()),
+            MorphToMany::make(__('maia::resources.roles'), 'roles', \SpaceCode\Maia\Role::class),
+            MorphToMany::make(__('maia::resources.permissions'), 'permissions', \SpaceCode\Maia\Permission::class)
+        ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function cards(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function filters(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function lenses(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function actions(Request $request)
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    protected function fullnameFields()
+    {
+        return [
+            Text::make(__('maia::resources.first_name'))
+                ->hideFromIndex(),
+            Text::make(__('maia::resources.last_name'))
+                ->hideFromIndex(),
+            Text::make(__('maia::resources.middle_name'))
+                ->hideFromIndex(),
+        ];
+    }
+}

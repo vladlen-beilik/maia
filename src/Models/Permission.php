@@ -2,17 +2,17 @@
 
 namespace SpaceCode\Maia\Models;
 
-use SpaceCode\Maia\Guard;
-use Illuminate\Support\Collection;
-use SpaceCode\Maia\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
-use SpaceCode\Maia\PermissionRegistrar;
-use SpaceCode\Maia\Traits\RefreshesPermissionCache;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use SpaceCode\Maia\Exceptions\PermissionDoesNotExist;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use SpaceCode\Maia\Exceptions\PermissionAlreadyExists;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Collection;
 use SpaceCode\Maia\Contracts\Permission as PermissionContract;
+use SpaceCode\Maia\Exceptions\PermissionDoesNotExist;
+use SpaceCode\Maia\PermissionRegistrar;
+use SpaceCode\Maia\Traits\HasRoles;
+use SpaceCode\Maia\Traits\RefreshesPermissionCache;
+use SpaceCode\Maia\Exceptions\PermissionAlreadyExists;
+use Illuminate\Database\Eloquent\Builder;
 
 class Permission extends Model implements PermissionContract
 {
@@ -21,13 +21,22 @@ class Permission extends Model implements PermissionContract
 
     protected $guarded = ['id'];
 
+    /**
+     * Permission constructor.
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         parent::__construct($attributes);
-        $this->setTable(config('maia.permission.table_names.permissions'));
+        $this->setTable(config('maia.table_names.permissions'));
     }
 
+    /**
+     * @param array $attributes
+     * @return Builder|Model
+     * @throws PermissionAlreadyExists
+     */
     public static function create(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
@@ -39,41 +48,37 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * A permission can be applied to roles.
+     * @return BelongsToMany
      */
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(
-            config('maia.permission.models.role'),
-            config('maia.permission.table_names.role_has_permissions'),
+            config('maia.models.role'),
+            config('maia.table_names.role_has_permissions'),
             'permission_id',
             'role_id'
         );
     }
 
     /**
-     * A permission belongs to some users of the model associated with its guard.
+     * @return MorphToMany
      */
     public function users(): MorphToMany
     {
         return $this->morphedByMany(
             getModelForGuard($this->attributes['guard_name']),
             'model',
-            config('maia.permission.table_names.model_has_permissions'),
+            config('maia.table_names.model_has_permissions'),
             'permission_id',
             config('maia.permission.column_names.model_morph_key')
         );
     }
 
     /**
-     * Find a permission by its name (and optionally guardName).
-     *
      * @param string $name
      * @param string|null $guardName
-     *
-     * @throws \SpaceCode\Maia\Exceptions\PermissionDoesNotExist
-     *
-     * @return \SpaceCode\Maia\Contracts\Permission
+     * @return PermissionContract
+     * @throws PermissionDoesNotExist
      */
     public static function findByName(string $name, $guardName = null): PermissionContract
     {
@@ -86,14 +91,10 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Find a permission by its id (and optionally guardName).
-     *
      * @param int $id
      * @param string|null $guardName
-     *
-     * @throws \SpaceCode\Maia\Exceptions\PermissionDoesNotExist
-     *
-     * @return \SpaceCode\Maia\Contracts\Permission
+     * @return PermissionContract
+     * @throws PermissionDoesNotExist
      */
     public static function findById(int $id, $guardName = null): PermissionContract
     {
@@ -106,12 +107,9 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Find or create permission by its name (and optionally guardName).
-     *
      * @param string $name
      * @param string|null $guardName
-     *
-     * @return \SpaceCode\Maia\Contracts\Permission
+     * @return PermissionContract
      */
     public static function findOrCreate(string $name, $guardName = null): PermissionContract
     {
@@ -124,7 +122,8 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Get the current cached permissions.
+     * @param array $params
+     * @return Collection
      */
     protected static function getPermissions(array $params = []): Collection
     {

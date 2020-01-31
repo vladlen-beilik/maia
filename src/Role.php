@@ -61,11 +61,11 @@ class Role extends Resource
     }
     public static function label()
     {
-        return __('maia::resources.Roles');
+        return __('maia::resources.roles');
     }
     public static function singularLabel()
     {
-        return __('maia::resources.Role');
+        return __('maia::resources.role');
     }
     /**
      * Get the fields displayed by the resource.
@@ -81,17 +81,17 @@ class Role extends Resource
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
         return [
             ID::make()->sortable(),
-            Text::make(__('maia::roles.name'), 'name')
+            Text::make(__('maia::resources.name'), 'name')
                 ->rules(['required', 'string', 'max:255'])
-                ->creationRules('unique:'.config('permission.table_names.roles'))
-                ->updateRules('unique:'.config('permission.table_names.roles').',name,{{resourceId}}'),
-            Select::make(__('maia::roles.guard_name'), 'guard_name')
+                ->creationRules('unique:'.config('maia.table_names.roles'))
+                ->updateRules('unique:'.config('maia.table_names.roles').',name,{{resourceId}}'),
+            Select::make(__('maia::resources.guard_name'), 'guard_name')
                 ->options($guardOptions->toArray())
                 ->rules(['required', Rule::in($guardOptions)]),
-            DateTime::make(__('maia::roles.created_at'), 'created_at')->exceptOnForms(),
-            DateTime::make(__('maia::roles.updated_at'), 'updated_at')->exceptOnForms(),
-            PermissionBooleanGroup::make('Permissions'),
-            MorphToMany::make($userResource::label(), 'users', $userResource)
+            DateTime::make(__('maia::resources.created_at'), 'created_at')->exceptOnForms(),
+            DateTime::make(__('maia::resources.updated_at'), 'updated_at')->exceptOnForms(),
+            PermissionBooleanGroup::make(__('maia::resources.permissions')),
+            MorphToMany::make(__('maia::resources.' . strtolower($userResource::label())), 'users', $userResource)
                 ->searchable()
                 ->singularLabel($userResource::singularLabel()),
         ];

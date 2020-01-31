@@ -38,9 +38,9 @@ trait HasRoles
     public function roles(): MorphToMany
     {
         return $this->morphToMany(
-            config('maia.permission.models.role'),
+            config('maia.models.role'),
             'model',
-            config('maia.permission.table_names.model_has_roles'),
+            config('maia.table_names.model_has_roles'),
             config('maia.permission.column_names.model_morph_key'),
             'role_id'
         );
@@ -74,7 +74,7 @@ trait HasRoles
         return $query->whereHas('roles', function ($query) use ($roles) {
             $query->where(function ($query) use ($roles) {
                 foreach ($roles as $role) {
-                    $query->orWhere(config('maia.permission.table_names.roles').'.id', $role->id);
+                    $query->orWhere(config('maia.table_names.roles').'.id', $role->id);
                 }
             });
         });

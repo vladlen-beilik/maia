@@ -4,13 +4,14 @@ namespace SpaceCode\Maia\Models;
 use SpaceCode\Maia\Guard;
 use Illuminate\Database\Eloquent\Model;
 use SpaceCode\Maia\Traits\HasPermissions;
-use SpaceCode\Maia\Exceptions\RoleDoesNotExist;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use SpaceCode\Maia\Exceptions\GuardDoesNotMatch;
 use SpaceCode\Maia\Exceptions\RoleAlreadyExists;
-use SpaceCode\Maia\Contracts\Role as RoleContract;
+use SpaceCode\Maia\Exceptions\RoleDoesNotExist;
 use SpaceCode\Maia\Traits\RefreshesPermissionCache;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use SpaceCode\Maia\Contracts\Role as RoleContract;
+use SpaceCode\Maia\Contracts\Permission as PermissionContract;
 
 class Role extends Model implements RoleContract
 {
@@ -19,13 +20,21 @@ class Role extends Model implements RoleContract
 
     protected $guarded = ['id'];
 
+    /**
+     * Role constructor.
+     * @param array $attributes
+     */
     public function __construct(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         parent::__construct($attributes);
-        $this->setTable(config('maia.permission.table_names.roles'));
+        $this->setTable(config('maia.table_names.roles'));
     }
 
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
     public static function create(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
@@ -36,41 +45,37 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * A role may be given various permissions.
+     * @return BelongsToMany
      */
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(
-            config('maia.permission.models.permission'),
-            config('maia.permission.table_names.role_has_permissions'),
+            config('maia.models.permission'),
+            config('maia.table_names.role_has_permissions'),
             'role_id',
             'permission_id'
         );
     }
 
     /**
-     * A role belongs to some users of the model associated with its guard.
+     * @return MorphToMany
      */
     public function users(): MorphToMany
     {
         return $this->morphedByMany(
             getModelForGuard($this->attributes['guard_name']),
             'model',
-            config('maia.permission.table_names.model_has_roles'),
+            config('maia.table_names.model_has_roles'),
             'role_id',
             config('maia.permission.column_names.model_morph_key')
         );
     }
 
     /**
-     * Find a role by its name and guard name.
-     *
      * @param string $name
      * @param string|null $guardName
-     *
-     * @return \SpaceCode\Maia\Contracts\Role|\SpaceCode\Maia\Models\Role
-     *
-     * @throws \SpaceCode\Maia\Exceptions\RoleDoesNotExist
+     * @return RoleContract|RoleContract
+     * @throws RoleDoesNotExist
      */
     public static function findByName(string $name, $guardName = null): RoleContract
     {
@@ -82,6 +87,12 @@ class Role extends Model implements RoleContract
         return $role;
     }
 
+    /**
+     * @param int $id
+     * @param string|null $guardName
+     * @return RoleContract|RoleContract
+     * @throws RoleDoesNotExist
+     */
     public static function findById(int $id, $guardName = null): RoleContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
@@ -93,12 +104,9 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * Find or create role by its name (and optionally guardName).
-     *
      * @param string $name
      * @param string|null $guardName
-     *
-     * @return \SpaceCode\Maia\Contracts\Role
+     * @return RoleContract
      */
     public static function findOrCreate(string $name, $guardName = null): RoleContract
     {
@@ -111,13 +119,8 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * Determine if the user may perform the given permission.
-     *
-     * @param string|Permission $permission
-     *
+     * @param PermissionContract|string $permission
      * @return bool
-     *
-     * @throws \SpaceCode\Maia\Exceptions\GuardDoesNotMatch
      */
     public function hasPermissionTo($permission): bool
     {

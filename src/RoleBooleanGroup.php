@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Nova\Fields\BooleanGroup;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use SpaceCode\Maia\Models\Role as RoleModel;
@@ -23,6 +24,9 @@ class RoleBooleanGroup extends BooleanGroup
         );
         $roleClass = app(PermissionRegistrar::class)->getRoleClass();
         $options = $roleClass::get()->pluck('name', 'name')->toArray();
+        if(!Auth::user()->hasRole('developer')) {
+            unset($options['developer']);
+        }
         $this->options($options);
     }
     /**

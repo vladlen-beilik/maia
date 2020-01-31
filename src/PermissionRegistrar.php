@@ -42,8 +42,8 @@ class PermissionRegistrar
      */
     public function __construct(CacheManager $cacheManager)
     {
-        $this->permissionClass = config('maia.permission.models.permission');
-        $this->roleClass = config('maia.permission.models.role');
+        $this->permissionClass = config('maia.models.permission');
+        $this->roleClass = config('maia.models.role');
         $this->cacheManager = $cacheManager;
         $this->initializeCache();
     }

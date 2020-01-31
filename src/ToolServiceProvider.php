@@ -5,17 +5,23 @@ use Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
+use App\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
 use SpaceCode\Maia\Contracts\Permission as PermissionContract;
+use SpaceCode\Maia\Contracts\Page as PageContract;
+use SpaceCode\Maia\Http\Middleware\FilemanagerAuthorize;
+use SpaceCode\Maia\Http\Middleware\SettingsAuthorize;
 
 class ToolServiceProvider extends ServiceProvider
 {
-    public function boot(PermissionRegistrar $permissionLoader, Filesystem $filesystem)
+    public function boot(PermissionRegistrar $permissionLoader, Filesystem $filesystem, User $user)
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views/filemanager', 'maia-filemanager');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views/settings', 'maia-settings');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'maia');
         if ($this->app->runningInConsole()) {
             $this->registerPublishing();
@@ -35,18 +41,39 @@ class ToolServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $this->routes();
         });
-        Gate::policy(config('maia.permission.models.permission'), PermissionPolicy::class);
-        Gate::policy(config('maia.permission.models.role'), RolePolicy::class);
+        $this->registerPolicies($user);
         Nova::serving(function (ServingNova $event) {
-            //
+            Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
+            Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
         });
         $this->registerMacroHelpers();
         $this->registerModelBindings();
         $this->registerBladeExtensions();
+        $this->loadHelper();
         $permissionLoader->registerPermissions();
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
         });
+    }
+
+    protected function loadHelper() {
+        require_once __DIR__.'/helpers.php';
+        if (file_exists(app_path('/Http/helpers.php'))) {
+            require_once app_path('/Http/helpers.php');
+        }
+    }
+
+    protected function registerPolicies($user)
+    {
+        Gate::before(function ($user) {
+            foreach ($user->roles as $role) {
+                return $role->name === 'developer' ? true : null;
+            }
+        });
+        Gate::policy(config('maia.models.user'), Policy\UserPolicy::class);
+        Gate::policy(config('maia.models.permission'), Policy\PermissionPolicy::class);
+        Gate::policy(config('maia.models.role'), Policy\RolePolicy::class);
+        Gate::policy(config('maia.models.page'), Policy\PagePolicy::class);
     }
 
     /**
@@ -68,13 +95,17 @@ class ToolServiceProvider extends ServiceProvider
             __DIR__.'/../lang' => resource_path('lang/vendor/maia'),
         ], 'maia-lang');
 
-//        $this->publishes([
-//            __DIR__.'/../resources/views/partials' => resource_path('views/vendor/nova/partials'),
-//        ], 'nova-views');
+        $this->publishes([
+            __DIR__.'/../resources/views/index' => resource_path('views'),
+        ], 'nova-views');
 
         $this->publishes([
             __DIR__.'/../database/migrations' => database_path('migrations'),
         ], 'maia-migrations');
+
+        $this->publishes([
+            __DIR__.'/../database/seeds' => database_path('seeds'),
+        ], 'maia-seeds');
     }
 
     /**
@@ -87,6 +118,21 @@ class ToolServiceProvider extends ServiceProvider
         if ($this->app->routesAreCached()) {
             return;
         }
+        \Illuminate\Support\Facades\Route::middleware(['nova'])
+            ->prefix('nova-vendor/maia-sluggable')
+            ->group(__DIR__.'/../routes/sluggable.php');
+
+        \Illuminate\Support\Facades\Route::middleware(['nova', FilemanagerAuthorize::class])
+            ->namespace('SpaceCode\Maia\Http\Controllers')
+            ->prefix('nova-vendor/maia-filemanager/nova-filemanager')
+            ->group(__DIR__.'/../routes/filemanager.php');
+
+        \Illuminate\Support\Facades\Route::middleware(['nova', SettingsAuthorize::class])
+            ->group(__DIR__ . '/../routes/settings.php');
+
+        // Index
+//        \Illuminate\Support\Facades\Route::get('/', ['uses' => 'VoxIndexController@home_show', 'as' => 'home']);
+//        \Illuminate\Support\Facades\Route::get(setting('seo-pages.prefix') . '/{slug}', ['uses' => 'MaiaIndexController@pages_show', 'as' => 'page']);
     }
 
     /**
@@ -101,9 +147,10 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function registerModelBindings()
     {
-        $config = $this->app->config['maia.permission.models'];
+        $config = $this->app->config['maia.models'];
         $this->app->bind(PermissionContract::class, $config['permission']);
         $this->app->bind(RoleContract::class, $config['role']);
+        $this->app->bind(PageContract::class, $config['page']);
     }
 
     protected function registerBladeExtensions()
