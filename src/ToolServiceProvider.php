@@ -45,6 +45,7 @@ class ToolServiceProvider extends ServiceProvider
         Nova::serving(function (ServingNova $event) {
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
+            Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
         });
         $this->registerMacroHelpers();
         $this->registerModelBindings();
