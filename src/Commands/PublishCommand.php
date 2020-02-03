@@ -75,5 +75,7 @@ class PublishCommand extends Command
         (new Filesystem)->copy($stubPath.'/app/User.php.stub', app_path('User.php'));
         (new Filesystem)->copy($stubPath.'/app/Nova/User.php.stub', app_path('Nova/User.php'));
         (new Filesystem)->copy($stubPath.'/app/Providers/NovaServiceProvider.php.stub', app_path('Providers/NovaServiceProvider.php'));
+        (new Filesystem)->copy($stubPath.'/config/app.php.stub', config_path('app.php'));
+        (new Filesystem)->copy($stubPath.'/config/nova.php.stub', config_path('nova.php'));
     }
 }

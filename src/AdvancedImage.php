@@ -45,6 +45,11 @@ class AdvancedImage extends File
     public $height;
 
     /**
+     * @var string
+     */
+    public $path;
+
+    /**
      * Indicates if the element should be shown on the index view.
      *
      * @var bool
@@ -68,9 +73,9 @@ class AdvancedImage extends File
         Image::configure(['driver' => 'gd']);
 
         $this->thumbnail(function () {
-            return $this->value ? Storage::disk($this->disk)->url($this->value) : null;
+            return $this->value ? Storage::disk($this->getStorageDisk())->url($this->value) : null;
         })->preview(function () {
-            return $this->value ? Storage::disk($this->disk)->url($this->value) : null;
+            return $this->value ? Storage::disk($this->getStorageDisk())->url($this->value) : null;
         });
     }
 
@@ -103,6 +108,13 @@ class AdvancedImage extends File
         return $this;
     }
 
+    public function path($path = null)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
     /**
      * Hydrate the given attribute on the model based on the incoming request.
      *
@@ -119,27 +131,38 @@ class AdvancedImage extends File
             return;
         }
 
-        $previousFileName = $model->{$attribute};
+        $route = explode('/', $request->url())[sizeof(explode('/', $request->url())) - 1];
+
+        if($route === 'settings') {
+            $previousFileName = setting($requestAttribute);
+        } else {
+            $previousFileName = $model->{$attribute};
+        }
 
         if (!$this->croppable && !$this->width && !$this->height) {
             parent::fillAttribute($request, $requestAttribute, $model, $attribute);
         } else {
             $image = Image::make($request->{$this->attribute});
+            $path = '';
             if ($this->croppable) {
                 $this->handleCrop($image, $request);
             }
             if ($this->width || $this->height) {
                 $this->handleResize($image, $this->width, $this->height);
             }
-
             $image->stream();
             $fileName = $request->{$this->attribute}->hashName();
-            Storage::disk($this->disk)->put($fileName, $image->__toString());
+            if($this->path) {
+                if(substr($this->path, -1) === '/') {
+                    $path = $this->path;
+                } else {
+                    $path = $this->path . '/';
+                }
+            }
+            Storage::disk($this->disk)->put($path . $fileName, $image->__toString());
             $image->destroy();
-
-            $model->{$attribute} = $fileName;
+            $model->{$attribute} = $path . $fileName;
         }
-
         Storage::disk($this->disk)->delete($previousFileName);
     }
 

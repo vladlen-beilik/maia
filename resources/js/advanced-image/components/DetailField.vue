@@ -2,7 +2,11 @@
     <panel-item :field="field">
         <div slot="value">
             <template v-if="shouldShowLoader">
-                <image-loader :src="field.previewUrl" class="max-w-xs" @missing="(value) => missing = value" />
+                <image-loader
+                    :src="field.previewUrl"
+                    class="max-w-xs"
+                    @missing="(value) => missing = value"
+                 />
             </template>
             <template v-if="field.value && !field.previewUrl">
                 {{ field.value }}

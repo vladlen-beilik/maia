@@ -17,7 +17,7 @@
 import { Minimum } from 'laravel-nova'
 export default {
     props: {
-        src: String,
+        src: String
     },
     data: () => ({
         loading: true,
@@ -32,17 +32,18 @@ export default {
                 image.src = this.src
             })
         )
-            .then(image => {
-                image.className = 'block w-full'
-                image.draggable = false
-                this.$refs.card.$el.appendChild(image)
-                this.loading = false
-            })
-            .catch(() => {
-                this.missing = true
-                this.$emit('missing', true)
-                this.loading = false
-            })
+        .then(image => {
+            image.className = 'block w-full'
+            image.draggable = false
+            this.$refs.card.$el.style.maxWidth = `${image.naturalWidth}px`
+            this.$refs.card.$el.appendChild(image)
+            this.loading = false
+        })
+        .catch(() => {
+            this.missing = true
+            this.$emit('missing', true)
+            this.loading = false
+        })
     },
 }
 </script>

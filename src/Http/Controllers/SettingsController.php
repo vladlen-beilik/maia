@@ -4,6 +4,7 @@ namespace SpaceCode\Maia\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use SpaceCode\Maia\Models\Settings;
 use SpaceCode\Maia\SettingsTool;
@@ -70,31 +71,33 @@ class SettingsController extends Controller
             if (!property_exists($tempResource, $field->attribute)) return;
 
             if (isset($existingRow)) {
-                if($field->attribute === 'site_logo' && $existingRow->value !== $tempResource->{$field->attribute}) {
-                    Storage::disk(config('maia.filemanager.disk', 'public'))->delete(setting($existingRow->key));
-                } elseif ($field->attribute === 'site_favicon' && $existingRow->value !== $tempResource->{$field->attribute}) {
-                    Storage::disk(config('maia.filemanager.disk', 'public'))
-                        ->delete([
-                            setting($existingRow->key),
-                            '32_' . setting($existingRow->key),
-                            '128_' . setting($existingRow->key),
-                            '152_' . setting($existingRow->key),
-                            '167_' . setting($existingRow->key),
-                            '180_' . setting($existingRow->key),
-                            '192_' . setting($existingRow->key),
-                            '196_' . setting($existingRow->key)
-                        ]);
+                if($field->attribute === 'site_favicon' && $existingRow->value !== $tempResource->{$field->attribute}) {
+                    $existing_array = explode('.', $existingRow->value);
+                    $existing_mime = $existing_array[sizeof($existing_array) - 1];
+                    $existing_path = str_replace('.' . $existing_mime,'', $existingRow->value);
+                    $temp_array = explode('.', $tempResource->{$field->attribute});
+                    $temp_mime = $temp_array[sizeof($temp_array) - 1];
+                    $temp_path = str_replace('.' . $temp_mime,'', $tempResource->{$field->attribute});
+                    foreach (['32', '128', '152', '167', '180', '192', '196'] as $size) {
+                        Storage::disk(config('maia.filemanager.disk', 'public'))->delete($existing_path . '_' . $size . '.' . $existing_mime);
+                        Storage::disk(config('maia.filemanager.disk', 'public'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
+                    }
+                }
+                if($field->attribute === 'site_timezone') {
+                    changeEnv('APP_TIMEZONE', $tempResource->{$field->attribute});
                 }
                 $existingRow->update(['value' => $tempResource->{$field->attribute}]);
             } else {
                 if($field->attribute === 'site_favicon') {
-                    Storage::copy(setting($existingRow->key), '32_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '128_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '152_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '167_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '180_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '192_' . setting($existingRow->key));
-                    Storage::copy(setting($existingRow->key), '196_' . setting($existingRow->key));
+                    $temp_array = explode('.', $tempResource->{$field->attribute});
+                    $temp_mime = $temp_array[sizeof($temp_array) - 1];
+                    $temp_path = str_replace('.' . $temp_mime,'', $tempResource->{$field->attribute});
+                    foreach (['32', '128', '152', '167', '180', '192', '196'] as $size) {
+                        Storage::disk(config('maia.filemanager.disk', 'public'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
+                    }
+                }
+                if($field->attribute === 'site_timezone') {
+                    changeEnv('APP_TIMEZONE', $tempResource->{$field->attribute});
                 }
                 Settings::create([
                     'key' => $field->attribute,

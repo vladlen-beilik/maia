@@ -168,7 +168,6 @@ class Page extends Resource
     protected function metaFields()
     {
         return [
-
             Text::make(__('maia::resources.meta_title'), 'meta_title')
                 ->rules('max:55')
                 ->help(__('maia::resources.meta_title_text'))

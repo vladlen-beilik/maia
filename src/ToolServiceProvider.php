@@ -15,6 +15,7 @@ use SpaceCode\Maia\Contracts\Permission as PermissionContract;
 use SpaceCode\Maia\Contracts\Page as PageContract;
 use SpaceCode\Maia\Http\Middleware\FilemanagerAuthorize;
 use SpaceCode\Maia\Http\Middleware\SettingsAuthorize;
+use SpaceCode\Maia\Http\Middleware\SeoAuthorize;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -22,6 +23,7 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views/filemanager', 'maia-filemanager');
         $this->loadViewsFrom(__DIR__ . '/../resources/views/settings', 'maia-settings');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views/seo', 'maia-seo');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'maia');
         if ($this->app->runningInConsole()) {
             $this->registerPublishing();
@@ -46,6 +48,8 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
+            Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
+            Nova::style('toggle', __DIR__.'/../dist/css/toggle.css');
         });
         $this->registerMacroHelpers();
         $this->registerModelBindings();
@@ -130,6 +134,9 @@ class ToolServiceProvider extends ServiceProvider
 
         \Illuminate\Support\Facades\Route::middleware(['nova', SettingsAuthorize::class])
             ->group(__DIR__ . '/../routes/settings.php');
+
+        \Illuminate\Support\Facades\Route::middleware(['nova', SeoAuthorize::class])
+            ->group(__DIR__ . '/../routes/seo.php');
 
         // Index
 //        \Illuminate\Support\Facades\Route::get('/', ['uses' => 'VoxIndexController@home_show', 'as' => 'home']);

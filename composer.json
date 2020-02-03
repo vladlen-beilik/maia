@@ -28,7 +28,8 @@
         "illuminate/contracts": "^5.8|^6.0",
         "illuminate/database": "^5.8|^6.0",
         "intervention/image": "^2.4",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "orchestra/testbench": "^3.8|^4.0",
