@@ -1,1 +1,3 @@
 dist/mix-manifest.json
+resources/js
+resources/sass
