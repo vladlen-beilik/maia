@@ -1,21 +1,26 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use SpaceCode\Maia\Models\Settings;
+use SpaceCode\Maia\Models\Seo;
 
 class SeoTableSeeder extends Seeder
 {
     public function run() {
-        !setting('site_timezone') ? Settings::create(['key' => 'site_timezone', 'value' => 'UTC']) : '';
-        !setting('mail_driver') ? Settings::create(['key' => 'mail_driver', 'value' => 'smtp']) : '';
-        !setting('mail_host') ? Settings::create(['key' => 'mail_host', 'value' => 'smtp.mailgun.org']) : '';
-        !setting('mail_port') ? Settings::create(['key' => 'mail_port', 'value' => '587']) : '';
-        !setting('mail_from_address') ? Settings::create(['key' => 'mail_from_address', 'value' => 'hello@example.com']) : '';
-        !setting('mail_from_name') ? Settings::create(['key' => 'mail_from_name', 'value' => 'Example']) : '';
-        !setting('mail_encryption') ? Settings::create(['key' => 'mail_encryption', 'value' => 'tls']) : '';
-        !setting('services_mailgun_endpoint') ? Settings::create(['key' => 'services_mailgun_endpoint', 'value' => 'api.mailgun.net']) : '';
-        !setting('services_aws_region') ? Settings::create(['key' => 'services_aws_region', 'value' => 'us-east-1']) : '';
-        !setting('site_blog') ? Settings::create(['key' => 'site_blog', 'value' => 1]) : '';
-        !setting('site_shop') ? Settings::create(['key' => 'site_shop', 'value' => 0]) : '';
+        is_null(seo('seo_posts_document_state')) ? Seo::create(['key' => 'seo_posts_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_posts_global_index')) ? Seo::create(['key' => 'seo_posts_global_index', 'value' => 0]) : '';
+        is_null(seo('seo_post_categories_document_state')) ? Seo::create(['key' => 'seo_post_categories_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_post_categories_global_index')) ? Seo::create(['key' => 'seo_post_categories_global_index', 'value' => 0]) : '';
+        is_null(seo('seo_post_tags_document_state')) ? Seo::create(['key' => 'seo_post_tags_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_post_tags_global_index')) ? Seo::create(['key' => 'seo_post_tagss_global_index', 'value' => 0]) : '';
+
+        is_null(seo('seo_products_document_state')) ? Seo::create(['key' => 'seo_products_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_products_global_index')) ? Seo::create(['key' => 'seo_products_global_index', 'value' => 0]) : '';
+        is_null(seo('seo_product_categories_document_state')) ? Seo::create(['key' => 'seo_product_categories_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_product_categories_global_index')) ? Seo::create(['key' => 'seo_product_categories_global_index', 'value' => 0]) : '';
+        is_null(seo('seo_product_tags_document_state')) ? Seo::create(['key' => 'seo_product_tags_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_product_tags_global_index')) ? Seo::create(['key' => 'seo_product_tags_global_index', 'value' => 0]) : '';
+
+        is_null(seo('seo_home_document_state')) ? Seo::create(['key' => 'seo_home_document_state', 'value' => 'dynamic']) : '';
+        is_null(seo('seo_home_global_index')) ? Seo::create(['key' => 'seo_home_global_index', 'value' => 0]) : '';
     }
 }

@@ -15,9 +15,7 @@ class CreateSeoTables extends Migration
     {
         Schema::create('seo', function (Blueprint $table) {
             $table->string('key')->unique()->primary();
-            $table->string('name');
             $table->string('value', 8192)->nullable();
-            $table->string('group')->nullable();
         });
     }
 

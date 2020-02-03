@@ -28,8 +28,8 @@ class SeoController extends Controller
 
         $addResolveCallback = function (&$field) {
             if (!empty($field->attribute)) {
-                $setting = Seo::where('key', $field->attribute)->first();
-                $field->resolve([$field->attribute => isset($setting) ? $setting->value : '']);
+                $seo = Seo::where('key', $field->attribute)->first();
+                $field->resolve([$field->attribute => isset($seo) ? $seo->value : '']);
             }
         };
 
