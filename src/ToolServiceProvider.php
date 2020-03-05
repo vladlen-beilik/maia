@@ -101,11 +101,6 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function registerPolicies($user)
     {
-//        Gate::before(function ($user) {
-//            foreach ($user->roles as $role) {
-//                return $role->name === 'developer' ? true : null;
-//            }
-//        });
         Gate::policy(\App\User::class, Policy\UserPolicy::class);
         Gate::policy(Models\Permission::class, Policy\PermissionPolicy::class);
         Gate::policy(Models\Role::class, Policy\RolePolicy::class);

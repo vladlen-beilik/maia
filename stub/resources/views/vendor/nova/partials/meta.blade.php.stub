@@ -1,0 +1,2 @@
+{!! !is_null(siteFavicon()) && !empty(siteFavicon()) ? '<link rel="icon" type="image/png" href="' . Maia::image(siteFavicon()) . '">' : '' !!}
+<meta name="robots" content="noindex, nofollow, noodp" />

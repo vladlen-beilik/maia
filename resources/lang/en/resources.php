@@ -186,5 +186,6 @@ return [
         'head' => 'Google Tag Manager Head',
         'body' => 'Google Tag Manager Body',
     ],
-    'sender' => 'Sender'
+    'sender' => 'Sender',
+    'logout' => 'Logout'
 ];
