@@ -39,7 +39,10 @@ class SeoTableSeeder extends Seeder
             'seo_home_google_bot_index' => 1
         ];
         foreach ($settings as $key => $value) {
-            Seo::firstOrCreate(['key' => $key, 'value' => $value]);
+            $a = Seo::find($key);
+            if(!isset($a)) {
+                Seo::create(['key' => $key, 'value' => $value]);
+            }
         }
     }
 }

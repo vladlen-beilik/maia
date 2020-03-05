@@ -125,14 +125,14 @@ class ToolServiceProvider extends ServiceProvider
      */
     protected function registerPublishing()
     {
-        $this->publishes([__DIR__.'/../config/maia.php' => config_path('maia.php'),], 'maia-config');
-        $this->publishes([__DIR__.'/../dist/index' => public_path('vendor/maia'),], 'maia-assets');
+        $this->publishes([__DIR__.'/../config/maia.php' => config_path('maia.php')], 'maia-config');
+        $this->publishes([__DIR__.'/../dist/index' => public_path('vendor/maia')], 'maia-assets');
         $this->publishes([__DIR__.'/../resources/styles/sitemap' => public_path('vendor/sitemap')], 'maia-assets');
-        $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/maia'),], 'maia-lang');
+        $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/maia')], 'maia-lang');
         $this->publishes([__DIR__.'/../resources/views/index' => resource_path('views')], 'maia-views');
         $this->publishes([__DIR__.'/../resources/views/sitemap' => base_path('resources/views/vendor/sitemap')], 'maia-views');
-        $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations'),], 'maia-migrations');
-        $this->publishes([__DIR__.'/../database/seeds' => database_path('seeds'),], 'maia-seeds');
+        $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], 'maia-migrations');
+        $this->publishes([__DIR__.'/../database/seeds/MaiaDatabaseSeeder.php' => database_path('seeds')], 'maia-seeds');
     }
 
     /**

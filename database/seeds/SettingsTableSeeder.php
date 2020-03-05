@@ -35,7 +35,10 @@ class SettingsTableSeeder extends Seeder
             'site_shop' => 0
         ];
         foreach ($settings as $key => $value) {
-            Settings::firstOrCreate(['key' => $key, 'value' => $value]);
+            $a = Settings::find($key);
+            if(!isset($a)) {
+                Settings::create(['key' => $key, 'value' => $value]);
+            }
         }
     }
 }

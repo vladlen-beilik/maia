@@ -9,7 +9,7 @@ use SpaceCode\Maia\Traits\Seedable;
 class PublishCommand extends Command
 {
     use Seedable;
-    protected $seedersPath = __DIR__ . '/../../../database/seeds/';
+    protected $seedersPath = __DIR__ . '/../../database/seeds/';
 
     /**
      * The name and signature of the console command.
@@ -32,6 +32,10 @@ class PublishCommand extends Command
      */
     public function handle()
     {
+        if(!\File::exists(app_path('Nova'))) {
+            $this->call('nova:install');
+        }
+
         $this->moveStubs();
 
         $this->call('vendor:publish', [
@@ -67,6 +71,9 @@ class PublishCommand extends Command
         $this->call('horizon:install');
         $this->call('migrate');
         $this->call('view:clear');
+        if (!\File::exists(public_path('storage'))) {
+            $this->call('storage:link');
+        }
         $this->seed('MaiaDatabaseSeeder');
     }
 
