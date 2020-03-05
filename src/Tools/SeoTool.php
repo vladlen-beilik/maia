@@ -7,9 +7,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Nova;
-use Laravel\Nova\Panel;
 use Laravel\Nova\Tool;
-use Laravel\Nova\Fields\Heading;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\Toggle;
 

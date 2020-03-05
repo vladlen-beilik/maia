@@ -2,12 +2,9 @@
 
 namespace SpaceCode\Maia\Tools;
 
-use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Heading;
 use SpaceCode\Maia\Fields\AdvancedImage;
 use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Nova;

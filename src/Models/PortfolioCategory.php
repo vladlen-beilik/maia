@@ -2,13 +2,10 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\HasOne;
 use SpaceCode\Maia\Contracts\PortfolioCategory as PortfolioCategoryContract;
+use SpaceCode\Maia\Exceptions\PortfolioAlreadyExists;
 use SpaceCode\Maia\Exceptions\PortfolioCategoryAlreadyExists;
 use SpaceCode\Maia\Exceptions\PortfolioCategoryDoesNotExist;
 use SpaceCode\Maia\Guard;

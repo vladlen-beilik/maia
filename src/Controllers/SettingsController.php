@@ -5,7 +5,6 @@ namespace SpaceCode\Maia\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use SpaceCode\Maia\Models\Settings;
 use SpaceCode\Maia\Tools\SettingsTool;

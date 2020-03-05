@@ -7,7 +7,6 @@ use SpaceCode\Maia\Contracts\Role;
 use Illuminate\Database\Eloquent\Builder;
 use SpaceCode\Maia\PermissionRegistrar;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use SpaceCode\Maia\Traits\HasPermissions;
 
 trait HasRoles
 {

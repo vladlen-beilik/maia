@@ -2,13 +2,10 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\HasOne;
 use SpaceCode\Maia\Contracts\PostCategory as PostCategoryContract;
+use SpaceCode\Maia\Exceptions\PostAlreadyExists;
 use SpaceCode\Maia\Exceptions\PostCategoryAlreadyExists;
 use SpaceCode\Maia\Exceptions\PostCategoryDoesNotExist;
 use SpaceCode\Maia\Guard;

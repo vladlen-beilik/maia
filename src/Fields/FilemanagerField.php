@@ -90,7 +90,7 @@ class FilemanagerField extends Field implements Cover
     /**
      * Set current folder for the field.
      *
-     * @param   string | function  $rules
+     * @param   string | function $rules
      *
      * @return  $this
      */

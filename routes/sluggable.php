@@ -12,4 +12,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/generate', 'SpaceCode\Maia\Http\Controllers\SlugController@getSlug');
+Route::post('/generate', 'SpaceCode\Maia\Controllers\SlugController@getSlug');

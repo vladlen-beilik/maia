@@ -2,7 +2,6 @@
 namespace SpaceCode\Maia;
 
 use Gate;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
@@ -10,7 +9,6 @@ use SpaceCode\Maia\Models;
 use App\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as Routing;
-use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
@@ -29,7 +27,6 @@ use SpaceCode\Maia\Middlewares\SeoAuthorize;
 use SpaceCode\Maia\Middlewares\HorizonAuthorize;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
-use Symfony\Component\Console\Helper\Helper;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
 use Spatie\Crawler\Crawler;
 

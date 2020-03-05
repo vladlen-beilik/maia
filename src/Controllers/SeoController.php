@@ -4,8 +4,6 @@ namespace SpaceCode\Maia\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Storage;
 use SpaceCode\Maia\Models\Seo;
 use SpaceCode\Maia\Tools\SeoTool;
 use Laravel\Nova\Contracts\Resolvable;

@@ -2,8 +2,6 @@
 
 namespace SpaceCode\Maia\Contracts;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 interface PostCategory
 {
     /**

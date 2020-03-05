@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
+use SpaceCode\Maia\Fields\Toggle;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
 

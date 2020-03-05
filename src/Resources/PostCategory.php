@@ -3,7 +3,6 @@
 namespace SpaceCode\Maia;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
@@ -13,12 +12,12 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
+use SpaceCode\Maia\Fields\Toggle;
 
 class PostCategory extends Resource
 {

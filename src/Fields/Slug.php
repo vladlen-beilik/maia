@@ -4,7 +4,6 @@ namespace SpaceCode\Maia\Fields;
 
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Element;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Slug extends Field
 {

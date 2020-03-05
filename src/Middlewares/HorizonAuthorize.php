@@ -16,13 +16,6 @@ class HorizonAuthorize
      */
     public function handle($request, $next)
     {
-//        if ($request->user()->roles->count() > 0) {
-//            foreach ($request->user()->roles as $role) {
-//                if($role->name === 'developer') {
-//                    return true;
-//                }
-//            }
-//        }
         $tool = collect(Nova::registeredTools())->first([$this, 'matchesTool']);
         return optional($tool)->authorize($request) ? $next($request) : abort(403);
     }

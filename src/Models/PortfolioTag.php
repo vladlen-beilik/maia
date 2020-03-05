@@ -2,11 +2,9 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Auth;
 use SpaceCode\Maia\Contracts\PortfolioTag as PortfolioTagContract;
+use SpaceCode\Maia\Exceptions\PortfolioAlreadyExists;
 use SpaceCode\Maia\Exceptions\PortfolioTagAlreadyExists;
 use SpaceCode\Maia\Exceptions\PortfolioTagDoesNotExist;
 use SpaceCode\Maia\Guard;
