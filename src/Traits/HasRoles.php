@@ -7,6 +7,7 @@ use SpaceCode\Maia\Contracts\Role;
 use Illuminate\Database\Eloquent\Builder;
 use SpaceCode\Maia\PermissionRegistrar;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use SpaceCode\Maia\Traits\HasPermissions;
 
 trait HasRoles
 {
@@ -38,10 +39,10 @@ trait HasRoles
     public function roles(): MorphToMany
     {
         return $this->morphToMany(
-            config('maia.models.role'),
+            \SpaceCode\Maia\Models\Role::class,
             'model',
-            config('maia.table_names.model_has_roles'),
-            config('maia.permission.column_names.model_morph_key'),
+            'model_has_roles',
+            'model_id',
             'role_id'
         );
     }
@@ -74,7 +75,7 @@ trait HasRoles
         return $query->whereHas('roles', function ($query) use ($roles) {
             $query->where(function ($query) use ($roles) {
                 foreach ($roles as $role) {
-                    $query->orWhere(config('maia.table_names.roles').'.id', $role->id);
+                    $query->orWhere('roles.id', $role->id);
                 }
             });
         });

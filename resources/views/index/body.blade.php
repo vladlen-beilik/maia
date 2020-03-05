@@ -1,10 +1,8 @@
-<body id="maia-body">
-    {!! setting('tracking.google_tag_manager_code_body') !!}
+<body id="maia-body" class="{{body_class()}}">
+    {!! $globalKey['tracking-body'] !!}
     @include('header')
-    <div id="maia-wrapper">
-        @yield('content')
-    </div>
-    @include('footer'){{"\n"}}
+    <div id="maia-wrapper">@if (trim($__env->yieldContent('content')))@yield('content')@endif</div>
+    @include('footer')
     @include('inc.js')
-    @yield('js'){{"\n"}}
+    @if (trim($__env->yieldContent('js')))@yield('js')@endif{{"\n"}}
 </body>

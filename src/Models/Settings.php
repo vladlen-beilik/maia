@@ -3,7 +3,7 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use SpaceCode\Maia\SettingsTool;
+use SpaceCode\Maia\Tools\SettingsTool;
 use Illuminate\Support\Collection as BaseCollection;
 
 class Settings extends Model

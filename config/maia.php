@@ -1,21 +1,6 @@
 <?php
+
 return [
-    'models' => [
-        'user' => \App\User::class,
-        'permission' => \SpaceCode\Maia\Models\Permission::class,
-        'role' => \SpaceCode\Maia\Models\Role::class,
-        'page' => \SpaceCode\Maia\Models\Page::class,
-    ],
-    'table_names' => [
-        'users' => 'users',
-        'pages' => 'pages',
-        'roles' => 'roles',
-        'permissions' => 'permissions',
-        'settings' => 'settings',
-        'model_has_permissions' => 'model_has_permissions',
-        'model_has_roles' => 'model_has_roles',
-        'role_has_permissions' => 'role_has_permissions',
-    ],
     'permission' => [
         'column_names' => [
             'model_morph_key' => 'model_id',
@@ -50,7 +35,18 @@ return [
             'Compressed' => ['zip', 'rar', 'tar', 'gz', '7z', 'pkg'],
         ],
         'filter'    => false,
-        'naming'    => SpaceCode\Maia\Http\Services\DefaultNamingStrategy::class,
+        'naming'    => \SpaceCode\Maia\Services\DefaultNamingStrategy::class,
         'jobs'      => [],
     ],
+    'sitemap' => [
+        'use_cache' => false,
+        'cache_key' => 'maia-sitemap.' . \Illuminate\Support\Str::slug(str_replace(['http://', 'https://'], '', config('app.url')), '-'),
+        'cache_duration' => 0,
+        'escaping' => true,
+        'use_limit_size' => false,
+        'max_size' => null,
+        'use_styles' => true,
+        'styles_location' => '/vendor/sitemap/',
+        'use_gzip' => false
+    ]
 ];

@@ -1,6 +1,6 @@
 <template>
     <p>
-        <img v-if="field.thumbnailUrl" :src="field.thumbnailUrl" style="object-fit: cover;" class="rounded-full w-8 h-8" />
+        <img v-if="field.thumbnailUrl" :src="field.thumbnailUrl" style="object-fit: cover;" class="rounded-full w-8 h-8"  alt=""/>
         <span v-else>&mdash;</span>
     </p>
 </template>

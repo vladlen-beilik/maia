@@ -9,8 +9,9 @@
         </div>
         <div class="w-3/4 py-4 text-90 flex items-center">
             <slot name="value">
-                <template v-if="field.type == 'image'">
-                    <ImageDetail v-if="loaded" :file="field" :css="'card relative card relative border border-lg border-50 overflow-hidden px-0 py-0 max-w-xs'"></ImageDetail>
+                <template v-if="field.type === 'image'">
+                    <ImageDetail v-if="loaded" :file="field"
+                                 :css="'card relative card relative border border-lg border-50 overflow-hidden px-0 py-0 max-w-xs'"></ImageDetail>
                     <div class="ml-2">{{ field.path }}</div>
                 </template>
                 <template v-else>
@@ -24,29 +25,29 @@
 </template>
 
 <script>
-import ImageDetail from '../../modules/Image';
+    import ImageDetail from '../../modules/Image';
 
-export default {
-    components: {
-        ImageDetail: ImageDetail,
-    },
-    props: {
-        field: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            ImageDetail: ImageDetail,
         },
-        fieldName: {
-            type: String,
-            default: '',
+        props: {
+            field: {
+                type: Object,
+                required: true,
+            },
+            fieldName: {
+                type: String,
+                default: '',
+            },
         },
-    },
-    data: () => ({
-        loaded: true,
-    }),
-    computed: {
-        label() {
-            return this.fieldName || this.field.name;
+        data: () => ({
+            loaded: true,
+        }),
+        computed: {
+            label() {
+                return this.fieldName || this.field.name;
+            },
         },
-    },
-};
+    };
 </script>

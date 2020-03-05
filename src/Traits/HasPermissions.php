@@ -39,10 +39,10 @@ trait HasPermissions
     public function permissions(): MorphToMany
     {
         return $this->morphToMany(
-            config('maia.permission.models.permission'),
+            \SpaceCode\Maia\Models\Permission::class,
             'model',
-            config('maia.permission.table_names.model_has_permissions'),
-            config('maia.permission.column_names.model_morph_key'),
+            'model_has_permissions',
+            'model_id',
             'permission_id'
         );
     }
@@ -65,7 +65,7 @@ trait HasPermissions
             $query->whereHas('permissions', function ($query) use ($permissions) {
                 $query->where(function ($query) use ($permissions) {
                     foreach ($permissions as $permission) {
-                        $query->orWhere(config('maia.permission.table_names.permissions').'.id', $permission->id);
+                        $query->orWhere('permissions.id', $permission->id);
                     }
                 });
             });
@@ -73,7 +73,7 @@ trait HasPermissions
                 $query->orWhereHas('roles', function ($query) use ($rolesWithPermissions) {
                     $query->where(function ($query) use ($rolesWithPermissions) {
                         foreach ($rolesWithPermissions as $role) {
-                            $query->orWhere(config('maia.permission.table_names.roles').'.id', $role->id);
+                            $query->orWhere('roles.id', $role->id);
                         }
                     });
                 });

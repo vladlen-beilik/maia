@@ -12,10 +12,10 @@ class UnauthorizedException extends HttpException
 
     public static function forRoles(array $roles): self
     {
-        $message = 'User does not have the right roles.';
+        $message = trans('maia::exeptions.unauthorized.forRoles.message');
         if (config('maia.permission.display_permission_in_exception')) {
             $permStr = implode(', ', $roles);
-            $message = 'User does not have the right roles. Necessary roles are '.$permStr;
+            $message = trans('maia::exeptions.unauthorized.forRoles.message_value', ['str' => $permStr]);
         }
         $exception = new static(403, $message, null, []);
         $exception->requiredRoles = $roles;
@@ -24,10 +24,10 @@ class UnauthorizedException extends HttpException
 
     public static function forPermissions(array $permissions): self
     {
-        $message = 'User does not have the right permissions.';
+        $message = trans('maia::exeptions.unauthorized.forPermissions.message');
         if (config('maia.permission.display_permission_in_exception')) {
             $permStr = implode(', ', $permissions);
-            $message = 'User does not have the right permissions. Necessary permissions are '.$permStr;
+            $message = trans('maia::exeptions.unauthorized.forPermissions.message_value', ['str' => $permStr]);
         }
         $exception = new static(403, $message, null, []);
         $exception->requiredPermissions = $permissions;
@@ -36,10 +36,10 @@ class UnauthorizedException extends HttpException
 
     public static function forRolesOrPermissions(array $rolesOrPermissions): self
     {
-        $message = 'User does not have any of the necessary access rights.';
+        $message = trans('maia::exeptions.unauthorized.forRolesOrPermissions.message');
         if (config('maia.permission.display_permission_in_exception') && config('maia.permission.display_role_in_exception')) {
             $permStr = implode(', ', $rolesOrPermissions);
-            $message = 'User does not have the right permissions. Necessary permissions are '.$permStr;
+            $message = trans('maia::exeptions.unauthorized.forRolesOrPermissions.message_value', ['str' => $permStr]);
         }
         $exception = new static(403, $message, null, []);
         $exception->requiredPermissions = $rolesOrPermissions;
@@ -48,7 +48,7 @@ class UnauthorizedException extends HttpException
 
     public static function notLoggedIn(): self
     {
-        return new static(403, 'User is not logged in.', null, []);
+        return new static(403, trans('maia::exeptions.unauthorized.notLoggedIn'), null, []);
     }
 
     public function getRequiredRoles(): array

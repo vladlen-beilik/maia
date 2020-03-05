@@ -14,8 +14,7 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        $tableNames = config('maia.table_names');
-        Schema::create($tableNames['pages'], function (Blueprint $table) {
+        Schema::create('pages', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('author_id');
             $table->string('title');
@@ -44,7 +43,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        $tableNames = config('maia.table_names');
-        Schema::drop($tableNames['pages']);
+        Schema::dropIfExists('pages');
     }
 }

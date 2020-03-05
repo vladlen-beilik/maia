@@ -43,12 +43,12 @@ export default {
          * Download the linked image
          */
         download() {
-            const { resourceName, resourceId } = this
-            const attribute = this.field.attribute
-            let link = document.createElement('a')
-            link.href = `/nova-api/${resourceName}/${resourceId}/download/${attribute}`
-            link.download = 'download'
-            link.click()
+            const { resourceName, resourceId } = this;
+            const attribute = this.field.attribute;
+            let link = document.createElement('a');
+            link.href = `/nova-api/${resourceName}/${resourceId}/download/${attribute}`;
+            link.download = 'download';
+            link.click();
         },
     },
     computed: {

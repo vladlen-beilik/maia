@@ -40,10 +40,10 @@ class User extends Authenticatable
     public function roles(): MorphToMany
     {
         return $this->morphToMany(
-            config('maia.models.role'),
+            \SpaceCode\Maia\Models\Role::class,
             'model',
-            config('maia.table_names.model_has_roles'),
-            config('maia.permission.column_names.model_morph_key'),
+            'model_has_roles',
+            'model_id',
             'role_id'
         );
     }
@@ -54,10 +54,10 @@ class User extends Authenticatable
     public function permissions(): MorphToMany
     {
         return $this->morphToMany(
-            config('maia.models.permission'),
+            \SpaceCode\Maia\Models\Permission::class,
             'model',
-            config('maia.table_names.model_has_permissions'),
-            config('maia.permission.column_names.model_morph_key'),
+            'model_has_permissions',
+            'model_id',
             'permission_id'
         );
     }

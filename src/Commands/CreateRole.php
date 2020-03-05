@@ -20,7 +20,7 @@ class CreateRole extends Command
         $roleClass = app(RoleContract::class);
         $role = $roleClass::findOrCreate($this->argument('name'), $this->argument('guard'));
         $role->givePermissionTo($this->makePermissions($this->argument('permissions')));
-        $this->info("Role `{$role->name}` created");
+        $this->info(trans('maia::commands.role.created', ['name' => $role->name]));
     }
 
     protected function makePermissions($string = null)

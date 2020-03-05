@@ -6,12 +6,12 @@ use InvalidArgumentException;
 
 class PermissionDoesNotExist extends InvalidArgumentException
 {
-    public static function create(string $permissionName, string $guardName = '')
+    public static function create(string $name, string $guardName = '')
     {
-        return new static("There is no permission named `{$permissionName}` for guard `{$guardName}`.");
+        return new static(trans('maia::exeptions.permission.doesnotexist.create', ['name' => $name, 'guardName' => $guardName]));
     }
-    public static function withId(int $permissionId)
+    public static function withId(int $id)
     {
-        return new static("There is no [permission] with id `{$permissionId}`.");
+        return new static(trans('maia::exeptions.permission.doesnotexist.withId', ['id' => $id]));
     }
 }

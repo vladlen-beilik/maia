@@ -16,8 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Permission extends Model implements PermissionContract
 {
-    use HasRoles;
-    use RefreshesPermissionCache;
+    use HasRoles, RefreshesPermissionCache;
 
     protected $guarded = ['id'];
 
@@ -29,7 +28,7 @@ class Permission extends Model implements PermissionContract
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         parent::__construct($attributes);
-        $this->setTable(config('maia.table_names.permissions'));
+        $this->setTable('permissions');
     }
 
     /**
@@ -53,8 +52,8 @@ class Permission extends Model implements PermissionContract
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(
-            config('maia.models.role'),
-            config('maia.table_names.role_has_permissions'),
+            \SpaceCode\Maia\Models\Role::class,
+            'role_has_permissions',
             'permission_id',
             'role_id'
         );
@@ -68,9 +67,9 @@ class Permission extends Model implements PermissionContract
         return $this->morphedByMany(
             getModelForGuard($this->attributes['guard_name']),
             'model',
-            config('maia.table_names.model_has_permissions'),
+            'model_has_permissions',
             'permission_id',
-            config('maia.permission.column_names.model_morph_key')
+            'model_id'
         );
     }
 

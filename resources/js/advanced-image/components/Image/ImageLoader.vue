@@ -26,23 +26,23 @@ export default {
     mounted() {
         Minimum(
             new Promise((resolve, reject) => {
-                let image = new Image()
-                image.addEventListener('load', () => resolve(image))
-                image.addEventListener('error', () => reject())
+                let image = new Image();
+                image.addEventListener('load', () => resolve(image));
+                image.addEventListener('error', () => reject());
                 image.src = this.src
             })
         )
         .then(image => {
-            image.className = 'block w-full'
-            image.draggable = false
-            this.$refs.card.$el.style.maxWidth = `${image.naturalWidth}px`
-            this.$refs.card.$el.appendChild(image)
-            this.loading = false
+            image.className = 'block w-full';
+            image.draggable = false;
+            this.$refs.card.$el.style.maxWidth = `${image.naturalWidth}px`;
+            this.$refs.card.$el.appendChild(image);
+            this.loading = false;
         })
         .catch(() => {
-            this.missing = true
-            this.$emit('missing', true)
-            this.loading = false
+            this.missing = true;
+            this.$emit('missing', true);
+            this.loading = false;
         })
     },
 }

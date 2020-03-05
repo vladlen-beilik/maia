@@ -6,12 +6,12 @@ use InvalidArgumentException;
 
 class RoleDoesNotExist extends InvalidArgumentException
 {
-    public static function named(string $roleName)
+    public static function named(string $name)
     {
-        return new static("There is no role named `{$roleName}`.");
+        return new static(trans('maia::exeptions.role.doesnotexist.named', ['name' => $name]));
     }
-    public static function withId(int $roleId)
+    public static function withId(int $id)
     {
-        return new static("There is no role with id `{$roleId}`.");
+        return new static(trans('maia::exeptions.role.doesnotexist.withId', ['id' => $id]));
     }
 }

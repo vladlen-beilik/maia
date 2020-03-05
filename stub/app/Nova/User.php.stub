@@ -2,30 +2,43 @@
 
 namespace App\Nova;
 
-use Illuminate\Support\Facades\Auth;
-use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Avatar;
+use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
-use Laravel\Nova\Panel;
-use SpaceCode\Maia\PermissionBooleanGroup;
-use SpaceCode\Maia\RoleBooleanGroup;
-use Laravel\Nova\Fields\MorphToMany;
+use Laravel\Nova\Fields\Text;
+use SpaceCode\Maia\Fields\PermissionBooleanGroup;
+use SpaceCode\Maia\Fields\RoleBooleanGroup;
+use SpaceCode\Maia\Fields\Tabs;
+use SpaceCode\Maia\Fields\TabsOnEdit;
+use Whitecube\NovaFlexibleContent\Flexible;
 
 class User extends Resource
 {
+    use TabsOnEdit;
+
+    protected $casts = [
+        'fullName' => 'array',
+        'apps' => 'array'
+    ];
+
     /**
+     * The model the resource corresponds to.
+     *
      * @var string
      */
     public static $model = 'App\\User';
 
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
      * @var string
      */
     public static $title = 'name';
 
     /**
+     * The columns that should be searched.
+     *
      * @var array
      */
     public static $search = [
@@ -35,41 +48,82 @@ class User extends Resource
     /**
      * @param Request $request
      * @return array
+     * @throws \Exception
      */
     public function fields(Request $request)
     {
-        $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'));
-        $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'));
-        if(Auth::id() === $this->id) {
-            $RoleBooleanGroup = RoleBooleanGroup::make(__('maia::resources.roles'))->hideWhenUpdating();
-            $PermissionBooleanGroup = PermissionBooleanGroup::make(__('maia::resources.permissions'))->hideWhenUpdating();
-        }
         return [
-            ID::make()->sortable(),
-            Avatar::make(__('maia::resources.avatar'))
-                ->path('avatars'),
-            Text::make(__('maia::resources.name'))
-                ->sortable()
-                ->rules('required', 'max:255'),
-            Text::make(__('maia::resources.email'))
-                ->sortable()
-                ->rules('required', 'email', 'max:254')
-                ->creationRules('unique:users,email')
-                ->updateRules('unique:users,email,{{resourceId}}'),
-            $RoleBooleanGroup,
-            $PermissionBooleanGroup,
-            Password::make(__('maia::resources.password'))
-                ->onlyOnForms()
-                ->creationRules('required', 'string', 'min:8')
-                ->updateRules('nullable', 'string', 'min:8'),
-            new Panel(__('maia::resources.full_name'), $this->fullnameFields()),
-            MorphToMany::make(__('maia::resources.roles'), 'roles', \SpaceCode\Maia\Role::class),
-            MorphToMany::make(__('maia::resources.permissions'), 'permissions', \SpaceCode\Maia\Permission::class)
+            (new Tabs($this->singularLabel(), [
+                trans('maia::resources.general') => [
+                    // ID
+                    ID::make()->sortable(),
+
+                    // Avatar
+                    Avatar::make(trans('maia::resources.avatar'))
+                        ->path('avatars'),
+
+                    // Name
+                    Text::make(trans('maia::resources.name'))
+                        ->sortable()
+                        ->rules('required', 'max:255'),
+
+                    // Email
+                    Text::make(trans('maia::resources.email'))
+                        ->sortable()
+                        ->rules('required', 'email', 'max:254')
+                        ->creationRules('unique:users,email')
+                        ->updateRules('unique:users,email,{{resourceId}}'),
+
+                    // Password
+                    Password::make(trans('maia::resources.password'))
+                        ->onlyOnForms()
+                        ->creationRules('required', 'string', 'min:8')
+                        ->updateRules('nullable', 'string', 'min:8'),
+                ],
+                trans('maia::resources.roles') => [
+                    RoleBooleanGroup::make(trans('maia::resources.roles'))
+                ],
+                trans('maia::resources.permissions') => [
+                    PermissionBooleanGroup::make(trans('maia::resources.permissions'))
+                ],
+                trans('maia::resources.full_name') => [
+                    // First
+                    Text::make(trans('maia::resources.first_name'), 'fullName->firstName')->resolveUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
+                    })->displayUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
+                    })->hideFromIndex(),
+
+                    // Last
+                    Text::make(trans('maia::resources.last_name'), 'fullName->lastName')->resolveUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
+                    })->displayUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
+                    })->hideFromIndex(),
+
+                    // Middle
+                    Text::make(trans('maia::resources.middle_name'), 'fullName->middleName')->resolveUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
+                    })->displayUsing(function () {
+                        return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
+                    })->hideFromIndex()
+                ],
+                trans('maia::resources.applications') => [
+                    Flexible::make(trans('maia::resources.applications'), 'apps')
+                        ->addLayout(trans('maia::resources.application'), 'app', [
+                            Text::make(trans('maia::resources.title'), 'title'),
+                            Text::make(trans('maia::resources.name'), 'name'),
+                            Text::make(trans('maia::resources.site.url'), 'url')
+                        ])
+                ]
+            ]))->withToolbar()
         ];
     }
 
     /**
-     * @param Request $request
+     * Get the cards available for the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function cards(Request $request)
@@ -78,7 +132,9 @@ class User extends Resource
     }
 
     /**
-     * @param Request $request
+     * Get the filters available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function filters(Request $request)
@@ -87,7 +143,9 @@ class User extends Resource
     }
 
     /**
-     * @param Request $request
+     * Get the lenses available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function lenses(Request $request)
@@ -96,26 +154,13 @@ class User extends Resource
     }
 
     /**
-     * @param Request $request
+     * Get the actions available for the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
     public function actions(Request $request)
     {
         return [];
-    }
-
-    /**
-     * @return array
-     */
-    protected function fullnameFields()
-    {
-        return [
-            Text::make(__('maia::resources.first_name'))
-                ->hideFromIndex(),
-            Text::make(__('maia::resources.last_name'))
-                ->hideFromIndex(),
-            Text::make(__('maia::resources.middle_name'))
-                ->hideFromIndex(),
-        ];
     }
 }

@@ -6,16 +6,16 @@ use InvalidArgumentException;
 
 class PageDoesNotExist extends InvalidArgumentException
 {
-    public static function sluged(string $pageSlug)
+    public static function sluged(string $slug)
     {
-        return new static("There is no page with slug `{$pageSlug}`.");
+        return new static(trans('maia::exeptions.page.doesnotexist.sluged', ['slug' => $slug]));
     }
-    public static function named(string $pageTitle)
+    public static function named(string $title)
     {
-        return new static("There is no page with this title `{$pageTitle}`.");
+        return new static(trans('maia::exeptions.page.doesnotexist.named', ['title' => $title]));
     }
-    public static function withId(int $pageId)
+    public static function withId(int $id)
     {
-        return new static("There is no page with id `{$pageId}`.");
+        return new static(trans('maia::exeptions.page.doesnotexist.withId', ['id' => $id]));
     }
 }

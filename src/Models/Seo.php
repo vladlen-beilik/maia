@@ -3,7 +3,7 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use SpaceCode\Maia\SeoTool;
+use SpaceCode\Maia\Tools\SeoTool;
 use Illuminate\Support\Collection as BaseCollection;
 
 class Seo extends Model

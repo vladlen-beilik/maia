@@ -35,7 +35,7 @@ class Page extends Model implements PageContract
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         $attributes['author_id'] = Auth::id();
         parent::__construct($attributes);
-        $this->setTable(config('maia.table_names.pages'));
+        $this->setTable('pages');
     }
 
     /**

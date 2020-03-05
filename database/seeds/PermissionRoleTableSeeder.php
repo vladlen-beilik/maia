@@ -15,25 +15,30 @@ class PermissionRoleTableSeeder extends Seeder
             Role::firstOrCreate(['name' => $name]);
         }
         $admin = Role::where('name', 'admin')->firstOrFail();
+        $developer = Role::where('name', 'developer')->firstOrFail();
 
         /**
          * Assignment
          */
         $permissions = [
+            'viewNova',
+            'viewHorizon',
+            'viewAny pages', 'view pages', 'create pages', 'update pages', 'delete pages', 'restore pages', 'forceDelete pages',
             'viewAny roles', 'view roles', 'create roles', 'update roles', 'delete roles',
             'viewAny permissions', 'view permissions', 'create permissions', 'update permissions', 'delete permissions',
             'viewAny users', 'view users', 'create users', 'update users', 'delete users',
-            'viewAny pages', 'view pages', 'create pages', 'update pages', 'delete pages', 'restore pages', 'forceDelete pages'
+            'viewAny posts', 'view posts', 'create posts', 'update posts', 'attachCategory posts', 'detachCategory posts', 'attachTag posts', 'detachTag posts', 'delete posts', 'restore posts', 'forceDelete posts',
+            'viewAny postTags', 'view postTags', 'create postTags', 'update postTags', 'delete postTags', 'restore postTags', 'forceDelete postTags',
+            'viewAny postCategories', 'view postCategories', 'create postCategories', 'update postCategories', 'delete postCategories', 'restore postCategories', 'forceDelete postCategories',
+            'viewAny portfolio', 'view portfolio', 'create portfolio', 'update portfolio', 'attachCategory portfolio', 'detachCategory portfolio', 'attachTag portfolio', 'detachTag portfolio', 'delete portfolio', 'restore portfolio', 'forceDelete portfolio',
+            'viewAny portfolioTags', 'view portfolioTags', 'create portfolioTags', 'update portfolioTags', 'delete portfolioTags', 'restore portfolioTags', 'forceDelete portfolioTags',
+            'viewAny portfolioCategories', 'view portfolioCategories', 'create portfolioCategories', 'update portfolioCategories', 'delete portfolioCategories', 'restore portfolioCategories', 'forceDelete portfolioCategories',
+            'viewAny contactForms', 'view contactForms', 'delete contactForms', 'restore contactForms', 'forceDelete contactForms',
         ];
         foreach ($permissions as $name) {
             Permission::firstOrCreate(['name' => $name]);
         }
-
-        foreach ($permissions as $key => $value) {
-            if($value === 'create permissions' || $value === 'update permissions' || $value === 'delete permissions') {
-                unset($permissions[$key]);
-            }
-        }
         $admin->syncPermissions($permissions);
+        $developer->syncPermissions(['viewNova', 'viewHorizon']);
     }
 }

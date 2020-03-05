@@ -6,6 +6,7 @@ use Laravel\Nova\Nova;
 use Laravel\Nova\Cards\Help;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use SpaceCode\Maia\Tools;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -17,8 +18,8 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot()
     {
         parent::boot();
-        \SpaceCode\Maia\SettingsTool::setSettingsFields();
-        \SpaceCode\Maia\SeoTool::setSeoFields();
+        Tools\SettingsTool::setSettingsFields();
+        Tools\SeoTool::setSeoFields();
     }
 
     /**
@@ -80,10 +81,11 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function tools()
     {
         return [
-            \SpaceCode\Maia\NovaTool::make(),
-            new \SpaceCode\Maia\FilemanagerTool(),
-            new \SpaceCode\Maia\SettingsTool(),
-            new \SpaceCode\Maia\SeoTool()
+            Tools\NovaTool::make(),
+            new Tools\NovaHorizonTool(),
+            new Tools\FilemanagerTool(),
+            new Tools\SettingsTool(),
+            new Tools\SeoTool()
         ];
     }
 

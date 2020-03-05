@@ -73,7 +73,7 @@ export default {
          */
         fill(formData) {
             if (this.file) {
-                formData.append(this.field.attribute, this.file, this.fileName)
+                formData.append(this.field.attribute, this.file, this.fileName);
                 if (this.field.croppable) {
                     formData.append(this.field.attribute + '_data', JSON.stringify(this.$refs.cropper.getData(true)))
                 }
@@ -86,34 +86,34 @@ export default {
             if (this.field.croppable) {
                 this.$refs.cropper.destroy()
             }
-            this.imgSrc = ''
-            this.file = null
-            this.fileName = ''
+            this.imgSrc = '';
+            this.file = null;
+            this.fileName = '';
         },
         /**
          * Respond to the file change
          * Set the data and init the crop box if the image is croppable
          */
         fileChange(e) {
-            let path = e.target.value
-            let fileName = path.match(/[^\\/]*$/)[0]
-            this.fileName = fileName
-            this.file = this.$refs.fileField.files[0]
-            const file = e.target.files[0]
+            let path = e.target.value;
+            let fileName = path.match(/[^\\/]*$/)[0];
+            this.fileName = fileName;
+            this.file = this.$refs.fileField.files[0];
+            const file = e.target.files[0];
             if (!file.type.includes('image/')) {
-                alert(this.__('Please select an image file'))
+                alert(this.__('Please select an image file'));
                 return
             }
             if (this.field.croppable) {
                 if (typeof FileReader === 'function') {
-                    const reader = new FileReader()
+                    const reader = new FileReader();
                     reader.onload = (event) => {
-                        this.imgSrc = event.target.result
-                        this.$refs.cropper.replace(event.target.result)
-                    }
+                        this.imgSrc = event.target.result;
+                        this.$refs.cropper.replace(event.target.result);
+                    };
                     reader.readAsDataURL(file)
                 } else {
-                    alert(this.__('Sorry, FileReader API not supported'))
+                    alert(this.__('Sorry, FileReader API not supported'));
                 }
             }
         },

@@ -6,16 +6,36 @@ use SpaceCode\Maia\Models\Settings;
 class SettingsTableSeeder extends Seeder
 {
     public function run() {
-        is_null(setting('site_timezone')) ? Settings::create(['key' => 'site_timezone', 'value' => 'UTC']) : '';
-        is_null(setting('mail_driver')) ? Settings::create(['key' => 'mail_driver', 'value' => 'smtp']) : '';
-        is_null(setting('mail_host')) ? Settings::create(['key' => 'mail_host', 'value' => 'smtp.mailgun.org']) : '';
-        is_null(setting('mail_port')) ? Settings::create(['key' => 'mail_port', 'value' => '587']) : '';
-        is_null(setting('mail_from_address')) ? Settings::create(['key' => 'mail_from_address', 'value' => 'hello@example.com']) : '';
-        is_null(setting('mail_from_name')) ? Settings::create(['key' => 'mail_from_name', 'value' => 'Example']) : '';
-        is_null(setting('mail_encryption')) ? Settings::create(['key' => 'mail_encryption', 'value' => 'tls']) : '';
-        is_null(setting('services_mailgun_endpoint')) ? Settings::create(['key' => 'services_mailgun_endpoint', 'value' => 'api.mailgun.net']) : '';
-        is_null(setting('services_aws_region')) ? Settings::create(['key' => 'services_aws_region', 'value' => 'us-east-1']) : '';
-        is_null(setting('site_blog')) ? Settings::create(['key' => 'site_blog', 'value' => 1]) : '';
-        is_null(setting('site_shop')) ? Settings::create(['key' => 'site_shop', 'value' => 0]) : '';
+
+        $settings = [
+            'system_name' => 'Laravel',
+            'system_debug' => 0,
+            'site_url' => url(''),
+            'site_timezone' => 'UTC',
+            'services_mailgun_endpoint' => 'api.mailgun.net',
+            'services_aws_region' => 'us-east-1',
+            'services_memcached_host' => '127.0.0.1',
+            'services_memcached_port' => '11211',
+            'services_dynamodb_table' => 'cache',
+            'services_redis_client' => 'phpredis',
+            'services_redis_cluster' => 'redis',
+            'services_redis_host' => '127.0.0.1',
+            'services_redis_port' => '6379',
+            'services_redis_database' => '0',
+            'services_redis_cache_database' => '1',
+            'mail_driver' => 'smtp',
+            'mail_host' => 'smtp.mailgun.org',
+            'mail_port' => '587',
+            'mail_from_address' => 'hello@example.com',
+            'mail_from_name' => 'Example',
+            'mail_encryption' => 'tls',
+            'cache_driver' => 'file',
+            'site_blog' => 1,
+            'site_portfolio' => 0,
+            'site_shop' => 0
+        ];
+        foreach ($settings as $key => $value) {
+            Settings::firstOrCreate(['key' => $key, 'value' => $value]);
+        }
     }
 }

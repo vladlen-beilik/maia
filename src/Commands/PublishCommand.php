@@ -39,10 +39,10 @@ class PublishCommand extends Command
             '--force' => true,
         ]);
 
-//        $this->call('vendor:publish', [
-//            '--tag' => 'maia-assets',
-//            '--force' => true,
-//        ]);
+        $this->call('vendor:publish', [
+            '--tag' => 'maia-assets',
+            '--force' => true,
+        ]);
 
         $this->call('vendor:publish', [
             '--tag' => 'maia-views',
@@ -61,21 +61,29 @@ class PublishCommand extends Command
 
         $this->call('vendor:publish', [
             '--tag' => 'maia-lang',
-            '--force' => $this->option('force'),
+            '--force' => true,
         ]);
 
-        $this->seed('MaiaDatabaseSeeder');
-        $this->call('view:clear');
+        $this->call('horizon:install');
         $this->call('migrate');
+        $this->call('view:clear');
+        $this->seed('MaiaDatabaseSeeder');
     }
 
     public function moveStubs()
     {
         $stubPath = __DIR__.'/../../stub';
+        (new Filesystem)->copy($stubPath.'/app/Http/Controllers/MaiaRobotsController.php.stub', app_path('Http/Controllers/MaiaRobotsController.php'));
         (new Filesystem)->copy($stubPath.'/app/User.php.stub', app_path('User.php'));
         (new Filesystem)->copy($stubPath.'/app/Nova/User.php.stub', app_path('Nova/User.php'));
         (new Filesystem)->copy($stubPath.'/app/Providers/NovaServiceProvider.php.stub', app_path('Providers/NovaServiceProvider.php'));
         (new Filesystem)->copy($stubPath.'/config/app.php.stub', config_path('app.php'));
         (new Filesystem)->copy($stubPath.'/config/nova.php.stub', config_path('nova.php'));
+        // Translate Nova
+//        foreach(['en', 'ru'] as $lang) {
+//            (new Filesystem)->copy($stubPath.'/translate/nova/' . $lang . '/validation.php', resource_path('lang/vendor/nova/' . $lang . '/validation.php'));
+//            (new Filesystem)->copy($stubPath.'/translate/nova/' . $lang . '.json', resource_path('lang/vendor/nova/' . $lang . '.json'));
+//        }
+
     }
 }
