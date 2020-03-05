@@ -132,7 +132,7 @@ class ToolServiceProvider extends ServiceProvider
         $this->publishes([__DIR__.'/../resources/views/index' => resource_path('views')], 'maia-views');
         $this->publishes([__DIR__.'/../resources/views/sitemap' => base_path('resources/views/vendor/sitemap')], 'maia-views');
         $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], 'maia-migrations');
-        $this->publishes([__DIR__.'/../database/seeds/MaiaDatabaseSeeder.php' => database_path('seeds')], 'maia-seeds');
+        $this->publishes([__DIR__.'/../database/seeds' => database_path('seeds')], 'maia-seeds');
     }
 
     /**
