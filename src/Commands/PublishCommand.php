@@ -67,11 +67,7 @@ class PublishCommand extends Command
             '--tag' => 'maia-lang',
             '--force' => true,
         ]);
-        if (!\File::exists(config_path('horizon.php'))) {
-            $this->call('horizon:install');
-        } else {
-            $this->call('horizon:assets');
-        }
+        $this->call('horizon:install');
         $this->call('migrate');
         $this->call('view:clear');
         if (!\File::exists(public_path('storage'))) {
@@ -95,8 +91,7 @@ class PublishCommand extends Command
             $stubPath . '/resources/views/vendor/nova/partials/footer.blade.php.stub' => resource_path('views/vendor/nova/partials/footer.blade.php'),
             $stubPath . '/resources/views/vendor/nova/partials/logo.blade.php.stub' => resource_path('views/vendor/nova/partials/logo.blade.php'),
             $stubPath . '/resources/views/vendor/nova/partials/meta.blade.php.stub' => resource_path('views/vendor/nova/partials/meta.blade.php'),
-            $stubPath . '/resources/views/vendor/nova/partials/user.blade.php.stub' => resource_path('views/vendor/nova/partials/user.blade.php'),
-
+            $stubPath . '/resources/views/vendor/nova/partials/user.blade.php.stub' => resource_path('views/vendor/nova/partials/user.blade.php')
         ];
         foreach ($array as $key => $value) {
             if($key === $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub') {
