@@ -67,8 +67,9 @@ class PublishCommand extends Command
             '--tag' => 'maia-lang',
             '--force' => true,
         ]);
-
-        $this->call('horizon:install');
+        if (!\File::exists(config_path('horizon.php'))) {
+            $this->call('horizon:install');
+        }
         $this->call('migrate');
         $this->call('view:clear');
         if (!\File::exists(public_path('storage'))) {
