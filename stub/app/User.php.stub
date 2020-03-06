@@ -61,4 +61,22 @@ class User extends Authenticatable
             'permission_id'
         );
     }
+
+    public function getFlexibleContentAttribute()
+    {
+        return $this->flexible('apps');
+    }
+
+    public function routeNotificationForSlack($notification)
+    {
+        $url = '';
+        if(!is_null($this->apps)) {
+            $collection = collect(json_decode($this->apps));
+            $item = $collection->firstWhere('attributes.name', 'slack_webhook');
+            if(isset($item)) {
+                $url = $item->attributes->url;
+            }
+        }
+        return $url;
+    }
 }
