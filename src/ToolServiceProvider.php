@@ -28,7 +28,6 @@ use SpaceCode\Maia\Middlewares\HorizonAuthorize;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
-use Spatie\Crawler\Crawler;
 
 class ToolServiceProvider extends ServiceProvider
 {

@@ -69,6 +69,8 @@ class PublishCommand extends Command
         ]);
         if (!\File::exists(config_path('horizon.php'))) {
             $this->call('horizon:install');
+        } else {
+            $this->call('horizon:assets');
         }
         $this->call('migrate');
         $this->call('view:clear');
