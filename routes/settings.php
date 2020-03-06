@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('\SpaceCode\Maia\Http\Controllers')->group(function () {
+Route::namespace('\SpaceCode\Maia\Controllers')->group(function () {
     Route::prefix('nova-vendor/maia-settings')->group(function () {
         Route::get('/settings', 'SettingsController@get');
         Route::post('/settings', 'SettingsController@save');

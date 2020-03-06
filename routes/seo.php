@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::namespace('\SpaceCode\Maia\Http\Controllers')->group(function () {
+Route::namespace('\SpaceCode\Maia\Controllers')->group(function () {
     Route::prefix('nova-vendor/maia-seo')->group(function () {
         Route::get('/seo', 'SeoController@get');
         Route::post('/seo', 'SeoController@save');
