@@ -43,9 +43,7 @@ class PublishCommand extends Command
         $this->call('vendor:publish', ['--tag' => 'maia-seeds', '--force' => true]);
         $this->call('vendor:publish', ['--tag' => 'maia-lang', '--force' => true]);
         $this->call('horizon:install');
-        $this->call('down');
-        $this->call('migrate');
-        $this->call('up');
+        $this->call('migrate', ['--force' => true]);
         $this->call('view:clear');
         if (!\File::exists(public_path('storage'))) {
             $this->call('storage:link');
