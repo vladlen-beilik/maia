@@ -98,19 +98,4 @@ class PostCategory extends Model implements PostCategoryContract
         }
         return $postCategory;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PostCategoryContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PostCategoryContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $postCategory = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $postCategory) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $postCategory;
-    }
 }

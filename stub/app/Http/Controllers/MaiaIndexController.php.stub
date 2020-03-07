@@ -24,13 +24,8 @@ class MaiaIndexController extends Controller
     public function __construct()
     {
         // Google Tag Manager
-        if(!is_null(setting('tracking_google_tag_manager_head'))) {
-            $global['tracking-head'] = "    <!-- Google Tag Manager -->\n" . setting('tracking_google_tag_manager_head') . "\n";
-            $global['tracking-body'] = setting('tracking.google_tag_manager_code_body');
-        } else {
-            $global['tracking-head'] = null;
-            $global['tracking-body'] = null;
-        }
+        $global['tracking-head'] = setting('tracking_google_tag_manager_head');
+        $global['tracking-body'] = setting('tracking_google_tag_manager_body');
 
         if(isset($__env) && trim($__env->yieldContent('json_ld'))) {
             $global['json_ld'] = "<!-- Schema -->\n" . str_replace('&#039;', '"', html_entity_decode($__env->yieldContent('json_ld'), ENT_COMPAT, 'UTF-8')) . "\n";

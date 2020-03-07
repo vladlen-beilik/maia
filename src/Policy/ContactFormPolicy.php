@@ -75,6 +75,7 @@ class ContactFormPolicy
     }
 
     /**
+     * @param User $user
      * @return bool
      */
     public function restore(User $user)
@@ -83,6 +84,7 @@ class ContactFormPolicy
     }
 
     /**
+     * @param User $user
      * @return bool
      */
     public function forceDelete(User $user)

@@ -5,13 +5,13 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use SpaceCode\Maia\Fields\PermissionBooleanGroup;
 use SpaceCode\Maia\Fields\RoleBooleanGroup;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
-use Whitecube\NovaFlexibleContent\Flexible;
 
 class User extends Resource
 {
@@ -109,12 +109,20 @@ class User extends Resource
                     })->hideFromIndex()
                 ],
                 trans('maia::resources.applications') => [
-                    Flexible::make(trans('maia::resources.applications'), 'apps')
-                        ->addLayout(trans('maia::resources.application'), 'app', [
-                            Text::make(trans('maia::resources.title'), 'title'),
-                            Text::make(trans('maia::resources.name'), 'name'),
-                            Text::make(trans('maia::resources.site.url'), 'url')
-                        ])
+                    KeyValue::make(trans('maia::resources.socialnetworks'), 'apps->socials')
+                        ->keyLabel(trans('maia::resources.key'))
+                        ->valueLabel(trans('maia::resources.value'))
+                        ->actionText(trans('maia::resources.add'))
+                        ->resolveUsing(function () {
+                            return is_null(jsonProp($this->apps, 'socials')) ? null : json_decode($this->apps)->socials;
+                        }),
+                    KeyValue::make(trans('maia::resources.webhooks'), 'apps->webhooks')
+                        ->keyLabel(trans('maia::resources.key'))
+                        ->valueLabel(trans('maia::resources.value'))
+                        ->actionText(trans('maia::resources.add'))
+                        ->resolveUsing(function () {
+                            return is_null(jsonProp($this->apps, 'webhooks')) ? null : json_decode($this->apps)->webhooks;
+                        })
                 ]
             ]))->withToolbar()
         ];

@@ -24,11 +24,4 @@ interface PortfolioCategory
      * @return static
      */
     public static function findById(int $id, $guardName): self;
-
-    /**
-     * @param string $slug
-     * @param $guardName
-     * @return static
-     */
-    public static function findOrCreate(string $slug, $guardName): self;
 }

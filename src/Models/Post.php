@@ -123,19 +123,4 @@ class Post extends Model implements PostContract
         }
         return $post;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PostContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PostContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $post = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $post) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $post;
-    }
 }

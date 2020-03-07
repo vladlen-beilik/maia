@@ -59,17 +59,4 @@ class ContactForm extends Model implements ContactFormContract
         }
         return $contactForm;
     }
-
-    /**
-     * @param int $id
-     * @return ContactFormContract
-     */
-    public static function findOrCreate(int $id): ContactFormContract
-    {
-        $contactForm = static::where('id', $id)->first();
-        if (! $contactForm) {
-            return static::query()->create();
-        }
-        return $contactForm;
-    }
 }

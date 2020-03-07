@@ -1,0 +1,1 @@
+* forceDelete & delete function in resources to sync relations

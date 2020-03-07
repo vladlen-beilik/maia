@@ -15,10 +15,4 @@ interface ContactForm
      * @return static
      */
     public static function findById(int $id): self;
-
-    /**
-     * @param int $id
-     * @return static
-     */
-    public static function findOrCreate(int $id): self;
 }

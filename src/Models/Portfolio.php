@@ -124,19 +124,4 @@ class Portfolio extends Model implements PortfolioContract
         }
         return $portfolio;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PortfolioContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PortfolioContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $portfolio = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $portfolio) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $portfolio;
-    }
 }

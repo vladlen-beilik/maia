@@ -60,21 +60,22 @@ class User extends Authenticatable
         );
     }
 
-    public function getFlexibleContentAttribute()
+    /**
+     * @param $type
+     * @param null $key
+     * @return mixed
+     */
+    public function getApp($type, $key = null)
     {
-        return $this->flexible('apps');
+        $apps = json_decode($this->apps);
+        if(!is_null($key) && !is_null($apps) && !empty($apps->{$type}) && isset($apps->{$type}->{$key})) {
+            return data_get($apps, "{$type}.{$key}");
+        }
+        return null;
     }
 
     public function routeNotificationForSlack($notification)
     {
-        $url = '';
-        if(!is_null($this->apps)) {
-            $collection = collect(json_decode($this->apps));
-            $item = $collection->firstWhere('attributes.name', 'slack_webhook');
-            if(isset($item)) {
-                $url = $item->attributes->url;
-            }
-        }
-        return $url;
+        return $this->getApp('webhooks', 'slack');
     }
 }

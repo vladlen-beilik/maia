@@ -2,7 +2,6 @@
 
 namespace SpaceCode\Maia;
 
-use Eusonlito\LaravelPacker\Packer;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,7 +39,7 @@ class Maia {
     }
 
     public function image($file) {
-        return Storage::disk(config('maia.filemanager.disk', 'public'))->url($file);
+        return Storage::disk(config('maia.filemanager.disk'))->url($file);
     }
 
     public function routes() {

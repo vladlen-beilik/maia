@@ -106,19 +106,4 @@ class Page extends Model implements PageContract
         }
         return $page;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PageContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PageContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $page = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $page) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $page;
-    }
 }

@@ -89,19 +89,4 @@ class PostTag extends Model implements PostTagContract
         }
         return $postTag;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PostTagContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PostTagContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $postTag = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $postTag) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $postTag;
-    }
 }

@@ -89,19 +89,4 @@ class PortfolioTag extends Model implements PortfolioTagContract
         }
         return $portfolioTag;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PortfolioTagContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PortfolioTagContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $portfolioTag = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $portfolioTag) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $portfolioTag;
-    }
 }

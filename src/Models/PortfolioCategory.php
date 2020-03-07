@@ -98,19 +98,4 @@ class PortfolioCategory extends Model implements PortfolioCategoryContract
         }
         return $portfolioCategory;
     }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PortfolioCategoryContract
-     */
-    public static function findOrCreate(string $slug, $guardName = null): PortfolioCategoryContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $portfolioCategory = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $portfolioCategory) {
-            return static::query()->create(['slug' => $slug, 'guard_name' => $guardName]);
-        }
-        return $portfolioCategory;
-    }
 }

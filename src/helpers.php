@@ -540,7 +540,7 @@ if (!function_exists('body_class')) {
         $request = \Request::url();
         $routeName = str_replace('maia.', '', Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
-        return $routeName . ' ' . $url;
+        return $routeName . ' ' . Str::slug($url, '-');
     }
 }
 
