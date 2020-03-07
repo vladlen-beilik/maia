@@ -36,14 +36,16 @@ class PublishCommand extends Command
             $this->call('nova:install');
         }
         $this->moveStubs();
-        $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true,]);
-        $this->call('vendor:publish', ['--tag' => 'maia-assets', '--force' => true,]);
-        $this->call('vendor:publish', ['--tag' => 'maia-views', '--force' => $this->option('force'),]);
-        $this->call('vendor:publish', ['--tag' => 'maia-migrations', '--force' => true,]);
-        $this->call('vendor:publish', ['--tag' => 'maia-seeds', '--force' => true,]);
-        $this->call('vendor:publish', ['--tag' => 'maia-lang', '--force' => true,]);
+        $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-assets', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-views', '--force' => $this->option('force')]);
+        $this->call('vendor:publish', ['--tag' => 'maia-migrations', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-seeds', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-lang', '--force' => true]);
         $this->call('horizon:install');
+        $this->call('down');
         $this->call('migrate');
+        $this->call('up');
         $this->call('view:clear');
         if (!\File::exists(public_path('storage'))) {
             $this->call('storage:link');
