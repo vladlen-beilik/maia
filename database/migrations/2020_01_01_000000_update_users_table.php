@@ -13,15 +13,14 @@ class UpdateUsersTable extends Migration
      */
     public function up()
     {
-        $tableName = 'users';
-        Schema::table($tableName, function (Blueprint $table, $tableName) {
-            if(!Schema::hasColumn($tableName, 'avatar')) {
+        Schema::table('users', function (Blueprint $table, $tableName) {
+            if(!Schema::hasColumn('users', 'avatar')) {
                 $table->string('avatar')->nullable()->after('name');
             }
-            if(!Schema::hasColumn($tableName, 'fullName')) {
+            if(!Schema::hasColumn('users', 'fullName')) {
                 $table->json('fullName')->nullable()->after('email');
             }
-            if(!Schema::hasColumn($tableName, 'apps')) {
+            if(!Schema::hasColumn('users', 'apps')) {
                 $table->json('apps')->nullable()->after('fullName');
             }
         });
