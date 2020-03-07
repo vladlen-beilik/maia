@@ -2,6 +2,7 @@
 
 namespace SpaceCode\Maia;
 
+use App\User;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 
@@ -9,10 +10,12 @@ class Maia {
 
     protected $version;
     protected $filesystem;
+    protected $admin;
     protected $viewLoadingEvents = [];
 
     public function __construct() {
         $this->filesystem = app(Filesystem::class);
+        $this->admin = User::where('name', 'developer')->firstOrFail();
         $this->findVersion();
     }
 
@@ -48,5 +51,9 @@ class Maia {
 
     public function getVersion() {
         return $this->version;
+    }
+
+    public function admin() {
+        return $this->admin;
     }
 }
