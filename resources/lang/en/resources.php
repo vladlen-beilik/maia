@@ -65,6 +65,7 @@ return [
     'off' => 'Off',
     'name' => 'Name',
     'email' => 'Email',
+    'emailaddress' => 'Email Address',
     'password' => 'Password',
     'display_name' => 'Display Name',
     'created_at' => 'Created at',
@@ -191,5 +192,20 @@ return [
         'body' => 'Google Tag Manager Body',
     ],
     'sender' => 'Sender',
-    'logout' => 'Logout'
+    'logout' => 'Logout',
+    'login' => [
+        'welcome' => 'Welcome Back!',
+        'remember' => 'Remember Me',
+        'forgot' => 'Forgot Your Password?',
+        'login' => 'Login',
+    ],
+    'forgot' => [
+        'forgot' => 'Forgot your password?',
+        'subject' => 'Reset Password Notification',
+        'receiving' => 'You are receiving this email because we received a password reset request for your account.',
+        'reset' => 'Reset Password',
+        'no_action' => 'If you did not request a password reset, no further action is required.',
+        'send' => 'Send Password Reset Link',
+        'confirm' => 'Confirm Password'
+    ]
 ];

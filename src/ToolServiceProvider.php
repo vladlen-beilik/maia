@@ -64,6 +64,19 @@ class ToolServiceProvider extends ServiceProvider
             Commands\UpdateCommand::class
         ]);
 
+        $this->app->alias(
+            \Spacecode\Maia\Controllers\LoginController::class,
+            \Laravel\Nova\Http\Controllers\LoginController::class
+        );
+        $this->app->alias(
+            \Spacecode\Maia\Controllers\ForgotPasswordController::class,
+            \Laravel\Nova\Http\Controllers\ForgotPasswordController::class
+        );
+        $this->app->alias(
+            \Spacecode\Maia\Controllers\ResetPasswordController::class,
+            \Laravel\Nova\Http\Controllers\ResetPasswordController::class
+        );
+
         $this->app->booted(function () {
             $this->routes();
             $schedule = app(Schedule::class);
