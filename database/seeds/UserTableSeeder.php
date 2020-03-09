@@ -19,7 +19,7 @@ class UserTableSeeder extends Seeder
         $developer->assignRole('developer');
         if(is_null($developer->avatar)) {
             $filename = 'avatars/' . Str::random(40) . '.png';
-            Storage::disk(config('maia.filemanager.disk'))->copy(public_path('vendor/maia/maia/images/developerAvatar.png'), $filename);
+            Storage::disk(config('maia.filemanager.disk'))->copy(public_path('vendor/maia/images/developerAvatar.png'), $filename);
             $developer->update(['avatar' => $filename]);
         }
     }
