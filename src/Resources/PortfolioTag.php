@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceCode\Maia;
+namespace SpaceCode\Maia\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;

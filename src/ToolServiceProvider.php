@@ -2,6 +2,7 @@
 namespace SpaceCode\Maia;
 
 use Gate;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;

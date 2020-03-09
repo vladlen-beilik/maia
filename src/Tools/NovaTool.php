@@ -4,16 +4,16 @@ namespace SpaceCode\Maia\Tools;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
-use SpaceCode\Maia\ContactForm;
-use SpaceCode\Maia\Page;
-use SpaceCode\Maia\Permission;
-use SpaceCode\Maia\Portfolio;
-use SpaceCode\Maia\PortfolioCategory;
-use SpaceCode\Maia\PortfolioTag;
-use SpaceCode\Maia\Post;
-use SpaceCode\Maia\PostCategory;
-use SpaceCode\Maia\PostTag;
-use SpaceCode\Maia\Role;
+use SpaceCode\Maia\Resources\ContactForm;
+use SpaceCode\Maia\Resources\Page;
+use SpaceCode\Maia\Resources\Permission;
+use SpaceCode\Maia\Resources\Portfolio;
+use SpaceCode\Maia\Resources\PortfolioCategory;
+use SpaceCode\Maia\Resources\PortfolioTag;
+use SpaceCode\Maia\Resources\Post;
+use SpaceCode\Maia\Resources\PostCategory;
+use SpaceCode\Maia\Resources\PostTag;
+use SpaceCode\Maia\Resources\Role;
 
 class NovaTool extends Tool
 {
@@ -30,6 +30,7 @@ class NovaTool extends Tool
 
     public function boot()
     {
+
         if(!isBlog()) {
             $this->postResource = null;
             $this->postCategoryResource = null;

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use SpaceCode\Maia\Models\Settings;
 use SpaceCode\Maia\Models\Seo;
@@ -554,6 +555,9 @@ if (!function_exists('isNofollow')) {
 if (!function_exists('isBlog')) {
     function isBlog()
     {
+        if(!Schema::hasTable('settings')) {
+            return false;
+        }
         if (!Cache::has('siteBlog')) {
             Cache::forever('siteBlog', boolval(setting('site_blog')));
         }
@@ -564,6 +568,9 @@ if (!function_exists('isBlog')) {
 if (!function_exists('isPortfolio')) {
     function isPortfolio()
     {
+        if(!Schema::hasTable('settings')) {
+            return false;
+        }
         if (!Cache::has('sitePortfolio')) {
             Cache::forever('sitePortfolio', boolval(setting('site_portfolio')));
         }
@@ -574,6 +581,9 @@ if (!function_exists('isPortfolio')) {
 if (!function_exists('isShop')) {
     function isShop()
     {
+        if(!Schema::hasTable('settings')) {
+            return false;
+        }
         if (!Cache::has('siteShop')) {
             Cache::forever('siteShop', boolval(setting('site_shop')));
         }

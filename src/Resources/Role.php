@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceCode\Maia;
+namespace SpaceCode\Maia\Resources;
 
 use Illuminate\Http\Request;
 use SpaceCode\Maia\Fields\PermissionBooleanGroup;
@@ -13,6 +13,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
+use SpaceCode\Maia\PermissionRegistrar;
 
 class Role extends Resource
 {

@@ -3,6 +3,7 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Avatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\KeyValue;
@@ -59,23 +60,26 @@ class User extends Resource
                     ID::make()->sortable(),
 
                     // Avatar
-                    Avatar::make(trans('maia::resources.avatar'))
-                        ->path('avatars'),
+                    Avatar::make(trans('maia::resources.avatar'), 'avatar')
+                        ->disk(config('maia.filemanager.disk'))
+                        ->path('avatars')
+                        ->deletable(false)
+                        ->prunable(),
 
                     // Name
-                    Text::make(trans('maia::resources.name'))
+                    Text::make(trans('maia::resources.name'), 'name')
                         ->sortable()
                         ->rules('required', 'max:255'),
 
                     // Email
-                    Text::make(trans('maia::resources.email'))
+                    Text::make(trans('maia::resources.email'), 'email')
                         ->sortable()
                         ->rules('required', 'email', 'max:254')
                         ->creationRules('unique:users,email')
                         ->updateRules('unique:users,email,{{resourceId}}'),
 
                     // Password
-                    Password::make(trans('maia::resources.password'))
+                    Password::make(trans('maia::resources.password'), 'password')
                         ->onlyOnForms()
                         ->creationRules('required', 'string', 'min:8')
                         ->updateRules('nullable', 'string', 'min:8'),
