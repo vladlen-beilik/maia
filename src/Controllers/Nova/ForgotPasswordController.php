@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceCode\Maia\Controllers;
+namespace SpaceCode\Maia\Controllers\Nova;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;

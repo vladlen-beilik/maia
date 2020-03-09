@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceCode\Maia\Controllers;
+namespace SpaceCode\Maia\Controllers\Nova;
 
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Validation\ValidatesRequests;

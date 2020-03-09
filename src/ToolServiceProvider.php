@@ -63,26 +63,39 @@ class ToolServiceProvider extends ServiceProvider
             Commands\PublishCommand::class,
             Commands\UpdateCommand::class
         ]);
+        $this->aliases();
+        $this->app->booted(function () {
+            $this->routes();
+            $this->schedule();
+        });
+        $this->registerPolicies($user);
+        $this->assets($event);
+        $this->registerMacroHelpers();
+        $this->registerModelBindings();
+        $this->registerBladeExtensions();
+        $permissionLoader->registerPermissions();
 
+        $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
+            return $permissionLoader;
+        });
+    }
+
+    protected function aliases() {
         $this->app->alias(
-            \Spacecode\Maia\Controllers\LoginController::class,
+            \Spacecode\Maia\Controllers\Nova\LoginController::class,
             \Laravel\Nova\Http\Controllers\LoginController::class
         );
         $this->app->alias(
-            \Spacecode\Maia\Controllers\ForgotPasswordController::class,
+            \Spacecode\Maia\Controllers\Nova\ForgotPasswordController::class,
             \Laravel\Nova\Http\Controllers\ForgotPasswordController::class
         );
         $this->app->alias(
-            \Spacecode\Maia\Controllers\ResetPasswordController::class,
+            \Spacecode\Maia\Controllers\Nova\ResetPasswordController::class,
             \Laravel\Nova\Http\Controllers\ResetPasswordController::class
         );
+    }
 
-        $this->app->booted(function () {
-            $this->routes();
-            $schedule = app(Schedule::class);
-            $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
-        });
-        $this->registerPolicies($user);
+    protected function assets($event) {
         Nova::serving(function ($event) {
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
             Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
@@ -92,14 +105,11 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
             Nova::style('toggle', __DIR__.'/../dist/css/toggle.css');
         });
-        $this->registerMacroHelpers();
-        $this->registerModelBindings();
-        $this->registerBladeExtensions();
-        $permissionLoader->registerPermissions();
+    }
 
-        $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
-            return $permissionLoader;
-        });
+    protected function schedule() {
+        $schedule = app(Schedule::class);
+        $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
     }
 
     protected function loadHelper() {
