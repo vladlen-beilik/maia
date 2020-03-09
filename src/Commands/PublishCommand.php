@@ -55,6 +55,7 @@ class PublishCommand extends Command
     {
         $stubPath = __DIR__.'/../../stub';
         $array = [
+            $stubPath . '/.htaccess.stub' => base_path('.htaccess'),
             $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub' => app_path('Http/Controllers/MaiaIndexController.php'),
             $stubPath . '/app/Http/Controllers/MaiaRobotsController.php.stub' => app_path('Http/Controllers/MaiaRobotsController.php'),
             $stubPath . '/app/Http/Controllers/MaiaSitemapController.php.stub' => app_path('Http/Controllers/MaiaSitemapController.php'),
@@ -69,7 +70,7 @@ class PublishCommand extends Command
             $stubPath . '/resources/views/vendor/nova/partials/user.blade.php.stub' => resource_path('views/vendor/nova/partials/user.blade.php')
         ];
         foreach ($array as $key => $value) {
-            if($key === $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub') {
+            if($key === $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub' || $key === $stubPath . '/.htaccess.stub') {
                 if(!\File::exists($value)) {
                     (new Filesystem)->copy($key, $value);
                 }

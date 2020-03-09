@@ -73,9 +73,4 @@ class User extends Authenticatable
         }
         return null;
     }
-
-    public function routeNotificationForSlack($notification)
-    {
-        return $this->getApp('webhooks', 'slack');
-    }
 }

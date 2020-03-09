@@ -25,9 +25,11 @@ use SpaceCode\Maia\Middlewares\FilemanagerAuthorize;
 use SpaceCode\Maia\Middlewares\SettingsAuthorize;
 use SpaceCode\Maia\Middlewares\SeoAuthorize;
 use SpaceCode\Maia\Middlewares\HorizonAuthorize;
+use SpaceCode\Maia\Jobs;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
+use Illuminate\Console\Scheduling\Schedule;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -58,15 +60,14 @@ class ToolServiceProvider extends ServiceProvider
         }
 
         $this->commands([
-            Commands\CacheReset::class,
-            Commands\CreateRole::class,
-            Commands\CreatePermission::class,
-            Commands\ShowPermission::class,
             Commands\PublishCommand::class,
+            Commands\UpdateCommand::class
         ]);
 
         $this->app->booted(function () {
             $this->routes();
+            $schedule = app(Schedule::class);
+            $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
         });
         $this->registerPolicies($user);
         Nova::serving(function ($event) {
