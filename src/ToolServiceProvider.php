@@ -148,6 +148,7 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->publishes([__DIR__.'/../config/maia.php' => config_path('maia.php')], 'maia-config');
         $this->publishes([__DIR__.'/../dist/index' => public_path('vendor/maia')], 'maia-assets');
+        $this->publishes([__DIR__.'/../resources/images' => public_path('vendor/maia/images')], 'maia-assets');
         $this->publishes([__DIR__.'/../resources/styles/sitemap' => public_path('vendor/sitemap')], 'maia-assets');
         $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/maia')], 'maia-lang');
         $this->publishes([__DIR__.'/../resources/views/index' => resource_path('views')], 'maia-views');
