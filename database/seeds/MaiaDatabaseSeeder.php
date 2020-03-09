@@ -16,6 +16,7 @@ class MaiaDatabaseSeeder extends Seeder
     public function run()
     {
          $this->call('PermissionRoleTableSeeder');
+         $this->call('UserTableSeeder');
          $this->call('SettingsTableSeeder');
          $this->call('SeoTableSeeder');
     }

@@ -80,9 +80,9 @@ class SettingsController extends Controller
                     $temp_mime = $temp_array[sizeof($temp_array) - 1];
                     $temp_path = str_replace('.' . $temp_mime,'', $tempResource->{$field->attribute});
                     foreach (['32', '180'] as $size) {
-                        Storage::disk(config('maia.filemanager.disk', 'public'))->delete($existing_path . '_' . $size . '.' . $existing_mime);
-                        Storage::disk(config('maia.filemanager.disk', 'public'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
-                        $image = Image::make(Storage::disk(config('maia.filemanager.disk', 'public'))->get($temp_path . '_' . $size . '.' . $temp_mime));
+                        Storage::disk(config('maia.filemanager.disk'))->delete($existing_path . '_' . $size . '.' . $existing_mime);
+                        Storage::disk(config('maia.filemanager.disk'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
+                        $image = Image::make(Storage::disk(config('maia.filemanager.disk'))->get($temp_path . '_' . $size . '.' . $temp_mime));
                         $image->resize($size, $size);
                         $image->save(public_path('storage/' . $temp_path . '_' . $size . '.' . $temp_mime));
                     }
@@ -94,8 +94,8 @@ class SettingsController extends Controller
                     $temp_mime = $temp_array[sizeof($temp_array) - 1];
                     $temp_path = str_replace('.' . $temp_mime,'', $tempResource->{$field->attribute});
                     foreach (['32', '180'] as $size) {
-                        Storage::disk(config('maia.filemanager.disk', 'public'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
-                        $image = Image::make(Storage::disk(config('maia.filemanager.disk', 'public'))->get($temp_path . '_' . $size . '.' . $temp_mime));
+                        Storage::disk(config('maia.filemanager.disk'))->copy($tempResource->{$field->attribute}, $temp_path . '_' . $size . '.' . $temp_mime);
+                        $image = Image::make(Storage::disk(config('maia.filemanager.disk'))->get($temp_path . '_' . $size . '.' . $temp_mime));
                         $image->resize($size, $size);
                         $image->save(public_path('storage/' . $temp_path . '_' . $size . '.' . $temp_mime));
                     }

@@ -34,6 +34,8 @@ class PublishCommand extends Command
     {
         if(!\File::exists(app_path('Nova'))) {
             $this->call('nova:install');
+        } else {
+            $this->call('nova:publish');
         }
         $this->moveStubs();
         $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
@@ -49,6 +51,7 @@ class PublishCommand extends Command
             $this->call('storage:link');
         }
         $this->seed('MaiaDatabaseSeeder');
+        
     }
 
     public function moveStubs()

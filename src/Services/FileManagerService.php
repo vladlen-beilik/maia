@@ -49,7 +49,7 @@ class FileManagerService
      */
     public function __construct()
     {
-        $this->disk = config('maia.filemanager.disk', 'public');
+        $this->disk = config('maia.filemanager.disk');
         $this->exceptFiles = collect([]);
         $this->exceptFolders = collect([]);
         $this->exceptExtensions = collect([]);
