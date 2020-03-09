@@ -36,10 +36,10 @@ class ForgotPasswordController extends Controller
 
         ResetPassword::toMailUsing(function ($notifiable, $token) {
             return (new MailMessage)
-                ->subject(trans('maia:resources.forgot.subject'))
-                ->line(trans('maia:resources.forgot.receiving'))
-                ->action(trans('maia:resources.forgot.reset'), url(config('nova.url').route('nova.password.reset', $token, false)))
-                ->line(trans('maia:resources.forgot.no_action'));
+                ->subject(trans('maia::resources.forgot.subject'))
+                ->line(trans('maia::resources.forgot.receiving'))
+                ->action(trans('maia::resources.forgot.reset'), url(config('nova.url').route('nova.password.reset', $token, false)))
+                ->line(trans('maia::resources.forgot.no_action'));
         });
     }
 

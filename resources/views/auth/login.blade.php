@@ -26,7 +26,7 @@
         @endif
 
         <div class="mb-6 {{ $errors->has('email') ? ' has-error' : '' }}">
-            <label class="block font-bold mb-2" for="email">{{ trans('maia::resources.login.email') }}</label>
+            <label class="block font-bold mb-2" for="email">{{ trans('maia::resources.email') }}</label>
             <input class="form-control form-input form-input-bordered w-full" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
         </div>
 

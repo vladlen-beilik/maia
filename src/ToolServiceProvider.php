@@ -82,15 +82,15 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function aliases() {
         $this->app->alias(
-            \Spacecode\Maia\Controllers\Nova\LoginController::class,
+            \SpaceCode\Maia\Controllers\Nova\LoginController::class,
             \Laravel\Nova\Http\Controllers\LoginController::class
         );
         $this->app->alias(
-            \Spacecode\Maia\Controllers\Nova\ForgotPasswordController::class,
+            \SpaceCode\Maia\Controllers\Nova\ForgotPasswordController::class,
             \Laravel\Nova\Http\Controllers\ForgotPasswordController::class
         );
         $this->app->alias(
-            \Spacecode\Maia\Controllers\Nova\ResetPasswordController::class,
+            \SpaceCode\Maia\Controllers\Nova\ResetPasswordController::class,
             \Laravel\Nova\Http\Controllers\ResetPasswordController::class
         );
     }

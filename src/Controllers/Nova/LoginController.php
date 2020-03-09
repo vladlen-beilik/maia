@@ -41,7 +41,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        return view('maia:auth.login');
+        return view('maia::auth.login');
     }
 
     /**
