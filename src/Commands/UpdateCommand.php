@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Commands;
 
 use Illuminate\Console\Command;
+use SpaceCode\Maia\Maia;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -25,9 +26,10 @@ class UpdateCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param Maia $maia
      * @return void
      */
-    public function handle()
+    public function handle(Maia $maia)
     {
         $update = false;
 
@@ -38,7 +40,7 @@ class UpdateCommand extends Command
             $composer_version = '';
             foreach(array_filter(explode("\n", $latest->getOutput()), 'strlen') as $key => $value) {
                 if(str_contains($value, 'latest')) {
-                    $current_version = Maia::getVersion();
+                    $current_version = $maia->getVersion();
                     $composer_version = trim(explode(':', $value)[1]);
                 }
             }
