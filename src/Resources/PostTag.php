@@ -5,6 +5,7 @@ namespace SpaceCode\Maia\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
@@ -85,39 +86,46 @@ class PostTag extends Resource
                     // Guard Name
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
-                        ->rules(['required', Rule::in($guardOptions)]),
+                        ->rules(['required', Rule::in($guardOptions)])
+                        ->sortable(),
 
                     // Template
                     Select::make(trans('maia::resources.template'), 'template')->resolveUsing(function ($value) {
                         return is_null($this->template) ? 'default' : $value;
                     })->options(getTemplate('postTags'))
-                        ->rules('required')
+                        ->rules(['required'])
                         ->displayUsingLabels()
                 ],
                 trans('maia::resources.content') => [
                     // Title
                     SluggableText::make(trans('maia::resources.title'), 'title')
                         ->slug('Slug')
-                        ->rules('required'),
+                        ->rules(['required'])
+                        ->sortable(),
 
                     // Slug
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->rules('required')
+                        ->rules(['required'])
                         ->slugUnique()
                         ->slugModel(static::$model)
-                        ->displayUsing(function () {
-                            return url(seo('seo_post_tags_prefix') . '/' . $this->slug);
-                        })->asHtml(),
+                        ->hideFromIndex(),
 
                     // Excerpt
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
-                        ->rules('max:255')
+                        ->rules(['max:255'])
                         ->hideFromIndex(),
 
                     // Body
                     Code::make(trans('maia::resources.body'), 'body')
                         ->language('php')
-                        ->hideFromIndex()
+                        ->hideFromIndex(),
+
+                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                        ->exceptOnForms()
+                        ->sortable(),
+                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->exceptOnForms()
+                        ->sortable()
                 ],
                 trans('maia::resources.meta_fields') => [
                     // Document State
@@ -130,7 +138,7 @@ class PostTag extends Resource
 
                     // Meta Title
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')
-                        ->rules('max:55')
+                        ->rules(['max:55'])
                         ->hideFromIndex(),
 
                     // Meta Description

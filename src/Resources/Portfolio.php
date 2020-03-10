@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
@@ -94,7 +95,8 @@ class Portfolio extends Resource
                     // Guard Name
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
-                        ->rules(['required', Rule::in($guardOptions)]),
+                        ->rules(['required', Rule::in($guardOptions)])
+                        ->sortable(),
 
                     // Author
                     $author,
@@ -103,7 +105,7 @@ class Portfolio extends Resource
                     Select::make(trans('maia::resources.template'), 'template')->resolveUsing(function ($value) {
                         return is_null($this->template) ? 'default' : $value;
                     })->options(getTemplate('portfolio'))
-                        ->rules('required')
+                        ->rules(['required'])
                         ->displayUsingLabels(),
 
                     // Status
@@ -111,7 +113,7 @@ class Portfolio extends Resource
                         return is_null($this->status) ? 'pending' : $value;
                     })->options(collect(\SpaceCode\Maia\Models\Portfolio::$statuses)->mapWithKeys(function ($key) {
                         return [$key => __(ucfirst($key))];
-                    }))->rules('required')
+                    }))->rules(['required'])
                         ->sortable()
                         ->displayUsingLabels(),
 
@@ -119,44 +121,52 @@ class Portfolio extends Resource
                     Text::make('View', function () {
                         $view = is_null($this->view) ? 0 : intval($this->view);
                         $unique = is_null($this->view_unique) ? 0 : intval($this->view_unique);
-                        return $view === $unique ? $view . ' ' . 'visitors' : $view . ' ' . 'visitors' . ' (' . $unique . ' ' . 'unique visitors' . ')';
+                        return $view === $unique ? trans('maia::resources.visitors.all', ['view' => $view]) : trans('maia::resources.visitors.unique', ['view' => $view, 'unique' => $unique]);
                     })->hideWhenCreating()->hideFromIndex()
                 ],
                 trans('maia::resources.content') => [
                     // Image
                     Image::make(trans('maia::resources.image'), 'image')
+                        ->disk(config('maia.filemanager.disk'))
                         ->path('portfolio/images')
+                        ->deletable(false)
                         ->prunable(),
 
                     // Title
                     SluggableText::make(trans('maia::resources.title'), 'title')
                         ->slug('Slug')
-                        ->rules('required'),
+                        ->rules(['required'])
+                        ->sortable(),
 
                     // Slug
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->rules('required')
+                        ->rules(['required'])
                         ->slugUnique()
                         ->slugModel(static::$model)
-                        ->displayUsing(function () {
-                            return url(seo('seo_portfolio_prefix') . '/' . $this->slug);
-                        })->asHtml(),
+                        ->hideFromIndex(),
 
                     // Excerpt
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
-                        ->rules('max:255')
+                        ->rules(['max:255'])
                         ->hideFromIndex(),
 
                     // Body
                     Code::make(trans('maia::resources.body'), 'body')
                         ->language('php')
-                        ->hideFromIndex()
+                        ->hideFromIndex(),
+
+                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                        ->exceptOnForms()
+                        ->sortable(),
+                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->exceptOnForms()
+                        ->sortable()
                 ],
                 trans('maia::resources.categories') => [
-                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\PortfolioCategory::class)
+                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PortfolioCategory::class)
                 ],
                 trans('maia::resources.tags') => [
-                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\PortfolioTag::class)
+                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PortfolioTag::class)
                 ],
                 trans('maia::resources.meta_fields') => [
                     // Document State
@@ -169,7 +179,7 @@ class Portfolio extends Resource
 
                     // Meta Title
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')
-                        ->rules('max:55')
+                        ->rules(['max:55'])
                         ->hideFromIndex(),
 
                     // Meta Description

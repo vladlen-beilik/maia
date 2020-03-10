@@ -88,15 +88,24 @@ class Role extends Resource
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
         return [
             ID::make()->sortable(),
+
             Text::make(trans('maia::resources.name'), 'name')
                 ->rules(['required', 'string', 'max:255'])
-                ->creationRules('unique:roles')
-                ->updateRules('unique:roles,name,{{resourceId}}'),
+                ->creationRules('unique:roles,name')
+                ->updateRules('unique:roles,name,{{resourceId}}')
+                ->sortable(),
+
             Select::make(trans('maia::resources.guard_name'), 'guard_name')
                 ->options($guardOptions->toArray())
-                ->rules(['required', Rule::in($guardOptions)]),
-            DateTime::make(trans('maia::resources.created_at'), 'created_at')->exceptOnForms(),
-            DateTime::make(trans('maia::resources.updated_at'), 'updated_at')->exceptOnForms(),
+                ->rules(['required', Rule::in($guardOptions)])
+                ->sortable(),
+
+            DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                ->exceptOnForms()
+                ->sortable(),
+            DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                ->exceptOnForms()
+                ->sortable(),
 
             PermissionBooleanGroup::make(trans('maia::resources.permissions')),
 

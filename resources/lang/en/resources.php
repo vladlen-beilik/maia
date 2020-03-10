@@ -67,6 +67,7 @@ return [
     'email' => 'Email',
     'emailaddress' => 'Email Address',
     'password' => 'Password',
+    'password_confirmation' => 'Password Confirmation',
     'display_name' => 'Display Name',
     'created_at' => 'Created at',
     'updated_at' => 'Updated at',
@@ -207,5 +208,9 @@ return [
         'no_action' => 'If you did not request a password reset, no further action is required.',
         'send' => 'Send Password Reset Link',
         'confirm' => 'Confirm Password'
+    ],
+    'visitors' => [
+        'all' => '`:view` visitors',
+        'unique' => '`:view` visitors (`:unique` unique visitors)',
     ]
 ];

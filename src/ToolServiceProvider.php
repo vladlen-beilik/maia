@@ -2,7 +2,6 @@
 namespace SpaceCode\Maia;
 
 use Gate;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
@@ -42,7 +41,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function boot(PermissionRegistrar $permissionLoader, Filesystem $filesystem, User $user, ServingNova $event)
     {
-
         $this->loadViewsFrom(__DIR__.'/../resources/views/sitemap', 'maia-sitemap');
         $this->loadViewsFrom(__DIR__.'/../resources/views/filemanager', 'maia-filemanager');
         $this->loadViewsFrom(__DIR__ . '/../resources/views/settings', 'maia-settings');
@@ -50,16 +48,13 @@ class ToolServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views/horizon', 'maia-horizon');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'maia');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'maia');
-
         $this->loadHelper();
         if ($this->app->runningInConsole()) {
             $this->registerPublishing();
         }
-
         if (! $this->app->configurationIsCached()) {
             $this->mergeConfigFrom(__DIR__.'/../config/maia.php', 'maia');
         }
-
         $this->commands([
             Commands\PublishCommand::class,
             Commands\UpdateCommand::class
@@ -75,7 +70,6 @@ class ToolServiceProvider extends ServiceProvider
         $this->registerModelBindings();
         $this->registerBladeExtensions();
         $permissionLoader->registerPermissions();
-
         $this->app->singleton(PermissionRegistrar::class, function ($app) use ($permissionLoader) {
             return $permissionLoader;
         });
@@ -182,14 +176,7 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->app->bind('sitemap', function ($app) {
             $config = config('maia.sitemap');
-            return new Sitemap(
-                $config,
-                $app['Illuminate\Cache\Repository'],
-                $app['config'],
-                $app['files'],
-                $app['Illuminate\Contracts\Routing\ResponseFactory'],
-                $app['view']
-            );
+            return new Sitemap($config, $app['Illuminate\Cache\Repository'], $app['config'], $app['files'], $app['Illuminate\Contracts\Routing\ResponseFactory'], $app['view']);
         });
         $loader = AliasLoader::getInstance();
         $loader->alias('sitemap', Sitemap::class);

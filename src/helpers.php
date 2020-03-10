@@ -610,3 +610,15 @@ if (!function_exists('siteFavicon')) {
         return Cache::get('siteFavicon');
     }
 }
+
+if (!function_exists('isDeveloper')) {
+    function isDeveloper($user)
+    {
+        foreach ($user->roles as $role) {
+            if($role->name === 'developer') {
+                return true;
+            }
+        }
+        return false;
+    }
+}

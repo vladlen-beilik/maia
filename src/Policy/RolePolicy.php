@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SpaceCode\Maia\Policy;
 
 use App\User;
+use SpaceCode\Maia\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class RolePolicy
@@ -13,11 +14,11 @@ class RolePolicy
 
     public function checkAssignment($user, $perm)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
         if ($user->roles->count() > 0) {
             foreach ($user->roles as $role) {
-                if($role->name === 'developer') {
-                    return true;
-                }
                 if ($role->permissions->contains('name', $perm)) {
                     return true;
                 }
@@ -60,19 +61,33 @@ class RolePolicy
 
     /**
      * @param User $user
+     * @param Role $role
      * @return bool
      */
-    public function update(User $user)
+    public function update(User $user, Role $role)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
+        if ($role->name === 'developer') {
+            return false;
+        }
         return $this->checkAssignment($user, 'update roles');
     }
 
     /**
      * @param User $user
+     * @param Role $role
      * @return bool
      */
-    public function delete(User $user)
+    public function delete(User $user, Role $role)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
+        if ($role->name === 'developer') {
+            return false;
+        }
         return $this->checkAssignment($user, 'delete roles');
     }
 }

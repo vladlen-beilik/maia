@@ -13,11 +13,11 @@ class UserPolicy
 
     public function checkAssignment($user, $perm)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
         if ($user->roles->count() > 0) {
             foreach ($user->roles as $role) {
-                if($role->name === 'developer') {
-                    return true;
-                }
                 if ($role->permissions->contains('name', $perm)) {
                     return true;
                 }
@@ -64,6 +64,12 @@ class UserPolicy
      */
     public function update(User $user)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
+        if ($user->name === 'developer') {
+            return false;
+        }
         return $this->checkAssignment($user, 'update users');
     }
 
@@ -73,6 +79,12 @@ class UserPolicy
      */
     public function delete(User $user)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
+        if ($user->name === 'developer') {
+            return false;
+        }
         return $this->checkAssignment($user, 'delete users');
     }
 }

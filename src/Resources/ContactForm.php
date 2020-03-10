@@ -69,7 +69,7 @@ class ContactForm extends Resource
             ID::make()->asBigInt()->sortable(),
 
             // Sender
-            Text::make(trans('maia::resources.sender'), 'sender')->readonly(),
+            Text::make(trans('maia::resources.sender'), 'sender')->sortable()->readonly(),
 
             // Title
             Text::make(trans('maia::resources.title'), 'title')->readonly(),

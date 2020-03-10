@@ -3,11 +3,12 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Fields\Avatar;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\PasswordConfirmation;
 use Laravel\Nova\Fields\Text;
 use SpaceCode\Maia\Fields\PermissionBooleanGroup;
 use SpaceCode\Maia\Fields\RoleBooleanGroup;
@@ -56,33 +57,41 @@ class User extends Resource
         return [
             (new Tabs($this->singularLabel(), [
                 trans('maia::resources.general') => [
-                    // ID
                     ID::make()->sortable(),
-
-                    // Avatar
                     Avatar::make(trans('maia::resources.avatar'), 'avatar')
                         ->disk(config('maia.filemanager.disk'))
                         ->path('avatars')
                         ->deletable(false)
                         ->prunable(),
-
-                    // Name
                     Text::make(trans('maia::resources.name'), 'name')
                         ->sortable()
-                        ->rules('required', 'max:255'),
-
-                    // Email
+                        ->rules('required', 'max:255', function ($attribute, $value, $fail) {
+                            if (strtolower($value) !== $value) {
+                                return $fail(trans('maia::validation.name.lowercase', ['name' => $attribute]));
+                            }
+                        })
+                        ->creationRules('unique:users,name')
+                        ->updateRules('unique:users,name,{{resourceId}}'),
                     Text::make(trans('maia::resources.email'), 'email')
                         ->sortable()
-                        ->rules('required', 'email', 'max:254')
+                        ->rules('required', 'max:255', 'email', function ($attribute, $value, $fail) {
+                            if (strtolower($value) !== $value) {
+                                return $fail(trans('maia::validation.email.lowercase', ['email' => $attribute]));
+                            }
+                        })
                         ->creationRules('unique:users,email')
                         ->updateRules('unique:users,email,{{resourceId}}'),
-
-                    // Password
                     Password::make(trans('maia::resources.password'), 'password')
                         ->onlyOnForms()
-                        ->creationRules('required', 'string', 'min:8')
-                        ->updateRules('nullable', 'string', 'min:8'),
+                        ->creationRules('required', 'string', 'min:8', 'max:55')
+                        ->updateRules('nullable', 'string', 'min:8', 'max:55'),
+                    PasswordConfirmation::make(trans('maia::resources.password_confirmation')),
+                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                        ->exceptOnForms()
+                        ->sortable(),
+                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->exceptOnForms()
+                        ->sortable()
                 ],
                 trans('maia::resources.roles') => [
                     RoleBooleanGroup::make(trans('maia::resources.roles'))
@@ -91,21 +100,16 @@ class User extends Resource
                     PermissionBooleanGroup::make(trans('maia::resources.permissions'))
                 ],
                 trans('maia::resources.full_name') => [
-                    // First
                     Text::make(trans('maia::resources.first_name'), 'fullName->firstName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
                     })->hideFromIndex(),
-
-                    // Last
                     Text::make(trans('maia::resources.last_name'), 'fullName->lastName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->hideFromIndex(),
-
-                    // Middle
                     Text::make(trans('maia::resources.middle_name'), 'fullName->middleName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
                     })->displayUsing(function () {
@@ -135,7 +139,7 @@ class User extends Resource
     /**
      * Get the cards available for the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function cards(Request $request)
@@ -146,7 +150,7 @@ class User extends Resource
     /**
      * Get the filters available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function filters(Request $request)
@@ -157,7 +161,7 @@ class User extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function lenses(Request $request)
@@ -168,7 +172,7 @@ class User extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function actions(Request $request)

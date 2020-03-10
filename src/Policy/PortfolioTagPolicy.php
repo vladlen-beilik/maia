@@ -13,11 +13,11 @@ class PortfolioTagPolicy
 
     public function checkAssignment($user, $perm)
     {
+        if(isDeveloper($user)) {
+            return true;
+        }
         if ($user->roles->count() > 0) {
             foreach ($user->roles as $role) {
-                if($role->name === 'developer') {
-                    return true;
-                }
                 if ($role->permissions->contains('name', $perm)) {
                     return true;
                 }

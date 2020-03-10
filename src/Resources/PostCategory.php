@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
+use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
@@ -89,21 +90,24 @@ class PostCategory extends Resource
                     // Guard Name
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
-                        ->rules(['required', Rule::in($guardOptions)]),
+                        ->rules(['required', Rule::in($guardOptions)])
+                        ->sortable(),
 
                     // Template
                     Select::make(trans('maia::resources.template'), 'template')->resolveUsing(function ($value) {
                         return is_null($this->template) ? 'default' : $value;
                     })->options(getTemplate('postCategories'))
-                        ->rules('required')
+                        ->rules(['required'])
                         ->displayUsingLabels(),
 
                     // Order
                     Number::make(trans('maia::resources.order'), 'order')->resolveUsing(function ($value) {
-                        return is_null($this->order) ? 1 : $value;
-                    })->min(1)
+                            return is_null($this->order) ? 1 : $value;
+                        })
+                        ->min(1)
                         ->max(1000)
                         ->step(1)
+                        ->sortable(),
                 ],
                 trans('maia::resources.parent') => [
                     BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)->nullable()->searchable()
@@ -111,32 +115,40 @@ class PostCategory extends Resource
                 trans('maia::resources.content') => [
                     // Image
                     Image::make(trans('maia::resources.image'), 'image')
+                        ->disk(config('maia.filemanager.disk'))
                         ->path('postCategories/images')
+                        ->deletable(false)
                         ->prunable(),
 
                     // Title
                     SluggableText::make(trans('maia::resources.title'), 'title')
                         ->slug('Slug')
-                        ->rules('required'),
+                        ->rules(['required'])
+                        ->sortable(),
 
                     // Slug
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->rules('required')
+                        ->rules(['required'])
                         ->slugUnique()
                         ->slugModel(static::$model)
-                        ->displayUsing(function () {
-                            return url(seo('seo_post_categories_prefix') . '/' . $this->slug);
-                        })->asHtml(),
+                        ->hideFromIndex(),
 
                     // Excerpt
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
-                        ->rules('max:255')
+                        ->rules(['max:255'])
                         ->hideFromIndex(),
 
                     // Body
                     Code::make(trans('maia::resources.body'), 'body')
                         ->language('php')
-                        ->hideFromIndex()
+                        ->hideFromIndex(),
+
+                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                        ->exceptOnForms()
+                        ->sortable(),
+                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->exceptOnForms()
+                        ->sortable()
                 ],
                 trans('maia::resources.meta_fields') => [
                     // Document State
@@ -149,7 +161,7 @@ class PostCategory extends Resource
 
                     // Meta Title
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')
-                        ->rules('max:55')
+                        ->rules(['max:55'])
                         ->hideFromIndex(),
 
                     // Meta Description

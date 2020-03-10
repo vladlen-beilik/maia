@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Resources;
 
 use Illuminate\Http\Request;
+use SpaceCode\Maia\Action\AttachToRole;
 use SpaceCode\Maia\Fields\RoleBooleanGroup;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
@@ -37,10 +38,12 @@ class Permission extends Resource
     public static $search = [
         'name',
     ];
+
     public static function getModel()
     {
         return app(PermissionRegistrar::class)->getPermissionClass();
     }
+
     /**
      * Get the logical group associated with the resource.
      *
@@ -50,6 +53,7 @@ class Permission extends Resource
     {
         return trans('maia::navigation.sidebar-assignment');
     }
+
     /**
      * Determine if this resource is available for navigation.
      *
@@ -60,14 +64,17 @@ class Permission extends Resource
     {
         return Gate::allows('viewAny', app(PermissionRegistrar::class)->getPermissionClass());
     }
+
     public static function label()
     {
         return trans('maia::resources.permissions');
     }
+
     public static function singularLabel()
     {
         return trans('maia::resources.permission');
     }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -82,27 +89,33 @@ class Permission extends Resource
         $userResource = Nova::resourceForModel(getModelForGuard($this->guard_name));
         return [
             ID::make()->sortable(),
+
             Text::make(trans('maia::resources.name'), 'name')
                 ->rules(['required', 'string', 'max:255'])
-                ->creationRules('unique:permissions')
-                ->updateRules('unique:permissions,name,{{resourceId}}'),
+                ->creationRules('unique:permissions,name')
+                ->updateRules('unique:permissions,name,{{resourceId}}')
+                ->sortable(),
 
-            Text::make(trans('maia::resources.display_name'), function () {
-                return trans('maia::resources.display_names.'.$this->name);
-            })->canSee(function () {
-                return is_array(trans('maia::resources.display_names'));
-            }),
             Select::make(trans('maia::resources.guard_name'), 'guard_name')
                 ->options($guardOptions->toArray())
-                ->rules(['required', Rule::in($guardOptions)]),
-            DateTime::make(trans('maia::resources.created_at'), 'created_at')->exceptOnForms(),
-            DateTime::make(trans('maia::resources.updated_at'), 'updated_at')->exceptOnForms(),
+                ->rules(['required', Rule::in($guardOptions)])
+                ->sortable(),
+
+            DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                ->exceptOnForms()
+                ->sortable(),
+            DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                ->exceptOnForms()
+                ->sortable(),
+
             RoleBooleanGroup::make(trans('maia::resources.roles')),
+
             MorphToMany::make(trans('maia::resources.' . strtolower($userResource::label())), 'users', $userResource)
                 ->searchable()
                 ->singularLabel($userResource::singularLabel()),
         ];
     }
+
     /**
      * Get the cards available for the request.
      *
@@ -113,6 +126,7 @@ class Permission extends Resource
     {
         return [];
     }
+
     /**
      * Get the filters available for the resource.
      *
@@ -123,6 +137,7 @@ class Permission extends Resource
     {
         return [];
     }
+
     /**
      * Get the lenses available for the resource.
      *
@@ -133,6 +148,7 @@ class Permission extends Resource
     {
         return [];
     }
+
     /**
      * Get the actions available for the resource.
      *
@@ -142,7 +158,7 @@ class Permission extends Resource
     public function actions(Request $request)
     {
         return [
-            new Action\AttachToRole,
+            new AttachToRole(),
         ];
     }
 }
