@@ -25,6 +25,8 @@
                 let frame = this.$refs.iframeContent;
                 frame.contentDocument.documentElement.childNodes[2].style.background = 'transparent';
                 frame.contentDocument.documentElement.childNodes[2].style.padding = '3.125rem';
+                frame.contentDocument.documentElement.childNodes[2].style.opacity = '1';
+                frame.contentDocument.documentElement.childNodes[2].style.visibility = 'visible';
             }
         },
     }
@@ -36,6 +38,8 @@
 
 <style scoped lang="scss">
     iframe {
+        opacity: 0;
+        visibility: visible;
         margin-top: -50px;
         height: 100vh;
     }

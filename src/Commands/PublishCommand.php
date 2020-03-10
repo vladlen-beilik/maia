@@ -32,11 +32,7 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        if(!\File::exists(app_path('Nova'))) {
-            $this->call('nova:install');
-        } else {
-            $this->call('nova:publish');
-        }
+        $this->novaBuild();
         $this->moveStubs();
         $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
         $this->call('vendor:publish', ['--tag' => 'maia-assets', '--force' => true]);
@@ -47,11 +43,8 @@ class PublishCommand extends Command
         $this->call('horizon:install');
         $this->call('migrate', ['--force' => true]);
         $this->call('view:clear');
-        if (!\File::exists(public_path('storage'))) {
-            $this->call('storage:link');
-        }
+        $this->storageBuild();
         $this->seed('MaiaDatabaseSeeder');
-        
     }
 
     public function moveStubs()
@@ -80,6 +73,20 @@ class PublishCommand extends Command
             } else {
                 (new Filesystem)->copy($key, $value);
             }
+        }
+    }
+
+    public function novaBuild() {
+        if(!\File::exists(app_path('Nova'))) {
+            $this->call('nova:install');
+        } else {
+            $this->call('nova:publish');
+        }
+    }
+
+    public function storageBuild() {
+        if (!\File::exists(public_path('storage'))) {
+            $this->call('storage:link');
         }
     }
 }
