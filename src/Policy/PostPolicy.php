@@ -71,36 +71,36 @@ class PostPolicy
      * @param User $user
      * @return bool
      */
-    public function attachCategory(User $user)
+    public function attachAnyPostCategory(User $user)
     {
-        return $this->checkAssignment($user, 'attachCategory posts');
+        return $this->checkAssignment($user, 'attachAnyPostCategory posts');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function detachCategory(User $user)
+    public function detachAnyPostCategory(User $user)
     {
-        return $this->checkAssignment($user, 'detachCategory posts');
+        return $this->checkAssignment($user, 'detachAnyPostCategory posts');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function attachTag(User $user)
+    public function attachAnyPostTag(User $user)
     {
-        return $this->checkAssignment($user, 'attachTag posts');
+        return $this->checkAssignment($user, 'attachAnyPostTag posts');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function detachTag(User $user)
+    public function detachAnyPostTag(User $user)
     {
-        return $this->checkAssignment($user, 'detachTag posts');
+        return $this->checkAssignment($user, 'detachAnyPostTag posts');
     }
 
     /**

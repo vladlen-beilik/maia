@@ -71,36 +71,36 @@ class PortfolioPolicy
      * @param User $user
      * @return bool
      */
-    public function attachCategory(User $user)
+    public function attachAnyPortfolioCategory(User $user)
     {
-        return $this->checkAssignment($user, 'attachCategory portfolio');
+        return $this->checkAssignment($user, 'attachAnyPortfolioCategory portfolio');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function detachCategory(User $user)
+    public function detachAnyPortfolioCategory(User $user)
     {
-        return $this->checkAssignment($user, 'detachCategory portfolio');
+        return $this->checkAssignment($user, 'detachAnyPortfolioCategory portfolio');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function attachTag(User $user)
+    public function attachAnyPortfolioTag(User $user)
     {
-        return $this->checkAssignment($user, 'attachTag portfolio');
+        return $this->checkAssignment($user, 'attachAnyPortfolioTag portfolio');
     }
 
     /**
      * @param User $user
      * @return bool
      */
-    public function detachTag(User $user)
+    public function detachAnyPortfolioTag(User $user)
     {
-        return $this->checkAssignment($user, 'detachTag portfolio');
+        return $this->checkAssignment($user, 'detachAnyPortfolioTag portfolio');
     }
 
     /**
