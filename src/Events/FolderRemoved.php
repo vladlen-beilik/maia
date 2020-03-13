@@ -8,14 +8,17 @@ use Illuminate\Queue\SerializesModels;
 class FolderRemoved
 {
     use SerializesModels;
+
     /**
      * @var mixed
      */
     public $storage;
+
     /**
      * @var mixed
      */
     public $folderPath;
+
     /**
      * Create a new event instance.
      *

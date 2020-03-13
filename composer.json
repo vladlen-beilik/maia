@@ -1,13 +1,18 @@
 {
     "name": "spacecode-dev/maia",
-    "description": "Admin panel handling for Laravel based on Laravel Nova",
+    "description": "CMS for Laravel 5.8.* based on Laravel Nova 2.9.4",
     "keywords": [
+        "laravel-admin",
         "maia",
         "laravel",
+        "laravel5",
+        "laravel cms",
+        "laravel 5",
         "admin",
         "panel",
         "dashboard",
-        "cms"
+        "cms",
+        "nova"
     ],
     "homepage": "https://github.com/spacecode-dev/maia",
     "license": "MIT",

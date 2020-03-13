@@ -12,23 +12,10 @@ use Illuminate\Support\Facades\Password;
 class ForgotPasswordController extends Controller
 {
     use ValidatesRequests;
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset emails and
-    | includes a trait which assists in sending these notifications from
-    | your application to your users. Feel free to explore this trait.
-    |
-    */
-
     use SendsPasswordResetEmails;
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * ForgotPasswordController constructor.
      */
     public function __construct()
     {
@@ -44,9 +31,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Display the form to request a password reset link.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showLinkRequestForm()
     {
@@ -54,9 +39,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Get the broker to be used during password reset.
-     *
-     * @return \Illuminate\Contracts\Auth\PasswordBroker
+     * @return mixed
      */
     public function broker()
     {

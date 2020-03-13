@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Select;
-use SpaceCode\Maia\Models\Role;
+use SpaceCode\Maia\Resources\Role;
 
 class AttachToRole extends Action
 {

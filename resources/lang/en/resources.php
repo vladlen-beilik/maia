@@ -33,6 +33,8 @@ return [
     'portfolioTag' => 'Portfolio Tag',
     'posts' => 'Posts',
     'post' => 'Post',
+    'licenses' => 'Licenses',
+    'license' => 'License',
     'postCategories' => 'Post Categories',
     'postCategory' => 'Post Category',
     'postTags' => 'Post Tags',
@@ -71,6 +73,7 @@ return [
     'display_name' => 'Display Name',
     'created_at' => 'Created at',
     'updated_at' => 'Updated at',
+    'expired_at' => 'Expired at',
     'image' => 'Image',
     'order' => 'Order',
     'parent' => 'Parent',
@@ -212,5 +215,10 @@ return [
     'visitors' => [
         'all' => '`:view` visitors',
         'unique' => '`:view` visitors (`:unique` unique visitors)',
+    ],
+    'lic' => [
+        'email' => 'User Email',
+        'token' => 'User Token',
+        'key' => 'License Key',
     ]
 ];

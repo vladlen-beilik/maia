@@ -8,18 +8,21 @@ use Illuminate\Queue\SerializesModels;
 class FileUploaded
 {
     use SerializesModels;
+
     /**
      * @var mixed
      */
     public $storage;
+
     /**
      * @var mixed
      */
     public $filePath;
+
     /**
-     * Create a new event instance.
-     *
-     * @return void
+     * FileUploaded constructor.
+     * @param FilesystemAdapter $storage
+     * @param string $filePath
      */
     public function __construct(FilesystemAdapter $storage, string $filePath)
     {

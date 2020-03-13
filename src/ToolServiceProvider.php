@@ -92,6 +92,7 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function assets($event) {
         Nova::serving(function ($event) {
+//            Nova::script('license', __DIR__ . '/../dist/js/license.js');
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
             Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
@@ -165,6 +166,7 @@ class ToolServiceProvider extends ServiceProvider
         Routing::middleware(['nova', FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
         Routing::middleware(['nova', SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
         Routing::middleware(['nova', SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
+//        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
     }
 
     /**

@@ -1,2 +1,14 @@
 dist/mix-manifest.json
+dist/js/advanced-image.js.LICENSE.txt
+dist/js/filemanager-field.js.LICENSE.txt
+dist/js/filemanager-tool.js.LICENSE.txt
+dist/js/horizon.js.LICENSE.txt
+dist/js/license.js.LICENSE.txt
+dist/js/seo.js.LICENSE.txt
+dist/js/settings.js.LICENSE.txt
+dist/index/vendor.js.LICENSE.txt
+resources/js
+resources/sass
+webpack.mix.js
+package.json
 todo.txt

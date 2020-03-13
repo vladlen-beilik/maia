@@ -18,5 +18,6 @@ Route::namespace('\SpaceCode\Maia\Controllers')->group(function () {
         Route::get('/settings', 'SettingsController@get');
         Route::post('/settings', 'SettingsController@save');
     });
-    Route::delete('/nova-api/maia-settings/settings/field/{fieldName}', 'SettingsController@deleteImage');
+    Route::delete('/nova-api/maia-settings/settings/field/{fieldName}', 'SettingsController@deleteValue');
+    Route::put('/nova-api/maia-settings/settings/field/{fieldName}', 'SettingsController@putTrue');
 });

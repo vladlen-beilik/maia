@@ -20,6 +20,7 @@ class SlugController
 
     protected $updating = false;
     protected $initialValue = '';
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -50,6 +51,7 @@ class SlugController
         }
         return $this->generateSlug($request->input('value'));
     }
+
     /**
      * @param string $modelClass
      */
@@ -73,6 +75,7 @@ class SlugController
             $this->mergeOptions($modelOptions);
         }
     }
+
     /**
      * Validate and merge options from array
      *
@@ -94,6 +97,7 @@ class SlugController
             $this->options = array_merge($this->options, $options);
         }
     }
+
     /**
      * @param string $value
      * @return \Illuminate\Http\JsonResponse
@@ -112,6 +116,7 @@ class SlugController
             return $this->sendResponse();
         }
     }
+
     /**
      * @param string $originalSlug
      * @return string
@@ -125,6 +130,7 @@ class SlugController
         }
         return $slug;
     }
+
     /**
      * @param string $slug
      * @return bool
@@ -143,6 +149,7 @@ class SlugController
             ->withoutGlobalScopes()
             ->first();
     }
+
     /**
      * Send JSON response with slug
      *
@@ -154,6 +161,7 @@ class SlugController
             'slug' => $this->slug,
         ]);
     }
+
     /**
      * @param string $error
      * @return mixed

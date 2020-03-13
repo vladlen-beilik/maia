@@ -11,46 +11,56 @@ use Laravel\Nova\Fields\Field;
 class FilemanagerField extends Field implements Cover
 {
     use CoverHelpers;
+
     /**
      * The field's component.
      *
      * @var string
      */
     public $component = 'filemanager-field';
+
     /**
      * The validation rules for upload files.
      *
      * @var array
      */
     public $uploadRules = [];
+
     /**
      * @var bool
      */
     protected $createFolderButton;
+
     /**
      * @var bool
      */
     protected $uploadButton;
+
     /**
      * @var bool
      */
     protected $dragAndDropUpload;
+
     /**
      * @var bool
      */
     protected $renameFolderButton;
+
     /**
      * @var bool
      */
     protected $deleteFolderButton;
+
     /**
      * @var bool
      */
     protected $renameFileButton;
+
     /**
      * @var bool
      */
     protected $deleteFileButton;
+
     /**
      * Create a new field.
      *
@@ -66,6 +76,7 @@ class FilemanagerField extends Field implements Cover
         $this->withMeta(['visibility' => 'public']);
         $this->rounded();
     }
+
     /**
      * Set display in details and list as image or icon.
      *
@@ -75,6 +86,7 @@ class FilemanagerField extends Field implements Cover
     {
         return $this->withMeta(['display' => 'image']);
     }
+
     /**
      * Set current folder for the field.
      *
@@ -87,6 +99,7 @@ class FilemanagerField extends Field implements Cover
         $folder = is_callable($folderName) ? call_user_func($folderName) : $folderName;
         return $this->withMeta(['folder' => $folder, 'home' => $folder]);
     }
+
     /**
      * Set current folder for the field.
      *
@@ -99,6 +112,7 @@ class FilemanagerField extends Field implements Cover
         $this->uploadRules = ($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules;
         return $this;
     }
+
     /**
      * Set filter for the field.
      *
@@ -118,6 +132,7 @@ class FilemanagerField extends Field implements Cover
         }
         return $this;
     }
+
     /**
      * Set display in details and list as image or icon.
      *
@@ -127,6 +142,7 @@ class FilemanagerField extends Field implements Cover
     {
         return $this->withMeta(['visibility' => 'private']);
     }
+
     /**
      * Hide Create button Folder.
      *
@@ -137,6 +153,7 @@ class FilemanagerField extends Field implements Cover
         $this->createFolderButton = false;
         return $this;
     }
+
     /**
      * Hide Upload button.
      *
@@ -147,6 +164,7 @@ class FilemanagerField extends Field implements Cover
         $this->uploadButton = false;
         return $this;
     }
+
     /**
      * Hide Rename folder button.
      *
@@ -157,6 +175,7 @@ class FilemanagerField extends Field implements Cover
         $this->renameFolderButton = false;
         return $this;
     }
+
     /**
      * Hide Delete folder button.
      *
@@ -167,6 +186,7 @@ class FilemanagerField extends Field implements Cover
         $this->deleteFolderButton = false;
         return $this;
     }
+
     /**
      * Hide Rename file button.
      *
@@ -177,6 +197,7 @@ class FilemanagerField extends Field implements Cover
         $this->renameFileButton = false;
         return $this;
     }
+
     /**
      * Hide Rename file button.
      *
@@ -187,6 +208,7 @@ class FilemanagerField extends Field implements Cover
         $this->deleteFileButton = false;
         return $this;
     }
+
     /**
      * No drag and drop file upload.
      *
@@ -197,6 +219,7 @@ class FilemanagerField extends Field implements Cover
         $this->dragAndDropUpload = false;
         return $this;
     }
+
     /**
      * Resolve the thumbnail URL for the field.
      *
@@ -214,6 +237,7 @@ class FilemanagerField extends Field implements Cover
         }
         return [];
     }
+
     /**
      * Resolve the thumbnail URL for the field.
      *
@@ -230,6 +254,7 @@ class FilemanagerField extends Field implements Cover
             return $data['url'];
         }
     }
+
     /**
      * Get additional meta information to merge with the element payload.
      *
@@ -245,6 +270,7 @@ class FilemanagerField extends Field implements Cover
             $this->meta
         );
     }
+
     /**
      * Set default button options.
      */
@@ -258,6 +284,7 @@ class FilemanagerField extends Field implements Cover
         $this->renameFileButton = config('maia.filemanager.buttons.rename_file', true);
         $this->deleteFileButton = config('maia.filemanager.buttons.delete_file', true);
     }
+
     /**
      * Return correct buttons.
      *
@@ -276,6 +303,7 @@ class FilemanagerField extends Field implements Cover
         ];
         return ['buttons' => $buttons];
     }
+
     /**
      * Return upload rules.
      *
@@ -285,6 +313,7 @@ class FilemanagerField extends Field implements Cover
     {
         return ['upload_rules' => $this->uploadRules];
     }
+
     /**
      * Return cover type.
      *
@@ -294,6 +323,7 @@ class FilemanagerField extends Field implements Cover
     {
         return ['rounded' => $this->isRounded()];
     }
+
     /**
      * FIx name label.
      *

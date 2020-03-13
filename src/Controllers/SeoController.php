@@ -15,9 +15,8 @@ use Illuminate\Support\Facades\Validator;
 
 class SeoController extends Controller
 {
-    use ResolvesFields,
-        ConditionallyLoadsAttributes;
-
+    use ResolvesFields;
+    use ConditionallyLoadsAttributes;
 
     public function get(Request $request)
     {

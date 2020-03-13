@@ -18,9 +18,8 @@ use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
-    use ResolvesFields,
-        ConditionallyLoadsAttributes;
-
+    use ResolvesFields;
+    use ConditionallyLoadsAttributes;
 
     public function get(Request $request)
     {
@@ -162,10 +161,17 @@ class SettingsController extends Controller
         return response('', 204);
     }
 
-    public function deleteImage(Request $request, $fieldName)
+    public function deleteValue(Request $request, $fieldName)
     {
         $existingRow = Settings::where('key', $fieldName)->first();
         if (isset($existingRow)) $existingRow->update(['value' => null]);
+        return response('', 204);
+    }
+
+    public function putTrue(Request $request, $fieldName)
+    {
+        $existingRow = Settings::where('key', $fieldName)->first();
+        if (isset($existingRow)) $existingRow->update(['value' => 1]);
         return response('', 204);
     }
 

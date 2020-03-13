@@ -13,6 +13,7 @@ class FilemanagerToolController extends Controller
      * @var mixed
      */
     protected $service;
+
     /**
      * @param FileManagerService $filemanagerService
      */
@@ -20,6 +21,7 @@ class FilemanagerToolController extends Controller
     {
         $this->service = $filemanagerService;
     }
+
     /**
      * @param Request $request
      */
@@ -27,6 +29,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->ajaxGetFilesAndFolders($request);
     }
+
     /**
      * @param Request $request
      */
@@ -35,6 +38,7 @@ class FilemanagerToolController extends Controller
         $filter = $this->getFilemanagerFieldFilter($attribute, $request);
         return $this->service->ajaxGetFilesAndFolders($request, $filter);
     }
+
     /**
      * @param Request $request
      */
@@ -42,6 +46,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->createFolderOnPath($request->folder, $request->current);
     }
+
     /**
      * @param Request $request
      */
@@ -49,6 +54,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->deleteDirectory($request->current);
     }
+
     /**
      * @param Request $request
      */
@@ -63,6 +69,7 @@ class FilemanagerToolController extends Controller
             $request->rules ? $this->getRules($request->rules) : []
         );
     }
+
     /**
      * @param Request $request
      */
@@ -70,6 +77,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->moveFile($request->old, $request->path);
     }
+
     /**
      * @param Request $request
      */
@@ -77,6 +85,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->getFileInfo($request->file);
     }
+
     /**
      * @param Request $request
      */
@@ -84,6 +93,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->removeFile($request->file, $request->type);
     }
+
     /**
      * @param Request $request
      */
@@ -91,6 +101,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->renameFile($request->file, $request->name);
     }
+
     /**
      * @param Request $request
      */
@@ -98,6 +109,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->renameFile($request->path, $request->name);
     }
+
     /**
      * @param Request $request
      */
@@ -105,6 +117,7 @@ class FilemanagerToolController extends Controller
     {
         return $this->service->folderUploadedEvent($request->path);
     }
+
     /**
      * @param NovaRequest $request
      */
@@ -120,6 +133,7 @@ class FilemanagerToolController extends Controller
         }
         return false;
     }
+
     /**
      * Get rules in array way.
      *

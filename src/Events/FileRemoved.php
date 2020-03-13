@@ -8,14 +8,17 @@ use Illuminate\Queue\SerializesModels;
 class FileRemoved
 {
     use SerializesModels;
+
     /**
      * @var mixed
      */
     public $storage;
+
     /**
      * @var mixed
      */
     public $filePath;
+
     /**
      * Create a new event instance.
      *

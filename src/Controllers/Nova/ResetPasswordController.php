@@ -13,23 +13,10 @@ use Laravel\Nova\Nova;
 class ResetPasswordController extends Controller
 {
     use ValidatesRequests;
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
-
     use ResetsPasswords;
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * ResetPasswordController constructor.
      */
     public function __construct()
     {
@@ -37,12 +24,8 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Display the password reset view for the given token.
-     *
-     * If no token is present, display the link request form.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  string|null  $token
+     * @param Request $request
+     * @param null $token
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function showResetForm(Request $request, $token = null)
@@ -53,8 +36,6 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Get the URI the user should be redirected to after resetting their password.
-     *
      * @return string
      */
     public function redirectPath()
@@ -63,9 +44,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Get the broker to be used during password reset.
-     *
-     * @return \Illuminate\Contracts\Auth\PasswordBroker
+     * @return mixed
      */
     public function broker()
     {
@@ -73,9 +52,7 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Get the guard to be used during password reset.
-     *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return mixed
      */
     protected function guard()
     {

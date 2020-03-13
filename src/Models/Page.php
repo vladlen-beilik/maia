@@ -33,7 +33,7 @@ class Page extends Model implements PageContract
     public function __construct(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
-        $attributes['author_id'] = Auth::id();
+        $attributes['author_id'] = $attributes['author_id'] ?? Auth::id();
         parent::__construct($attributes);
         $this->setTable('pages');
     }

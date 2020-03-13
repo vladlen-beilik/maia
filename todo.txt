@@ -1,3 +1,2 @@
 * delete image 404
-* attach detach policy
 * forceDelete & delete function in resources to sync relations

@@ -157,7 +157,22 @@ class SettingsTool extends Tool
                 trans('maia::resources.tracking') => [
                     Textarea::make(trans('maia::resources.gtm.head'), 'tracking_google_tag_manager_head'),
                     Textarea::make(trans('maia::resources.gtm.body'), 'tracking_google_tag_manager_body'),
-                ]
+                ],
+//                trans('maia::resources.license') => [
+//                    Text::make(trans('maia::resources.lic.email'), 'license_email')
+//                        ->rules('required', 'max:255', 'email'),
+//                    Text::make(trans('maia::resources.lic.token'), 'license_token')
+//                        ->resolveUsing(function ($value) {
+//                            return trim($value);
+//                        })
+//                        ->rules('required', 'max:32', 'min:32'),
+//                    Textarea::make(trans('maia::resources.lic.key'), 'license_key')
+//                        ->resolveUsing(function ($value) {
+//                            return wordwrap(str_replace("\r\n", '', $value), 40, "\n", true);
+//                        })
+//                        ->rows(7)
+//                        ->rules(['required', 'min:280', 'max:292'])
+//                ]
             ]))
         ]);
     }

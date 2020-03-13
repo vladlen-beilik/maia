@@ -4,8 +4,8 @@ namespace SpaceCode\Maia\Tools;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
-use SpaceCode\Maia\Permission;
-use SpaceCode\Maia\Role;
+use SpaceCode\Maia\Resources\Permission;
+use SpaceCode\Maia\Resources\Role;
 
 class PermissionTool extends Tool
 {
