@@ -32,8 +32,9 @@ class UpdateCommand extends Command
      */
     public function handle(Maia $maia, $update = false)
     {
-        $latest = new Process(['/usr/local/bin/composer', 'show', '--latest', 'spacecode-dev/maia']);
+        $latest = new Process(['/usr/local/bin/composer show --latest spacecode-dev/maia']);
         $latest->setTimeout(null)->run();
+        $this->info('Check for updates...');
         if($latest->isSuccessful()) {
             $current_version = $maia->getVersion();
             $composer_version = '0';
@@ -44,18 +45,21 @@ class UpdateCommand extends Command
             }
             if ($current_version < $composer_version) {
                 $update = true;
+                $this->info('New version of CMS Maia (v' . $composer_version . ' ) installing started...');
             }
             if ($update) {
-                $upd = new Process(['/usr/local/bin/composer', 'update', 'spacecode-dev/maia']);
+                $this->info('Download files...');
+                $upd = new Process(['/usr/local/bin/composer update spacecode-dev/maia']);
                 $upd->setTimeout(null)->run();
-                if($upd->isSuccessful()){
-                    $this->call('maia:publish');
-                    $this->info('Maia successfully updated');
+                if($upd->isSuccessful()) {
+                    $this->info('Publishing...');
+                    $this->callSilent('maia:publish');
+                    $this->info('CMS Maia successfully updated');
                 } else {
                     throw new ProcessFailedException($upd);
                 }
             } else {
-                $this->info('You have the latest version of CMS Maia');
+                $this->info('You have the latest version of CMS Maia (v' . $current_version . ')');
             }
         } else {
             throw new ProcessFailedException($latest);
