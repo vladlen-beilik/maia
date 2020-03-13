@@ -1,2 +1,0 @@
-* delete image 404
-* forceDelete & delete function in resources to sync relations
