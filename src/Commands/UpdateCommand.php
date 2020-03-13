@@ -45,7 +45,7 @@ class UpdateCommand extends Command
             }
             if ($current_version < $composer_version) {
                 $update = true;
-                $this->info('New version of CMS Maia (v' . $composer_version . ' ) installing started...');
+                $this->info('New version of CMS Maia (v' . $composer_version . ') installing started...');
             }
             if ($update) {
                 $this->info('Download files...');
