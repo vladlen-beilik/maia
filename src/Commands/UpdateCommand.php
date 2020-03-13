@@ -32,7 +32,7 @@ class UpdateCommand extends Command
      */
     public function handle(Maia $maia, $update = false)
     {
-        $latest = new Process(['/usr/local/bin/composer show', '-l', 'spacecode-dev/maia']);
+        $latest = new Process(['/usr/local/bin/composer', 'show', '-l', 'spacecode-dev/maia']);
         $latest->setTimeout(null)->run();
         $this->info('Check for updates...');
         if($latest->isSuccessful()) {
@@ -49,7 +49,7 @@ class UpdateCommand extends Command
             }
             if ($update) {
                 $this->info('Download files...');
-                $upd = new Process(['/usr/local/bin/composer update', 'spacecode-dev/maia']);
+                $upd = new Process(['/usr/local/bin/composer', 'update', 'spacecode-dev/maia']);
                 $upd->setTimeout(null)->run();
                 if($upd->isSuccessful()) {
                     $this->info('Publishing...');
