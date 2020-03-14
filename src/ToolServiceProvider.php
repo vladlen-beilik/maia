@@ -56,6 +56,7 @@ class ToolServiceProvider extends ServiceProvider
             $this->mergeConfigFrom(__DIR__.'/../config/maia.php', 'maia');
         }
         $this->commands([
+//            Commands\InstallCommand::class,
             Commands\PublishCommand::class,
             Commands\UpdateCommand::class
         ]);
