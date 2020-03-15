@@ -29,47 +29,43 @@ class InstallCommand extends Command
         if (\File::exists(base_path('nova'))) {
             $this->error('Missing installation folder for Laravel Nova ("./nova").');
         }
-        if ($this->confirm('You need to check you database connections charset. It can be `utf8`. Do you wish to continue?')) {
-            if(config('database.connections.mysql.charset') !== 'utf8') {
-                $this->error('Your database connections charset does not fit the requirements.');
+        $path = $this->ask('What is your application full path? (ex: /var/www/example/data/www/you_application/)');
+        if($path === '' || empty($path)) {
+            $this->error('Application full path for composer is required.');
+        }
+        putenv("COMPOSER_HOME={$path}");
+        putenv("HOME={$path}");
+        $this->info('CMS Maia install started');
+        $this->info('Download files...');
+        $req = new Process(['/usr/local/bin/composer', 'require', 'spacecode-dev/maia']);
+        $req->setTimeout(null)->run();
+        if($req->isSuccessful()) {
+            $this->info('All files successfully download');
+            $this->info('Publishing...');
+            $this->callSilent('maia:publish');
+            $this->info('CMS Maia successfully installed');
+            if ($this->confirm('You need to create an admin user. Do you wish to continue?')) {
+                $name = $this->ask('What is your user login? (ex: admin)');
+                $email = $this->ask('What is your user email?');
+                $password = $this->secret('What is the password?');
+                if($name === '' || empty($name)) {
+                    $this->error('User login is required.');
+                }
+                if($email === '' || empty($email)) {
+                    $this->error('User email is required.');
+                }
+                if($password === '' || empty($password)) {
+                    $this->error('Password is required.');
+                }
+                User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()]);
+                $this->info('Admin user successfully created.');
+                $this->info('You may login after several seconds.');
+                $this->info('Enjoy using CMS Maia.');
+                $this->info('Have a nice day )))');
+                $this->info('Best regards, SpaceCode Team');
             }
-            if ($this->confirm('You need to check you database connections collation. It can be `utf8_unicode_ci`. Do you wish to continue?')) {
-                if(config('database.connections.mysql.collation') !== 'utf8_unicode_ci') {
-                    $this->error('Your database connections collation does not fit the requirements.');
-                }
-                $path = $this->ask('What is your application full path? (ex: /var/www/example/data/www/you_application/)');
-                if($path === '' || empty($path)) {
-                    $this->error('Application full path for composer is required.');
-                }
-                putenv("COMPOSER_HOME={$path}");
-                putenv("HOME={$path}");
-                $this->info('Download files...');
-                $req = new Process(['/usr/local/bin/composer', 'require', 'spacecode-dev/maia']);
-                $req->setTimeout(null)->run();
-                if($req->isSuccessful()) {
-                    $this->info('Publishing...');
-                    $this->callSilent('maia:publish');
-                    $this->info('CMS Maia successfully installed');
-                    if ($this->confirm('You need to create you first user. He will be an Admin. Do you wish to continue?')) {
-                        $name = $this->ask('What is your user login? (ex: admin)');
-                        $email = $this->ask('What is your user email?');
-                        $password = $this->secret('What is the password?');
-                        $this->info($password);
-                        if($name === '' || empty($name)) {
-                            $this->error('User login is required.');
-                        }
-                        if($email === '' || empty($email)) {
-                            $this->error('User email is required.');
-                        }
-                        if($password === '' || empty($password)) {
-                            $this->error('Password is required.');
-                        }
-                        User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()]);
-                    }
-                } else {
-                    throw new ProcessFailedException($req);
-                }
-            }
+        } else {
+            throw new ProcessFailedException($req);
         }
     }
 }

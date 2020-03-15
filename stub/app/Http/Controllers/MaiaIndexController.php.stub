@@ -74,6 +74,20 @@ class MaiaIndexController extends Controller
     }
 
     /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function parentPageIndex()
+    {
+        $slugs = collect(func_get_args());
+        $page = $slugs->reduce(function($page, $slug) {
+            return ($page->children()->where('slug', $slug)->firstOrFail());
+        }, Page::whereSlug($slugs->shift())->where(['status' => 'published', 'deleted_at' => null])->with('children')->firstOrFail());
+        return view($page->template === 'default' ? 'page' : 'templates.pages.' . $page->template,
+            ['page' => $page]
+        );
+    }
+
+    /**
      * @param $slug
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

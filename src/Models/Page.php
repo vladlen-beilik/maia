@@ -2,6 +2,7 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +37,22 @@ class Page extends Model implements PageContract
         $attributes['author_id'] = $attributes['author_id'] ?? Auth::id();
         parent::__construct($attributes);
         $this->setTable('pages');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     /**

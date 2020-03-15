@@ -106,6 +106,9 @@ class Page extends Resource
                         ->sortable()
                         ->displayUsingLabels(),
                 ],
+                trans('maia::resources.parent') => [
+                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)->nullable()->searchable()
+                ],
                 trans('maia::resources.content') => [
                     // Title
                     SluggableText::make(trans('maia::resources.title'), 'title')

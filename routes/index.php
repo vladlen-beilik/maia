@@ -11,7 +11,14 @@
 |
 */
 
-if (!\Request::is('admin') && !\Request::is('admin/*')) {
+if (
+    !\Request::is('admin') &&
+    !\Request::is('admin/*') &&
+    !\Request::is('nova-api') &&
+    !\Request::is('nova-api/*') &&
+    !\Request::is('nova-vendor') &&
+    !\Request::is('nova-vendor/*')
+) {
     Route::group(['as' => 'maia.'], function () {
         Route::group(['prefix' => '/'], function () {
             Route::get('robots.txt', ['uses' => 'MaiaRobotsController', 'as' => 'robot']);
@@ -30,6 +37,7 @@ if (!\Request::is('admin') && !\Request::is('admin/*')) {
             }
             Route::get('/', ['uses' => 'MaiaIndexController@homeIndex', 'as' => 'home']);
             Route::get('{slug}/', ['uses' => 'MaiaIndexController@pageIndex', 'as' => 'page']);
+            Route::get('{slug}/{slug2?}/{slug3?}/{slug4?}/{slug5?}', ['uses' => 'MaiaIndexController@parentPageIndex', 'as' => 'parent-page']);
             if(isBlog()) {
                 Route::get(seo('seo_posts_prefix') . '/{slug}/', ['uses' => 'MaiaIndexController@postIndex', 'as' => 'post']);
                 Route::get(seo('seo_post_tags_prefix') . '/{slug}/', ['uses' => 'MaiaIndexController@postTagIndex', 'as' => 'tag']);

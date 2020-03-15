@@ -539,7 +539,7 @@ if (!function_exists('body_class')) {
     function body_class()
     {
         $request = \Request::url();
-        $routeName = str_replace('maia.', '', Route::currentRouteName());
+        $routeName = str_replace(['maia.', 'parent-'], '', Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
         return $routeName . ' ' . Str::slug($url, '-');
     }
