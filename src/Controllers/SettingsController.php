@@ -6,6 +6,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use SpaceCode\Maia\Models\Settings;
 use SpaceCode\Maia\Tools\SettingsTool;
 use Intervention\Image\Facades\Image;
@@ -59,9 +60,6 @@ class SettingsController extends Controller
 
         $fields->whereInstanceOf(Resolvable::class)->each(function ($field) use ($request) {
             if (empty($field->attribute)) return;
-
-            // For nova-translatable support
-//            if (!empty($field->meta['translatable']['original_attribute'])) $field->attribute = $field->meta['translatable']['original_attribute'];
 
             $existingRow = Settings::where('key', $field->attribute)->first();
 
@@ -146,9 +144,27 @@ class SettingsController extends Controller
                 'mail_password' => 'MAIL_PASSWORD',
                 'cache_driver' => 'CACHE_DRIVER' // file
             ];
+
             if(array_key_exists($field->attribute, $settingsArray)) {
-                changeEnv($settingsArray[$field->attribute], $tempResource->{$field->attribute});
+                $temp = $tempResource->{$field->attribute};
+                $env = file_get_contents(base_path() . '/.env');
+                if(!Str::contains($env, $settingsArray[$field->attribute])) {
+                    if(Str::contains($temp, ' ') || Str::contains($temp, '{') && Str::contains($temp, '}') && Str::contains($temp, '$')) {
+                        $envString = $settingsArray[$field->attribute] . '="' . $temp . '"';
+                    } else {
+                        $envString = is_null($temp) ? $settingsArray[$field->attribute] . '=null' : $settingsArray[$field->attribute] . '=' . $temp;
+                    }
+                    setEnv($envString);
+                } else {
+                    changeEnv($settingsArray[$field->attribute], $temp);
+                }
             }
+
+            if($field->attribute === 'site_url' && !Str::contains(file_get_contents(base_path() . '/.env'), 'HORIZON_PREFIX')) {
+                $envString = 'HORIZON_PREFIX=' . str_replace('.', '-', class_basename($tempResource->{$field->attribute})) . '-horizon:';
+                setEnv($envString);
+            }
+
             if($field->attribute === 'site_blog' || $field->attribute === 'site_portfolio' || $field->attribute === 'site_shop' || $field->attribute === 'site_index' || $field->attribute === 'site_favicon') {
                 $explode = explode('_', $field->attribute);
                 $name = $explode[0].ucfirst($explode[1]);
@@ -158,6 +174,7 @@ class SettingsController extends Controller
                 Cache::forever($name, $field->attribute === 'site_favicon' ? $tempResource->{$field->attribute} : boolval($tempResource->{$field->attribute}));
             }
         });
+        rebuildEnv();
         return response('', 204);
     }
 

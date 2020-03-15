@@ -1,15 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
-use SpaceCode\Maia\Models\Settings;
-use SpaceCode\Maia\Models\Seo;
-use Illuminate\Support\Facades\Cache;
-
 if (!function_exists('settings')) {
     function settings($keys = null)
     {
-        $query = Settings::query();
+        $query = \SpaceCode\Maia\Models\Settings::query();
         if (isset($keys)) $query->whereIn('key', $keys);
         return $query->get()->pluck('value', 'key')->toArray();
     }
@@ -18,7 +12,7 @@ if (!function_exists('settings')) {
 if (!function_exists('setting')) {
     function setting($key)
     {
-        $setting = Settings::find($key);
+        $setting = \SpaceCode\Maia\Models\Settings::find($key);
         if(isset($setting)) {
             if($setting->value === '0' || $setting->value === '1') {
                 return intval($setting->value);
@@ -34,7 +28,7 @@ if (!function_exists('setting')) {
 if (!function_exists('seo')) {
     function seo($key)
     {
-        $seo = Seo::find($key);
+        $seo = \SpaceCode\Maia\Models\Seo::find($key);
         if(isset($seo)) {
             if($seo->value === '0' || $seo->value === '1') {
                 return intval($seo->value);
@@ -87,10 +81,10 @@ if (! function_exists('timezoneList')) {
             $timezone_list['UTC'] = ['label' => 'UTC', 'group' => trans('maia::resources.default')];
             $timezone_list[$timezone] = ['label' => $pretty_label, 'group' => $pretty_group];
         }
-        if (!Cache::has('timezoneList')) {
-            Cache::forever('timezoneList', $timezone_list);
+        if (!\Illuminate\Support\Facades\Cache::has('timezoneList')) {
+            \Illuminate\Support\Facades\Cache::forever('timezoneList', $timezone_list);
         }
-        return Cache::get('timezoneList');
+        return \Illuminate\Support\Facades\Cache::get('timezoneList');
     }
 }
 
@@ -116,24 +110,59 @@ if (! function_exists('changeEnv')) {
             }
             $env = file_get_contents(base_path() . '/.env');
             $new_env = [];
-            foreach(explode(PHP_EOL, $env) as $key => $value) {
+            $putContent = false;
+            foreach(array_filter(array_map('trim', explode(PHP_EOL, $env))) as $key => $value) {
                 $entry = explode("=", $value, 2);
-                if(empty($value)) {
-                    $new_env[] = '';
-                } else {
-                    if($entry[0] === $change_key) {
-                        if(Str::contains($change_value, ' ') || Str::contains($change_value, '{') && Str::contains($change_value, '}') && Str::contains($change_value, '$')) {
-                            $new_env[] = $entry[0] . '="' . $change_value . '"';
-                        } else {
-                            $new_env[] = $entry[0] . '=' . $change_value;
-                        }
+                if(count($entry) > 1 && $entry[1] !== $change_value) {
+                    $putContent = true;
+                }
+                if($entry[0] === $change_key) {
+                    if(\Illuminate\Support\Str::contains($change_value, ' ') || \Illuminate\Support\Str::contains($change_value, '{') && \Illuminate\Support\Str::contains($change_value, '}') && \Illuminate\Support\Str::contains($change_value, '$')) {
+                        $new_env[] = $entry[0] . '="' . $change_value . '"';
                     } else {
-                        $new_env[] = $entry[0] . '=' . $entry[1];
+                        $new_env[] = $entry[0] . '=' . $change_value;
                     }
+                } else {
+                    $new_env[] = $entry[0] . '=' . $entry[1];
                 }
             }
-            file_put_contents(base_path() . '/.env', implode(PHP_EOL, $new_env));
+            if($putContent) {
+                file_put_contents(base_path() . '/.env', implode(PHP_EOL, $new_env));
+            }
         }
+    }
+}
+
+if (! function_exists('setEnv')) {
+    function setEnv($string) {
+        if(isset($string)) {
+            $env = file_get_contents(base_path() . '/.env');
+            $env = array_filter(explode(PHP_EOL, $env));
+            array_push($env, $string);
+            file_put_contents(base_path() . '/.env', implode(PHP_EOL, $env));
+        }
+    }
+}
+
+if (! function_exists('rebuildEnv')) {
+    function rebuildEnv() {
+        $env = file_get_contents(base_path() . '/.env');
+        $env = explode(PHP_EOL, $env);
+        $env = array_map('trim', $env);
+        $env = array_filter($env);
+
+        $env = \Illuminate\Support\Collection::make($env)->groupBy(function ($item, $key) {
+            return substr($item, 0, 2);
+        })->toArray();
+
+        $new_env = [];
+        foreach($env as $key => $value) {
+            foreach ($value as $_key => $_value) {
+                $new_env[] = $_value . "\r";
+            }
+            $new_env[] = '';
+        }
+        file_put_contents(base_path() . '/.env', implode(PHP_EOL, $new_env));
     }
 }
 
@@ -141,7 +170,7 @@ if (! function_exists('favicon')) {
     function favicon($path, $size) {
         $mime = explode('.', $path)[1];
         $name = explode('.', $path)[0];
-        return Maia::image($name . '_' . $size . '.' . $mime);
+        return \SpaceCode\Maia\Maia::image($name . '_' . $size . '.' . $mime);
     }
 }
 
@@ -265,7 +294,7 @@ if (!function_exists('state')) {
         } else {
             $state = $data;
         }
-        is_null($state) ? $state = 'dynamic' : '';
+        $state = is_null($state) ? 'dynamic' : '';
         return $state;
     }
 }
@@ -273,7 +302,7 @@ if (!function_exists('state')) {
 if (!function_exists('variables_array')) {
     function variables_array()
     {
-        $array = [
+        return [
             '%%author_id%%',
             '%%author_name%%',
             '%%author_first_name%%',
@@ -296,7 +325,6 @@ if (!function_exists('variables_array')) {
             '%%website_description%%',
             '%%website_logo%%'
         ];
-        return $array;
     }
 }
 
@@ -319,7 +347,7 @@ if (!function_exists('check_author')) {
 if (!function_exists('check_thumbnail')) {
     function check_thumbnail($thumbnail)
     {
-        is_null($thumbnail) ? $return = '' : $return = Maia::image($thumbnail);
+        is_null($thumbnail) ? $return = '' : $return = \SpaceCode\Maia\Maia::image($thumbnail);
         return $return;
     }
 }
@@ -327,7 +355,7 @@ if (!function_exists('check_thumbnail')) {
 if (!function_exists('check_logo')) {
     function check_logo()
     {
-        is_null(setting('site.logo')) ? $return = '' : $return = Maia::image(setting('site.logo'));
+        is_null(setting('site.logo')) ? $return = '' : $return = \SpaceCode\Maia\Maia::image(setting('site.logo'));
         return $return;
     }
 }
@@ -374,7 +402,7 @@ if (!function_exists('variables_result')) {
         $website_excerpt = setting('site_excerpt');
         $website_description = setting('site_description');
         $website_logo = check_logo();
-        $array2 = [
+        return [
             $author_id,
             $author_name,
             $author_first_name,
@@ -397,7 +425,6 @@ if (!function_exists('variables_result')) {
             $website_description,
             $website_logo
         ];
-        return $array2;
     }
 }
 
@@ -524,7 +551,7 @@ if (!function_exists('getTemplate')) {
                     $contents = trim(str_replace('Template:', '', preg_split('/\{{--|\--}}(, *)?/', $file->getContents(), -1, PREG_SPLIT_NO_EMPTY)[0]));
                     if($contents !== 'Example') {
                         $names = str_replace('.blade.php', '', $file->getFilename());
-                        $templates = Arr::add($templates, $names, $contents);
+                        $templates = \Illuminate\Support\Arr::add($templates, $names, $contents);
                     }
                 }
             }
@@ -539,9 +566,9 @@ if (!function_exists('body_class')) {
     function body_class()
     {
         $request = \Request::url();
-        $routeName = str_replace(['maia.', 'parent-'], '', Route::currentRouteName());
+        $routeName = str_replace(['maia.', 'parent-'], '', \Illuminate\Support\Facades\Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
-        return $routeName . ' ' . Str::slug($url, '-');
+        return $routeName . ' ' . \Illuminate\Support\Str::slug($url, '-');
     }
 }
 
@@ -555,59 +582,59 @@ if (!function_exists('isNofollow')) {
 if (!function_exists('isBlog')) {
     function isBlog()
     {
-        if(!Schema::hasTable('settings')) {
+        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
             return false;
         }
-        if (!Cache::has('siteBlog')) {
-            Cache::forever('siteBlog', boolval(setting('site_blog')));
+        if (!\Illuminate\Support\Facades\Cache::has('siteBlog')) {
+            \Illuminate\Support\Facades\Cache::forever('siteBlog', boolval(setting('site_blog')));
         }
-        return Cache::get('siteBlog');
+        return \Illuminate\Support\Facades\Cache::get('siteBlog');
     }
 }
 
 if (!function_exists('isPortfolio')) {
     function isPortfolio()
     {
-        if(!Schema::hasTable('settings')) {
+        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
             return false;
         }
-        if (!Cache::has('sitePortfolio')) {
-            Cache::forever('sitePortfolio', boolval(setting('site_portfolio')));
+        if (!\Illuminate\Support\Facades\Cache::has('sitePortfolio')) {
+            \Illuminate\Support\Facades\Cache::forever('sitePortfolio', boolval(setting('site_portfolio')));
         }
-        return Cache::get('sitePortfolio');
+        return \Illuminate\Support\Facades\Cache::get('sitePortfolio');
     }
 }
 
 if (!function_exists('isShop')) {
     function isShop()
     {
-        if(!Schema::hasTable('settings')) {
+        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
             return false;
         }
-        if (!Cache::has('siteShop')) {
-            Cache::forever('siteShop', boolval(setting('site_shop')));
+        if (!\Illuminate\Support\Facades\Cache::has('siteShop')) {
+            \Illuminate\Support\Facades\Cache::forever('siteShop', boolval(setting('site_shop')));
         }
-        return Cache::get('siteShop');
+        return \Illuminate\Support\Facades\Cache::get('siteShop');
     }
 }
 
 if (!function_exists('siteIndex')) {
     function siteIndex()
     {
-        if (!Cache::has('siteIndex')) {
-            Cache::forever('siteIndex', boolval(setting('site_index')));
+        if (!\Illuminate\Support\Facades\Cache::has('siteIndex')) {
+            \Illuminate\Support\Facades\Cache::forever('siteIndex', boolval(setting('site_index')));
         }
-        return Cache::get('siteIndex');
+        return \Illuminate\Support\Facades\Cache::get('siteIndex');
     }
 }
 
 if (!function_exists('siteFavicon')) {
     function siteFavicon()
     {
-        if (!Cache::has('siteFavicon')) {
-            Cache::forever('siteFavicon', setting('site_favicon'));
+        if (!\Illuminate\Support\Facades\Cache::has('siteFavicon')) {
+            \Illuminate\Support\Facades\Cache::forever('siteFavicon', setting('site_favicon'));
         }
-        return Cache::get('siteFavicon');
+        return \Illuminate\Support\Facades\Cache::get('siteFavicon');
     }
 }
 
