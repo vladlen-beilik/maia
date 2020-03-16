@@ -1,9 +1,20 @@
 <?php
 
+use App\User;
+use SpaceCode\Maia\Models\Settings;
+use SpaceCode\Maia\Models\Seo;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
+
 if (!function_exists('settings')) {
     function settings($keys = null)
     {
-        $query = \SpaceCode\Maia\Models\Settings::query();
+        $query = Settings::query();
         if (isset($keys)) $query->whereIn('key', $keys);
         return $query->get()->pluck('value', 'key')->toArray();
     }
@@ -12,7 +23,7 @@ if (!function_exists('settings')) {
 if (!function_exists('setting')) {
     function setting($key)
     {
-        $setting = \SpaceCode\Maia\Models\Settings::find($key);
+        $setting = Settings::find($key);
         if(isset($setting)) {
             if($setting->value === '0' || $setting->value === '1') {
                 return intval($setting->value);
@@ -28,7 +39,7 @@ if (!function_exists('setting')) {
 if (!function_exists('seo')) {
     function seo($key)
     {
-        $seo = \SpaceCode\Maia\Models\Seo::find($key);
+        $seo = Seo::find($key);
         if(isset($seo)) {
             if($seo->value === '0' || $seo->value === '1') {
                 return intval($seo->value);
@@ -81,10 +92,10 @@ if (! function_exists('timezoneList')) {
             $timezone_list['UTC'] = ['label' => 'UTC', 'group' => trans('maia::resources.default')];
             $timezone_list[$timezone] = ['label' => $pretty_label, 'group' => $pretty_group];
         }
-        if (!\Illuminate\Support\Facades\Cache::has('timezoneList')) {
-            \Illuminate\Support\Facades\Cache::forever('timezoneList', $timezone_list);
+        if (!Cache::has('timezoneList')) {
+            Cache::forever('timezoneList', $timezone_list);
         }
-        return \Illuminate\Support\Facades\Cache::get('timezoneList');
+        return Cache::get('timezoneList');
     }
 }
 
@@ -117,7 +128,7 @@ if (! function_exists('changeEnv')) {
                     $putContent = true;
                 }
                 if($entry[0] === $change_key) {
-                    if(\Illuminate\Support\Str::contains($change_value, ' ') || \Illuminate\Support\Str::contains($change_value, '{') && \Illuminate\Support\Str::contains($change_value, '}') && \Illuminate\Support\Str::contains($change_value, '$')) {
+                    if(Str::contains($change_value, ' ') || Str::contains($change_value, '{') && Str::contains($change_value, '}') && Str::contains($change_value, '$')) {
                         $new_env[] = $entry[0] . '="' . $change_value . '"';
                     } else {
                         $new_env[] = $entry[0] . '=' . $change_value;
@@ -151,7 +162,7 @@ if (! function_exists('rebuildEnv')) {
         $env = array_map('trim', $env);
         $env = array_filter($env);
 
-        $env = \Illuminate\Support\Collection::make($env)->groupBy(function ($item, $key) {
+        $env = Collection::make($env)->groupBy(function ($item, $key) {
             return substr($item, 0, 2);
         })->toArray();
 
@@ -170,7 +181,7 @@ if (! function_exists('favicon')) {
     function favicon($path, $size) {
         $mime = explode('.', $path)[1];
         $name = explode('.', $path)[0];
-        return \SpaceCode\Maia\Maia::image($name . '_' . $size . '.' . $mime);
+        return Maia::image($name . '_' . $size . '.' . $mime);
     }
 }
 
@@ -332,7 +343,7 @@ if (!function_exists('check_author')) {
     function check_author($id, $result)
     {
         if (isset($id)) {
-            $user = \App\User::find($id);
+            $user = User::find($id);
             if (!is_null($user->$result)) {
                 return $user->$result;
             } else {
@@ -347,7 +358,7 @@ if (!function_exists('check_author')) {
 if (!function_exists('check_thumbnail')) {
     function check_thumbnail($thumbnail)
     {
-        is_null($thumbnail) ? $return = '' : $return = \SpaceCode\Maia\Maia::image($thumbnail);
+        is_null($thumbnail) ? $return = '' : $return = Maia::image($thumbnail);
         return $return;
     }
 }
@@ -355,7 +366,7 @@ if (!function_exists('check_thumbnail')) {
 if (!function_exists('check_logo')) {
     function check_logo()
     {
-        is_null(setting('site.logo')) ? $return = '' : $return = \SpaceCode\Maia\Maia::image(setting('site.logo'));
+        is_null(setting('site.logo')) ? $return = '' : $return = Maia::image(setting('site.logo'));
         return $return;
     }
 }
@@ -551,7 +562,7 @@ if (!function_exists('getTemplate')) {
                     $contents = trim(str_replace('Template:', '', preg_split('/\{{--|\--}}(, *)?/', $file->getContents(), -1, PREG_SPLIT_NO_EMPTY)[0]));
                     if($contents !== 'Example') {
                         $names = str_replace('.blade.php', '', $file->getFilename());
-                        $templates = \Illuminate\Support\Arr::add($templates, $names, $contents);
+                        $templates = Arr::add($templates, $names, $contents);
                     }
                 }
             }
@@ -566,9 +577,9 @@ if (!function_exists('body_class')) {
     function body_class()
     {
         $request = \Request::url();
-        $routeName = str_replace(['maia.', 'parent-'], '', \Illuminate\Support\Facades\Route::currentRouteName());
+        $routeName = str_replace(['maia.', 'parent-'], '', Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
-        return $routeName . ' ' . \Illuminate\Support\Str::slug($url, '-');
+        return $routeName . ' ' . Str::slug($url, '-');
     }
 }
 
@@ -582,59 +593,59 @@ if (!function_exists('isNofollow')) {
 if (!function_exists('isBlog')) {
     function isBlog()
     {
-        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+        if(!Schema::hasTable('settings')) {
             return false;
         }
-        if (!\Illuminate\Support\Facades\Cache::has('siteBlog')) {
-            \Illuminate\Support\Facades\Cache::forever('siteBlog', boolval(setting('site_blog')));
+        if (!Cache::has('siteBlog')) {
+            Cache::forever('siteBlog', boolval(setting('site_blog')));
         }
-        return \Illuminate\Support\Facades\Cache::get('siteBlog');
+        return Cache::get('siteBlog');
     }
 }
 
 if (!function_exists('isPortfolio')) {
     function isPortfolio()
     {
-        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+        if(!Schema::hasTable('settings')) {
             return false;
         }
-        if (!\Illuminate\Support\Facades\Cache::has('sitePortfolio')) {
-            \Illuminate\Support\Facades\Cache::forever('sitePortfolio', boolval(setting('site_portfolio')));
+        if (!Cache::has('sitePortfolio')) {
+            Cache::forever('sitePortfolio', boolval(setting('site_portfolio')));
         }
-        return \Illuminate\Support\Facades\Cache::get('sitePortfolio');
+        return Cache::get('sitePortfolio');
     }
 }
 
 if (!function_exists('isShop')) {
     function isShop()
     {
-        if(!\Illuminate\Support\Facades\Schema::hasTable('settings')) {
+        if(!Schema::hasTable('settings')) {
             return false;
         }
-        if (!\Illuminate\Support\Facades\Cache::has('siteShop')) {
-            \Illuminate\Support\Facades\Cache::forever('siteShop', boolval(setting('site_shop')));
+        if (!Cache::has('siteShop')) {
+            Cache::forever('siteShop', boolval(setting('site_shop')));
         }
-        return \Illuminate\Support\Facades\Cache::get('siteShop');
+        return Cache::get('siteShop');
     }
 }
 
 if (!function_exists('siteIndex')) {
     function siteIndex()
     {
-        if (!\Illuminate\Support\Facades\Cache::has('siteIndex')) {
-            \Illuminate\Support\Facades\Cache::forever('siteIndex', boolval(setting('site_index')));
+        if (!Cache::has('siteIndex')) {
+            Cache::forever('siteIndex', boolval(setting('site_index')));
         }
-        return \Illuminate\Support\Facades\Cache::get('siteIndex');
+        return Cache::get('siteIndex');
     }
 }
 
 if (!function_exists('siteFavicon')) {
     function siteFavicon()
     {
-        if (!\Illuminate\Support\Facades\Cache::has('siteFavicon')) {
-            \Illuminate\Support\Facades\Cache::forever('siteFavicon', setting('site_favicon'));
+        if (!Cache::has('siteFavicon')) {
+            Cache::forever('siteFavicon', setting('site_favicon'));
         }
-        return \Illuminate\Support\Facades\Cache::get('siteFavicon');
+        return Cache::get('siteFavicon');
     }
 }
 
