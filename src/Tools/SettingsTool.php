@@ -107,7 +107,7 @@ class SettingsTool extends Tool
                     Text::make(trans('maia::resources.services.dynamodb.table'), 'services_dynamodb_table'),
                     Text::make(trans('maia::resources.services.dynamodb.endpoint'), 'services_dynamodb_endpoint'),
                     Heading::make(trans('maia::resources.services.redis.title')),
-                    Text::make(trans('maia::resources.services.redis.client'), 'services_redis_client'),
+//                    Text::make(trans('maia::resources.services.redis.client'), 'services_redis_client'),
                     Text::make(trans('maia::resources.services.redis.cluster'), 'services_redis_cluster'),
                     Text::make(trans('maia::resources.services.redis.url'), 'services_redis_url'),
                     Text::make(trans('maia::resources.services.redis.host'), 'services_redis_host'),

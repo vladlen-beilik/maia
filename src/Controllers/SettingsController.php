@@ -126,7 +126,7 @@ class SettingsController extends Controller
                 'services_memcached_port' => 'MEMCACHED_PORT', // 11211
                 'services_dynamodb_table' => 'DYNAMODB_CACHE_TABLE', // cache
                 'services_dynamodb_endpoint' => 'DYNAMODB_ENDPOINT',
-                'services_redis_client' => 'REDIS_CLIENT', // phpredis
+//                'services_redis_client' => 'REDIS_CLIENT', // phpredis
                 'services_redis_cluster' => 'REDIS_CLUSTER', // redis
                 'services_redis_url' => 'REDIS_URL',
                 'services_redis_host' => 'REDIS_HOST', // 127.0.0.1
