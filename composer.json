@@ -33,7 +33,7 @@
         "laravel/nova": "2.9.4",
         "intervention/image": "^2.5",
         "laravel/slack-notification-channel": "^2.0",
-        "laminas/laminas-httphandlerrunner ": "^1.1",
+        "laminas/laminas-httphandlerrunner": "^1.1",
         "intervention/imagecache": "~2.3"
     },
     "require-dev": {
