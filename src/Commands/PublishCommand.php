@@ -59,7 +59,6 @@ class PublishCommand extends Command
             $stubPath . '/app/Http/Controllers/MaiaSitemapController.php.stub' => app_path('Http/Controllers/MaiaSitemapController.php'),
             $stubPath . '/app/User.php.stub' => app_path('User.php'),
             $stubPath . '/app/Nova/User.php.stub' => app_path('Nova/User.php'),
-            $stubPath . '/app/Providers/NovaServiceProvider.php.stub' => app_path('Providers/NovaServiceProvider.php'),
             $stubPath . '/config/app.php.stub' => config_path('app.php'),
             $stubPath . '/config/nova.php.stub' => config_path('nova.php'),
             $stubPath . '/resources/views/vendor/nova/partials/footer.blade.php.stub' => resource_path('views/vendor/nova/partials/footer.blade.php'),

@@ -113,7 +113,7 @@ class Post extends Resource
                     Select::make(trans('maia::resources.status'), 'status')->resolveUsing(function ($value) {
                         return is_null($this->status) ? 'pending' : $value;
                     })->options(collect(\SpaceCode\Maia\Models\Post::$statuses)->mapWithKeys(function ($key) {
-                        return [$key => __(ucfirst($key))];
+                        return [$key => ucfirst($key)];
                     }))->rules(['required'])
                         ->sortable()
                         ->displayUsingLabels(),

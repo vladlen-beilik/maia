@@ -30,6 +30,7 @@ use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
 use Illuminate\Console\Scheduling\Schedule;
+use SpaceCode\Maia\Tools;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -56,7 +57,7 @@ class ToolServiceProvider extends ServiceProvider
             $this->mergeConfigFrom(__DIR__.'/../config/maia.php', 'maia');
         }
         $this->commands([
-//            Commands\InstallCommand::class,
+            Commands\InstallCommand::class,
             Commands\PublishCommand::class,
             Commands\UpdateCommand::class
         ]);
@@ -66,6 +67,7 @@ class ToolServiceProvider extends ServiceProvider
             $this->schedule();
         });
         $this->registerPolicies($user);
+        $this->registerTools();
         $this->assets($event);
         $this->registerMacroHelpers();
         $this->registerModelBindings();
@@ -94,6 +96,8 @@ class ToolServiceProvider extends ServiceProvider
     protected function assets($event) {
         Nova::serving(function ($event) {
 //            Nova::script('license', __DIR__ . '/../dist/js/license.js');
+            Nova::script('multiselect', __DIR__ . '/../dist/js/multiselect.js');
+            Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
             Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
@@ -133,6 +137,19 @@ class ToolServiceProvider extends ServiceProvider
             Gate::policy(Models\PortfolioTag::class, Policy\PortfolioTagPolicy::class);
         }
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);
+    }
+
+    protected function registerTools()
+    {
+        Nova::tools([
+            Tools\FilemanagerTool::make(),
+            Tools\NovaHorizonTool::make(),
+            Tools\SettingsTool::make(),
+            Tools\SeoTool::make(),
+            Tools\NovaTool::make()
+        ]);
+        Tools\SettingsTool::setSettingsFields();
+        Tools\SeoTool::setSeoFields();
     }
 
     /**

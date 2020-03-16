@@ -422,7 +422,7 @@ if (!function_exists('variables_result')) {
             $meta_title,
             $meta_description,
             $meta_keywords,
-            __($status),
+            $status,
             $created_at,
             $updated_at,
             $website_url,
