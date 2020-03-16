@@ -1,8 +1,14 @@
 <p><img src="https://spacecode.ams3.cdn.digitaloceanspaces.com/maia/logo.svg" width="280" alt="CMS Maia"></p>
 
-[![Latest Stable Version](https://poser.pugx.org/spacecode-dev/maia/v/stable?format=flat-square)](https://packagist.org/packages/spacecode-dev/maia)
-[![Total Downloads](https://poser.pugx.org/spacecode-dev/maia/downloads?format=flat-square)](https://packagist.org/packages/spacecode-dev/maia)
-[![License](https://poser.pugx.org/spacecode-dev/maia/license?format=flat-square)](https://packagist.org/packages/spacecode-dev/maia)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/spacecode-dev/maia?label=stable)
+![GitHub repo size](https://img.shields.io/github/repo-size/spacecode-dev/maia?label=size)
+![Packagist](https://img.shields.io/packagist/dt/spacecode-dev/maia)
+![GitHub](https://img.shields.io/github/license/spacecode-dev/maia)
+
+We will be grateful if you Rate our efforts and Follow Us
+
+![GitHub followers](https://img.shields.io/github/followers/spacecode-dev)
+![GitHub stars](https://img.shields.io/github/stars/spacecode-dev/maia)
 
 Flexible and Powerful CMS. 
 Designed for People and Developers. 
