@@ -1,6 +1,6 @@
 {
     "name": "spacecode-dev/maia",
-    "description": "CMS for Laravel 5.8.* based on Laravel Nova 2.9.4",
+    "description": "CMS for Laravel based on Laravel Nova",
     "keywords": [
         "laravel-admin",
         "maia",
