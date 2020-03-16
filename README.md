@@ -1,7 +1,6 @@
 <p><img src="https://spacecode.ams3.cdn.digitaloceanspaces.com/maia/logo.svg" width="280" alt="CMS Maia"></p>
 
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/spacecode-dev/maia?label=stable)
-![GitHub repo size](https://img.shields.io/github/repo-size/spacecode-dev/maia?label=size)
 ![Packagist](https://img.shields.io/packagist/dt/spacecode-dev/maia)
 ![GitHub](https://img.shields.io/github/license/spacecode-dev/maia)
 
