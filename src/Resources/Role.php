@@ -90,19 +90,20 @@ class Role extends Resource
             ID::make()->sortable(),
 
             Text::make(trans('maia::resources.name'), 'name')
-                ->rules(['required', 'string', 'max:255'])
+                ->rules('required', 'string', 'max:255')
                 ->creationRules('unique:roles,name')
                 ->updateRules('unique:roles,name,{{resourceId}}')
                 ->sortable(),
 
             Select::make(trans('maia::resources.guard_name'), 'guard_name')
                 ->options($guardOptions->toArray())
-                ->rules(['required', Rule::in($guardOptions)])
+                ->rules('required', Rule::in($guardOptions))
                 ->sortable(),
 
             DateTime::make(trans('maia::resources.created_at'), 'created_at')
                 ->exceptOnForms()
                 ->sortable(),
+
             DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                 ->exceptOnForms()
                 ->sortable(),

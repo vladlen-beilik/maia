@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PortfolioTagPolicy
@@ -32,64 +31,64 @@ class PortfolioTagPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function create(User $user)
+    public function create($user)
     {
         return $this->checkAssignment($user, 'create portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function update(User $user)
+    public function update($user)
     {
         return $this->checkAssignment($user, 'update portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function delete(User $user)
+    public function delete($user)
     {
         return $this->checkAssignment($user, 'delete portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function restore(User $user)
+    public function restore($user)
     {
         return $this->checkAssignment($user, 'restore portfolioTags');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function forceDelete(User $user)
+    public function forceDelete($user)
     {
         return $this->checkAssignment($user, 'forceDelete portfolioTags');
     }

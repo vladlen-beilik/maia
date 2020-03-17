@@ -19,23 +19,40 @@ class MaiaSitemapController extends Controller
         if(siteIndex()) {
             $homemod = File::exists(resource_path('views/home.blade.php')) ? date('c', File::lastModified(resource_path('views/home.blade.php'))) : '';
             $sitemap->addSitemap(URL::to('sitemap-homepage.xml'), $homemod);
-            $pagemod = Models\Page::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->count() > 0 ? Models\Page::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-            $sitemap->addSitemap(URL::to('sitemap-pages.xml'), $pagemod);
+
+            $pages = Models\Page::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+            if($pages->count() > 0)
+                $sitemap->addSitemap(URL::to('sitemap-pages.xml'), $pages->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
             if(isBlog()) {
-                $postmod = Models\Post::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->count() > 0 ? Models\Post::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-posts.xml'), $postmod);
-                $postCategoriesmod = Models\PostCategory::where(['guard_name' => 'web'])->count() > 0 ? Models\PostCategory::where(['guard_name' => 'web'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-post-categories.xml'), $postCategoriesmod);
-                $postTagsmod = Models\PostTag::where(['guard_name' => 'web'])->count() > 0 ? Models\PostTag::where(['guard_name' => 'web'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-post-tags.xml'), $postTagsmod);
+
+                $posts = Models\Post::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+                if($posts->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-posts.xml'), $posts->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
+                $postCategories = Models\PostCategory::where(['guard_name' => 'web']);
+                if($postCategories->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-post-categories.xml'), $postCategories->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
+                $postTags = Models\PostTag::where(['guard_name' => 'web']);
+                if($postTags->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-post-tags.xml'), $postTags->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
             }
             if(isPortfolio()) {
-                $portfoliomod = Models\Portfolio::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->count() > 0 ? Models\Portfolio::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-portfolio.xml'), $portfoliomod);
-                $portfolioCategoriesmod = Models\PortfolioCategory::where(['guard_name' => 'web'])->count() > 0 ? Models\PortfolioCategory::where(['guard_name' => 'web'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-portfolio-categories.xml'), $portfolioCategoriesmod);
-                $portfolioTagsmod = Models\PortfolioTag::where(['guard_name' => 'web'])->count() > 0 ? Models\PortfolioTag::where(['guard_name' => 'web'])->orderBy('updated_at', 'desc')->first()->updated_at->format('c') : '';
-                $sitemap->addSitemap(URL::to('sitemap-portfolio-tags.xml'), $portfolioTagsmod);
+
+                $portfolio = Models\Portfolio::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+                if($portfolio->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-portfolio.xml'), $portfolio->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
+                $portfolioCategories = Models\PortfolioCategory::where(['guard_name' => 'web']);
+                if($portfolioCategories->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-portfolio-categories.xml'), $portfolioCategories->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
+                $portfolioTags = Models\PortfolioTag::where(['guard_name' => 'web']);
+                if($portfolioTags->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-portfolio-tags.xml'), $portfolioTags->orderBy('updated_at', 'desc')->first()->updated_at->format('c'));
+
             }
         }
         return $sitemap->render('sitemapindex');
@@ -51,8 +68,8 @@ class MaiaSitemapController extends Controller
         $items = Models\Page::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
         $sitemap = App::make('sitemap');
         if($items->count() > 0) {
-            foreach ($items->orderBy('created_at', 'desc')->pluck('slug', 'updated_at') as $key => $value) {
-                $sitemap->add(URL::to($value), date('c', strtotime($key)), '0.9', 'daily');
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), date('c', strtotime($item->updated_at)), '0.9', 'daily');
             }
         }
         return $sitemap->render('xml');
@@ -73,11 +90,12 @@ class MaiaSitemapController extends Controller
         $items = Models\PostCategory::where(['guard_name' => 'web']);
         $sitemap = App::make('sitemap');
         if($items->count() > 0) {
-            foreach ($items->orderBy('created_at', 'desc')->pluck('slug', 'updated_at') as $key => $value) {
-                $sitemap->add(URL::to(seo('seo_post_categories_prefix') . '/' . $value), date('c', strtotime($key)), '0.8', 'daily');
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), date('c', strtotime($item->updated_at)), '0.8', 'daily');
             }
         }
         return $sitemap->render('xml');
+
     }
 
     public function postTags() {
@@ -106,8 +124,8 @@ class MaiaSitemapController extends Controller
         $items = Models\PortfolioCategory::where(['guard_name' => 'web']);
         $sitemap = App::make('sitemap');
         if($items->count() > 0) {
-            foreach ($items->orderBy('created_at', 'desc')->pluck('slug', 'updated_at') as $key => $value) {
-                $sitemap->add(URL::to(seo('seo_portfolio_categories_prefix') . '/' . $value), date('c', strtotime($key)), '0.8', 'daily');
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), date('c', strtotime($item->updated_at)), '0.8', 'daily');
             }
         }
         return $sitemap->render('xml');

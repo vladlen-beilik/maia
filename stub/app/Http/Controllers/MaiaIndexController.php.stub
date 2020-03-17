@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller as Controller;
 use App\Notifications\CustomAnswer;
-use App\User;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\View;
+use SpaceCode\Maia\Facades\Maia;
 use SpaceCode\Maia\Models\ContactForm;
 use SpaceCode\Maia\Models\Page;
 use SpaceCode\Maia\Models\Portfolio;
@@ -16,8 +17,8 @@ use SpaceCode\Maia\Models\PostCategory;
 use SpaceCode\Maia\Models\PostTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Notification;
-use Validator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View as ViewModel;
 
 class MaiaIndexController extends Controller
 {
@@ -50,7 +51,7 @@ class MaiaIndexController extends Controller
 
     /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function pageIndex($slug)
     {
@@ -61,20 +62,7 @@ class MaiaIndexController extends Controller
     }
 
     /**
-     * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function postIndex($slug)
-    {
-        $post = Post::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        put_session_view('posts', $post);
-        return view($post->template === 'default' ? 'post' : 'templates.posts.' . $post->template,
-            ['post' => $post]
-        );
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function parentPageIndex()
     {
@@ -89,7 +77,20 @@ class MaiaIndexController extends Controller
 
     /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
+     */
+    public function postIndex($slug)
+    {
+        $post = Post::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
+        put_session_view('posts', $post);
+        return view($post->template === 'default' ? 'post' : 'templates.posts.' . $post->template,
+            ['post' => $post]
+        );
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
      */
     public function postCategoryIndex($slug)
     {
@@ -100,8 +101,22 @@ class MaiaIndexController extends Controller
     }
 
     /**
+     * @return Factory|ViewModel
+     */
+    public function parentPostCategoryIndex()
+    {
+        $slugs = collect(func_get_args());
+        $postCategory = $slugs->reduce(function($postCategory, $slug) {
+            return ($postCategory->children()->where('slug', $slug)->firstOrFail());
+        }, PostCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
+        return view($postCategory->template === 'default' ? 'postCategory' : 'templates.postCategories.' . $postCategory->template,
+            ['postCategory' => $postCategory]
+        );
+    }
+
+    /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function postTagIndex($slug)
     {
@@ -113,7 +128,7 @@ class MaiaIndexController extends Controller
 
     /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function portfolioIndex($slug)
     {
@@ -126,7 +141,7 @@ class MaiaIndexController extends Controller
 
     /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function portfolioCategoryIndex($slug)
     {
@@ -137,8 +152,22 @@ class MaiaIndexController extends Controller
     }
 
     /**
+     * @return Factory|ViewModel
+     */
+    public function parentPortfolioCategoryIndex()
+    {
+        $slugs = collect(func_get_args());
+        $portfolioCategory = $slugs->reduce(function($portfolioCategory, $slug) {
+            return ($portfolioCategory->children()->where('slug', $slug)->firstOrFail());
+        }, PortfolioCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
+        return view($portfolioCategory->template === 'default' ? 'portfolioCategory' : 'templates.portfolioCategories.' . $portfolioCategory->template,
+            ['portfolioCategory' => $portfolioCategory]
+        );
+    }
+
+    /**
      * @param $slug
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|ViewModel
      */
     public function portfolioTagIndex($slug)
     {

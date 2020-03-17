@@ -58,37 +58,42 @@ class User extends Resource
             (new Tabs($this->singularLabel(), [
                 trans('maia::resources.general') => [
                     ID::make()->sortable(),
+
                     Avatar::make(trans('maia::resources.avatar'), 'avatar')
                         ->disk(config('maia.filemanager.disk'))
                         ->path('avatars')
                         ->deletable(false)
                         ->prunable(),
+
                     Text::make(trans('maia::resources.name'), 'name')
                         ->sortable()
                         ->rules('required', 'max:255', function ($attribute, $value, $fail) {
                             if (strtolower($value) !== $value) {
                                 return $fail(trans('maia::validation.name.lowercase', ['name' => $attribute]));
-                            }
-                        })
-                        ->creationRules('unique:users,name')
+                        }
+                        })->creationRules('unique:users,name')
                         ->updateRules('unique:users,name,{{resourceId}}'),
+
                     Text::make(trans('maia::resources.email'), 'email')
                         ->sortable()
                         ->rules('required', 'max:255', 'email', function ($attribute, $value, $fail) {
                             if (strtolower($value) !== $value) {
                                 return $fail(trans('maia::validation.email.lowercase', ['email' => $attribute]));
                             }
-                        })
-                        ->creationRules('unique:users,email')
+                        })->creationRules('unique:users,email')
                         ->updateRules('unique:users,email,{{resourceId}}'),
+
                     Password::make(trans('maia::resources.password'), 'password')
                         ->onlyOnForms()
                         ->creationRules('required', 'string', 'min:8', 'max:55')
                         ->updateRules('nullable', 'string', 'min:8', 'max:55'),
+
                     PasswordConfirmation::make(trans('maia::resources.password_confirmation')),
+
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
                         ->sortable(),
+
                     DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
                         ->sortable()
@@ -105,11 +110,13 @@ class User extends Resource
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
                     })->hideFromIndex(),
+
                     Text::make(trans('maia::resources.last_name'), 'fullName->lastName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->hideFromIndex(),
+
                     Text::make(trans('maia::resources.middle_name'), 'fullName->middleName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
                     })->displayUsing(function () {
@@ -124,6 +131,7 @@ class User extends Resource
                         ->resolveUsing(function () {
                             return is_null(jsonProp($this->apps, 'socials')) ? null : json_decode($this->apps)->socials;
                         }),
+
                     KeyValue::make(trans('maia::resources.webhooks'), 'apps->webhooks')
                         ->keyLabel(trans('maia::resources.key'))
                         ->valueLabel(trans('maia::resources.value'))

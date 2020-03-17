@@ -5,27 +5,20 @@ use Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
+use Laravel\Nova\Tools\Dashboard;
 use SpaceCode\Maia\Models;
 use App\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as Routing;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
-use SpaceCode\Maia\Contracts\Role as RoleContract;
-use SpaceCode\Maia\Contracts\Permission as PermissionContract;
-use SpaceCode\Maia\Contracts\Page as PageContract;
-use SpaceCode\Maia\Contracts\Post as PostContract;
-use SpaceCode\Maia\Contracts\PostCategory as PostCategoryContract;
-use SpaceCode\Maia\Contracts\PostTag as PostTagContract;
-use SpaceCode\Maia\Contracts\Portfolio as PortfolioContract;
-use SpaceCode\Maia\Contracts\PortfolioCategory as PortfolioCategoryContract;
-use SpaceCode\Maia\Contracts\PortfolioTag as PortfolioTagContract;
-use SpaceCode\Maia\Contracts\ContactForm as ContactFormContract;
+use SpaceCode\Maia\Contracts;
 use SpaceCode\Maia\Middlewares\FilemanagerAuthorize;
 use SpaceCode\Maia\Middlewares\SettingsAuthorize;
 use SpaceCode\Maia\Middlewares\SeoAuthorize;
 use SpaceCode\Maia\Middlewares\HorizonAuthorize;
 use SpaceCode\Maia\Jobs;
+use SpaceCode\Maia\Observers;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
@@ -68,7 +61,7 @@ class ToolServiceProvider extends ServiceProvider
         });
         $this->registerPolicies($user);
         $this->registerTools();
-        $this->assets($event);
+        $this->assets();
         $this->registerMacroHelpers();
         $this->registerModelBindings();
         $this->registerBladeExtensions();
@@ -93,9 +86,10 @@ class ToolServiceProvider extends ServiceProvider
         );
     }
 
-    protected function assets($event) {
-        Nova::serving(function ($event) {
+    protected function assets() {
+        Nova::serving(function () {
 //            Nova::script('license', __DIR__ . '/../dist/js/license.js');
+            Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::script('multiselect', __DIR__ . '/../dist/js/multiselect.js');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
@@ -214,20 +208,8 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function registerModelBindings()
     {
-        $this->app->bind(PermissionContract::class, Models\Permission::class);
-        $this->app->bind(RoleContract::class, Models\Role::class);
-        $this->app->bind(PageContract::class, Models\Page::class);
-        if(isBlog()) {
-            $this->app->bind(PostContract::class, Models\Post::class);
-            $this->app->bind(PostCategoryContract::class, Models\PostCategory::class);
-            $this->app->bind(PostTagContract::class, Models\PostTag::class);
-        }
-        if(isPortfolio()) {
-            $this->app->bind(PortfolioContract::class, Models\Portfolio::class);
-            $this->app->bind(PortfolioCategoryContract::class, Models\PortfolioCategory::class);
-            $this->app->bind(PortfolioTagContract::class, Models\PortfolioTag::class);
-        }
-        $this->app->bind(ContactFormContract::class, Models\ContactForm::class);
+        $this->app->bind(Contracts\PermissionContract::class, Models\Permission::class);
+        $this->app->bind(Contracts\RoleContract::class, Models\Role::class);
     }
 
     protected function registerBladeExtensions()

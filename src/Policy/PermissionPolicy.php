@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use SpaceCode\Maia\Models\Permission;
 
@@ -49,38 +48,38 @@ class PermissionPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny permissions');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view permissions');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function create(User $user)
+    public function create($user)
     {
         return $this->checkAssignment($user, 'create permissions');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param Permission $permission
      * @return bool
      */
-    public function update(User $user, Permission $permission)
+    public function update($user, Permission $permission)
     {
         if(isDeveloper($user)) {
             return true;
@@ -92,11 +91,11 @@ class PermissionPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param Permission $permission
      * @return bool
      */
-    public function delete(User $user, Permission $permission)
+    public function delete($user, Permission $permission)
     {
         if(isDeveloper($user)) {
             return true;

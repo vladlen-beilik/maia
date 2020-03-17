@@ -4,15 +4,10 @@ namespace SpaceCode\Maia\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
-use SpaceCode\Maia\Contracts\Post as PostContract;
-use SpaceCode\Maia\Exceptions\PostAlreadyExists;
-use SpaceCode\Maia\Exceptions\PostDoesNotExist;
-use SpaceCode\Maia\Guard;
 
-class Post extends Model implements PostContract
+class Post extends Model
 {
     use SoftDeletes;
 
@@ -35,21 +30,12 @@ class Post extends Model implements PostContract
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         $attributes['author_id'] = $attributes['author_id'] ?? Auth::id();
+        $attributes['template'] = $attributes['template'] ?? 'default';
+        $attributes['status'] = $attributes['status'] ?? 'pending';
+        $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
+        $attributes['comments'] = $attributes['comments'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('posts');
-    }
-
-    /**
-     * @param array $attributes
-     * @return Builder|Model
-     * @throws PostAlreadyExists
-     */
-    public static function create(array $attributes = [])
-    {
-        if (static::where('slug', $attributes['slug'])->where('guard_name', $attributes['guard_name'])->first()) {
-            throw PostAlreadyExists::create($attributes['slug'], $attributes['guard_name']);
-        }
-        return static::query()->create($attributes);
     }
 
     /**
@@ -74,53 +60,5 @@ class Post extends Model implements PostContract
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(PostTag::class, 'relation_post_tag', 'post_id', 'tag_id');
-    }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PostContract
-     * @throws PostDoesNotExist
-     */
-    public static function findBySlug(string $slug, $guardName = null): PostContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $post = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $post) {
-            throw PostDoesNotExist::sluged($slug);
-        }
-        return $post;
-    }
-
-    /**
-     * @param string $title
-     * @param string|null $guardName
-     * @return PostContract
-     * @throws PostDoesNotExist
-     */
-    public static function findByTitle(string $title, $guardName = null): PostContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $post = static::where('title', $title)->where('guard_name', $guardName)->first();
-        if (! $post) {
-            throw PostDoesNotExist::named($title);
-        }
-        return $post;
-    }
-
-    /**
-     * @param int $id
-     * @param string|null $guardName
-     * @return PostContract
-     * @throws PostDoesNotExist
-     */
-    public static function findById(int $id, $guardName = null): PostContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $post = static::where('id', $id)->where('guard_name', $guardName)->first();
-        if (! $post) {
-            throw PostDoesNotExist::withId($id);
-        }
-        return $post;
     }
 }

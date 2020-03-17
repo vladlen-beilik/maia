@@ -4,15 +4,12 @@ namespace SpaceCode\Maia\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
-use SpaceCode\Maia\Contracts\Page as PageContract;
-use SpaceCode\Maia\Exceptions\PageAlreadyExists;
-use SpaceCode\Maia\Exceptions\PageDoesNotExist;
-use SpaceCode\Maia\Guard;
+use SpaceCode\Maia\Models\Seo;
+use SpaceCode\Maia\Exceptions\PageConflict;
 
-class Page extends Model implements PageContract
+class Page extends Model
 {
     use SoftDeletes;
 
@@ -27,14 +24,55 @@ class Page extends Model implements PageContract
 
     protected $guarded = ['id'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($model) {
+
+            $prefixes = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
+            if($prefixes->count() > 0 && !is_null($model->parent_id) && in_array($model->parent->slug, $prefixes->toArray())) {
+                throw PageConflict::ban($model->getUrl());
+            }
+
+            $already = self::all()->map(function ($page) {
+                return $page->getUrl();
+            });
+            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
+                throw PageConflict::url($model->getUrl(), $model->guard_name);
+            }
+
+            return true;
+        });
+
+        static::updating(function($model) {
+
+            $prefixes = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
+            if($prefixes->count() > 0 && !is_null($model->parent_id) && in_array($model->parent->slug, $prefixes->toArray())) {
+                throw PageConflict::ban($model->getUrl());
+            }
+
+            $already = self::all()->map(function ($page) {
+                return $page->getUrl();
+            });
+            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
+                throw PageConflict::url($model->getUrl(), $model->guard_name);
+            }
+
+            return true;
+        });
+    }
+
     /**
-     * Page constructor.
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         $attributes['author_id'] = $attributes['author_id'] ?? Auth::id();
+        $attributes['status'] = $attributes['status'] ?? 'pending';
+        $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
+        $attributes['template'] = $attributes['template'] ?? 'default';
         parent::__construct($attributes);
         $this->setTable('pages');
     }
@@ -56,16 +94,16 @@ class Page extends Model implements PageContract
     }
 
     /**
-     * @param array $attributes
-     * @return Builder|Model
-     * @throws PageAlreadyExists
+     * @return mixed|string
      */
-    public static function create(array $attributes = [])
+    public function getUrl()
     {
-        if (static::where('slug', $attributes['slug'])->where('guard_name', $attributes['guard_name'])->first()) {
-            throw PageAlreadyExists::create($attributes['slug'], $attributes['guard_name']);
+        $url = $this->slug;
+        $parent = $this;
+        while ($parent = $parent->parent) {
+            $url = $parent->slug . '/' . $url;
         }
-        return static::query()->create($attributes);
+        return $url;
     }
 
     /**
@@ -74,53 +112,5 @@ class Page extends Model implements PageContract
     public function user(): BelongsTo
     {
         return $this->belongsTo('App\\User', 'author_id');
-    }
-
-    /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PageContract
-     * @throws PageDoesNotExist
-     */
-    public static function findBySlug(string $slug, $guardName = null): PageContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $page = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $page) {
-            throw PageDoesNotExist::sluged($slug);
-        }
-        return $page;
-    }
-
-    /**
-     * @param string $title
-     * @param string|null $guardName
-     * @return PageContract
-     * @throws PageDoesNotExist
-     */
-    public static function findByTitle(string $title, $guardName = null): PageContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $page = static::where('title', $title)->where('guard_name', $guardName)->first();
-        if (! $page) {
-            throw PageDoesNotExist::named($title);
-        }
-        return $page;
-    }
-
-    /**
-     * @param int $id
-     * @param string|null $guardName
-     * @return PageContract
-     * @throws PageDoesNotExist
-     */
-    public static function findById(int $id, $guardName = null): PageContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $page = static::where('id', $id)->where('guard_name', $guardName)->first();
-        if (! $page) {
-            throw PageDoesNotExist::withId($id);
-        }
-        return $page;
     }
 }

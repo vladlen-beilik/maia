@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PortfolioPolicy
@@ -32,100 +31,100 @@ class PortfolioPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function create(User $user)
+    public function create($user)
     {
         return $this->checkAssignment($user, 'create portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function update(User $user)
+    public function update($user)
     {
         return $this->checkAssignment($user, 'update portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function attachAnyPortfolioCategory(User $user)
+    public function attachAnyPortfolioCategory($user)
     {
         return $this->checkAssignment($user, 'attachAnyPortfolioCategory portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function detachAnyPortfolioCategory(User $user)
+    public function detachAnyPortfolioCategory($user)
     {
         return $this->checkAssignment($user, 'detachAnyPortfolioCategory portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function attachAnyPortfolioTag(User $user)
+    public function attachAnyPortfolioTag($user)
     {
         return $this->checkAssignment($user, 'attachAnyPortfolioTag portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function detachAnyPortfolioTag(User $user)
+    public function detachAnyPortfolioTag($user)
     {
         return $this->checkAssignment($user, 'detachAnyPortfolioTag portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function delete(User $user)
+    public function delete($user)
     {
         return $this->checkAssignment($user, 'delete portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function restore(User $user)
+    public function restore($user)
     {
         return $this->checkAssignment($user, 'restore portfolio');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function forceDelete(User $user)
+    public function forceDelete($user)
     {
         return $this->checkAssignment($user, 'forceDelete portfolio');
     }

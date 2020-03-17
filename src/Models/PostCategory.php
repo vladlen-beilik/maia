@@ -2,15 +2,11 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use SpaceCode\Maia\Contracts\PostCategory as PostCategoryContract;
-use SpaceCode\Maia\Exceptions\PostAlreadyExists;
-use SpaceCode\Maia\Exceptions\PostCategoryAlreadyExists;
-use SpaceCode\Maia\Exceptions\PostCategoryDoesNotExist;
-use SpaceCode\Maia\Guard;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use SpaceCode\Maia\Exceptions\PostCategoryConflict;
 
-class PostCategory extends Model implements PostCategoryContract
+class PostCategory extends Model
 {
     const STATE_STATIC = 'static';
     const STATE_DYNAMIC = 'dynamic';
@@ -19,13 +15,44 @@ class PostCategory extends Model implements PostCategoryContract
 
     protected $guarded = ['id'];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($model) {
+
+            $already = self::all()->map(function ($postCategory) {
+                return $postCategory->getUrl();
+            });
+            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
+                throw PostCategoryConflict::url($model->getUrl(), $model->guard_name);
+            }
+
+            return true;
+        });
+
+        static::updating(function($model) {
+
+            $already = self::all()->map(function ($postCategory) {
+                return $postCategory->getUrl();
+            });
+            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
+                throw PostCategoryConflict::url($model->getUrl(), $model->guard_name);
+            }
+
+            return true;
+        });
+    }
+
     /**
-     * Post Category constructor.
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
+        $attributes['template'] = $attributes['template'] ?? 'default';
+        $attributes['order'] = $attributes['order'] ?? 1;
+        $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         parent::__construct($attributes);
         $this->setTable('post_categories');
     }
@@ -39,63 +66,23 @@ class PostCategory extends Model implements PostCategoryContract
     }
 
     /**
-     * @param array $attributes
-     * @return Builder|Model
-     * @throws PostCategoryAlreadyExists
+     * @return HasMany
      */
-    public static function create(array $attributes = [])
+    public function children(): HasMany
     {
-        if (static::where('slug', $attributes['slug'])->where('guard_name', $attributes['guard_name'])->first()) {
-            throw PostAlreadyExists::create($attributes['slug'], $attributes['guard_name']);
-        }
-        return static::query()->create($attributes);
+        return $this->hasMany(self::class, 'parent_id', 'id');
     }
 
     /**
-     * @param string $slug
-     * @param string|null $guardName
-     * @return PostCategoryContract
-     * @throws PostCategoryDoesNotExist
+     * @return mixed|string
      */
-    public static function findBySlug(string $slug, $guardName = null): PostCategoryContract
+    public function getUrl()
     {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $postCategory = static::where('slug', $slug)->where('guard_name', $guardName)->first();
-        if (! $postCategory) {
-            throw PostCategoryDoesNotExist::sluged($slug);
+        $url = $this->slug;
+        $parent = $this;
+        while ($parent = $parent->parent) {
+            $url = $parent->slug . '/' . $url;
         }
-        return $postCategory;
-    }
-
-    /**
-     * @param string $title
-     * @param string|null $guardName
-     * @return PostCategoryContract
-     * @throws PostCategoryDoesNotExist
-     */
-    public static function findByTitle(string $title, $guardName = null): PostCategoryContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $postCategory = static::where('title', $title)->where('guard_name', $guardName)->first();
-        if (! $postCategory) {
-            throw PostCategoryDoesNotExist::named($title);
-        }
-        return $postCategory;
-    }
-
-    /**
-     * @param int $id
-     * @param string|null $guardName
-     * @return PostCategoryContract
-     * @throws PostCategoryDoesNotExist
-     */
-    public static function findById(int $id, $guardName = null): PostCategoryContract
-    {
-        $guardName = $guardName ?? Guard::getDefaultName(static::class);
-        $postCategory = static::where('id', $id)->where('guard_name', $guardName)->first();
-        if (! $postCategory) {
-            throw PostCategoryDoesNotExist::withId($id);
-        }
-        return $postCategory;
+        return seo('seo_post_categories_prefix') . '/' . $url;
     }
 }

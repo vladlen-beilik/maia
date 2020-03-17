@@ -85,6 +85,7 @@ return [
     'applications' => 'Applications',
     'socialnetworks' => 'Social Networks',
     'webhooks' => 'Webhooks',
+    'view' => 'View',
     'pending' => 'Pending',
     'published' => 'Published',
     'default' => 'Default',

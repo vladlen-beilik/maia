@@ -7,7 +7,6 @@ use SpaceCode\Maia\Traits\HasPermissions;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use SpaceCode\Maia\Exceptions\GuardDoesNotMatch;
-use SpaceCode\Maia\Exceptions\RoleAlreadyExists;
 use SpaceCode\Maia\Exceptions\RoleDoesNotExist;
 use SpaceCode\Maia\Traits\RefreshesPermissionCache;
 use SpaceCode\Maia\Contracts\Role as RoleContract;
@@ -28,19 +27,6 @@ class Role extends Model implements RoleContract
         $attributes['guard_name'] = $attributes['guard_name'] ?? config('auth.defaults.guard');
         parent::__construct($attributes);
         $this->setTable('roles');
-    }
-
-    /**
-     * @param array $attributes
-     * @return mixed
-     */
-    public static function create(array $attributes = [])
-    {
-        $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
-        if (static::where('name', $attributes['name'])->where('guard_name', $attributes['guard_name'])->first()) {
-            throw RoleAlreadyExists::create($attributes['name'], $attributes['guard_name']);
-        }
-        return static::query()->create($attributes);
     }
 
     /**

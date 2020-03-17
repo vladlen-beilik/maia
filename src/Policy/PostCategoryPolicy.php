@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostCategoryPolicy
@@ -32,64 +31,64 @@ class PostCategoryPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function create(User $user)
+    public function create($user)
     {
         return $this->checkAssignment($user, 'create postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function update(User $user)
+    public function update($user)
     {
         return $this->checkAssignment($user, 'update postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function delete(User $user)
+    public function delete($user)
     {
         return $this->checkAssignment($user, 'delete postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function restore(User $user)
+    public function restore($user)
     {
         return $this->checkAssignment($user, 'restore postCategories');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function forceDelete(User $user)
+    public function forceDelete($user)
     {
         return $this->checkAssignment($user, 'forceDelete postCategories');
     }

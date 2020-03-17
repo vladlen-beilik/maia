@@ -64,43 +64,44 @@ class ContactForm extends Resource
     public function fields(Request $request)
     {
         return [
-
-            // ID
             ID::make()->asBigInt()->sortable(),
 
-            // Sender
-            Text::make(trans('maia::resources.sender'), 'sender')->sortable()->readonly(),
+            Text::make(trans('maia::resources.sender'), 'sender')
+                ->sortable()
+                ->readonly(),
 
-            // Title
-            Text::make(trans('maia::resources.title'), 'title')->readonly(),
+            Text::make(trans('maia::resources.title'), 'title')
+                ->readonly(),
 
-            // Contacts
-            Textarea::make(trans('maia::resources.contacts'), 'contacts')->displayUsing(function () {
-                if(is_null($this->contacts)) {
-                    return null;
-                } else {
-                    $array = '';
-                    foreach (json_decode($this->contacts) as $key => $value) {
-                        $val = $key === 'budget' ? "$" . $value : $value;
-                        $array .= ucfirst($key) . ": " . $val . "\n";
+            Textarea::make(trans('maia::resources.contacts'), 'contacts')
+                ->displayUsing(function () {
+                    if (is_null($this->contacts)) {
+                        return null;
+                    } else {
+                        $array = '';
+                        foreach (json_decode($this->contacts) as $key => $value) {
+                            $val = $key === 'budget' ? "$" . $value : $value;
+                            $array .= ucfirst($key) . ": " . $val . "\n";
+                        }
+                        return $array;
                     }
-                    return $array;
-                }
-            })->hideFromIndex()->readonly(),
+                })->hideFromIndex()
+                ->readonly(),
 
-            // Description
-            Textarea::make(trans('maia::resources.description'), 'description')->displayUsing(function () {
-                if(is_null($this->description)) {
-                    return null;
-                } else {
-                    $array = '';
-                    foreach (json_decode($this->description) as $key => $value) {
-                        $val = $key === 'budget' ? "$" . $value : $value;
-                        $array .= ucfirst($key) . ": " . $val . "\n";
+            Textarea::make(trans('maia::resources.description'), 'description')
+                ->displayUsing(function () {
+                    if (is_null($this->description)) {
+                        return null;
+                    } else {
+                        $array = '';
+                        foreach (json_decode($this->description) as $key => $value) {
+                            $val = $key === 'budget' ? "$" . $value : $value;
+                            $array .= ucfirst($key) . ": " . $val . "\n";
+                        }
+                        return $array;
                     }
-                    return $array;
-                }
-            })->hideFromIndex()->readonly(),
+                })->hideFromIndex()
+                ->readonly(),
         ];
     }
 

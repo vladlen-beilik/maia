@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use SpaceCode\Maia\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -33,38 +32,38 @@ class RolePolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny roles');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view roles');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function create(User $user)
+    public function create($user)
     {
         return $this->checkAssignment($user, 'create roles');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param Role $role
      * @return bool
      */
-    public function update(User $user, Role $role)
+    public function update($user, Role $role)
     {
         if(isDeveloper($user)) {
             return true;
@@ -76,11 +75,11 @@ class RolePolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @param Role $role
      * @return bool
      */
-    public function delete(User $user, Role $role)
+    public function delete($user, Role $role)
     {
         if(isDeveloper($user)) {
             return true;

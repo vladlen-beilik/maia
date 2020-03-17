@@ -32,21 +32,6 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * @param array $attributes
-     * @return Builder|Model
-     * @throws PermissionAlreadyExists
-     */
-    public static function create(array $attributes = [])
-    {
-        $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
-        $permission = static::getPermissions(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name']])->first();
-        if ($permission) {
-            throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name']);
-        }
-        return static::query()->create($attributes);
-    }
-
-    /**
      * @return BelongsToMany
      */
     public function roles(): BelongsToMany

@@ -160,6 +160,11 @@ class SettingsController extends Controller
                 }
             }
 
+            if($field->attribute === 'site_url' && !Str::contains(file_get_contents(base_path() . '/.env'), 'HORIZON_PREFIX')) {
+                $envString = 'HORIZON_PREFIX=' . str_replace('.', '-', class_basename($tempResource->{$field->attribute})) . '-horizon:';
+                setEnv($envString);
+            }
+
             if($field->attribute === 'site_blog' || $field->attribute === 'site_portfolio' || $field->attribute === 'site_shop' || $field->attribute === 'site_index' || $field->attribute === 'site_favicon') {
                 $explode = explode('_', $field->attribute);
                 $name = $explode[0].ucfirst($explode[1]);

@@ -1,10 +1,15 @@
 <?php
 
+use App\User;
 use SpaceCode\Maia\Models\Settings;
 use SpaceCode\Maia\Models\Seo;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('settings')) {
     function settings($keys = null)
@@ -157,7 +162,7 @@ if (! function_exists('rebuildEnv')) {
         $env = array_map('trim', $env);
         $env = array_filter($env);
 
-        $env = \Illuminate\Support\Collection::make($env)->groupBy(function ($item, $key) {
+        $env = Collection::make($env)->groupBy(function ($item, $key) {
             return substr($item, 0, 2);
         })->toArray();
 
@@ -338,7 +343,7 @@ if (!function_exists('check_author')) {
     function check_author($id, $result)
     {
         if (isset($id)) {
-            $user = \App\User::find($id);
+            $user = User::find($id);
             if (!is_null($user->$result)) {
                 return $user->$result;
             } else {
@@ -422,7 +427,7 @@ if (!function_exists('variables_result')) {
             $meta_title,
             $meta_description,
             $meta_keywords,
-            $status,
+            __($status),
             $created_at,
             $updated_at,
             $website_url,
@@ -574,7 +579,7 @@ if (!function_exists('body_class')) {
         $request = \Request::url();
         $routeName = str_replace(['maia.', 'parent-'], '', Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
-        return $routeName . ' ' . Str::snake($url, '-');
+        return $routeName . ' ' . Str::slug($url, '-');
     }
 }
 

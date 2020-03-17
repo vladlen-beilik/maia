@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Policy;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ContactFormPolicy
@@ -32,19 +31,19 @@ class ContactFormPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return $this->checkAssignment($user, 'viewAny contactForms');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function view(User $user)
+    public function view($user)
     {
         return $this->checkAssignment($user, 'view contactForms');
     }
@@ -66,28 +65,28 @@ class ContactFormPolicy
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function delete(User $user)
+    public function delete($user)
     {
         return $this->checkAssignment($user, 'delete contactForms');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function restore(User $user)
+    public function restore($user)
     {
         return $this->checkAssignment($user, 'restore contactForms');
     }
 
     /**
-     * @param User $user
+     * @param $user
      * @return bool
      */
-    public function forceDelete(User $user)
+    public function forceDelete($user)
     {
         return $this->checkAssignment($user, 'forceDelete contactForms');
     }
