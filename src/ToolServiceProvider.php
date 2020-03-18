@@ -103,8 +103,8 @@ class ToolServiceProvider extends ServiceProvider
     }
 
     protected function schedule() {
-        $schedule = app(Schedule::class);
-        $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
+//        $schedule = app(Schedule::class);
+//        $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
     }
 
     protected function loadHelper() {
