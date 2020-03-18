@@ -93,7 +93,7 @@ class PortfolioCategory extends Resource
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('portfolioCategories'))
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Number::make(trans('maia::resources.order'), 'order')
@@ -146,7 +146,7 @@ class PortfolioCategory extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')

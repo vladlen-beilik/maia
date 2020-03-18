@@ -6,6 +6,8 @@ return [
         'seo' => 'Seo',
         'settings' => 'Settings',
     ],
+    'types' => 'Types',
+    'type' => 'Type',
     'key' => 'Key',
     'value' => 'Value',
     'add' => 'Add',

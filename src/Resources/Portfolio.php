@@ -93,12 +93,12 @@ class Portfolio extends Resource
         });
         if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
             $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-                ->required()
+                ->rules('required')
                 ->hideWhenCreating()
                 ->sortable();
         } else {
             $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-                ->required()
+                ->rules('required')
                 ->hideWhenCreating()
                 ->sortable()
                 ->readonly();
@@ -117,7 +117,7 @@ class Portfolio extends Resource
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('portfolio'))
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Badge::make(trans('maia::resources.status'), 'status', function () {
@@ -131,7 +131,7 @@ class Portfolio extends Resource
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                         return [$key => ucfirst($key)];
                     }))->onlyOnForms()
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Text::make(trans('maia::resources.view'), 'view', function () {
@@ -189,7 +189,7 @@ class Portfolio extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')

@@ -89,7 +89,7 @@ class PostTag extends Resource
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('postTags'))
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels()
                 ],
                 trans('maia::resources.content') => [
@@ -126,7 +126,7 @@ class PostTag extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')

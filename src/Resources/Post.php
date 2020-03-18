@@ -111,7 +111,7 @@ class Post extends Resource
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('posts'))
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Badge::make(trans('maia::resources.status'), 'status', function () {
@@ -124,7 +124,7 @@ class Post extends Resource
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                             return [$key => ucfirst($key)];
                         }))->onlyOnForms()
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Toggle::make(trans('maia::resources.comments'), 'comments')
@@ -185,7 +185,7 @@ class Post extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')
