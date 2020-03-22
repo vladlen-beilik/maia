@@ -27,20 +27,15 @@ class MaiaIndexController extends Controller
         // Google Tag Manager
         $global['tracking-head'] = setting('tracking_google_tag_manager_head');
         $global['tracking-body'] = setting('tracking_google_tag_manager_body');
-
+        $global['json_ld'] = null;
         if(isset($__env) && trim($__env->yieldContent('json_ld'))) {
             $global['json_ld'] = "<!-- Schema -->\n" . str_replace('&#039;', '"', html_entity_decode($__env->yieldContent('json_ld'), ENT_COMPAT, 'UTF-8')) . "\n";
-        } else {
-            $global['json_ld'] = null;
         }
-
+        $global['favicon'] = null;
         $siteFavicon = siteFavicon();
         if(!is_null($siteFavicon) && !empty($siteFavicon)) {
             $global['favicon'] = "    <!-- Favicon -->\n" . "    <link rel='icon' sizes='180x180' href='" . favicon(siteFavicon(), '180') . "' />\n" . "    <link rel='icon' sizes='32x32' href='" . favicon(siteFavicon(), '32') . "' />\n";
-        } else {
-            $global['favicon'] = null;
         }
-
         View::share('globalKey', $global);
     }
 

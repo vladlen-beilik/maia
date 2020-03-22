@@ -1,5 +1,5 @@
 {{-- Template: Example --}}
-@include('maia::templates.term_slot_head', ['key' => 'portfolioTags', 'term' => $portfolioTag, 'url' => url(seo('seo_portfolio_tags_prefix') . '/' . $portfolioTag->slug)])
+@include('maia::templates.term_slot_head', ['key' => 'portfolioTags', 'term' => $portfolioTag, 'url' => $portfolioTag->getUrl(true)])
 @extends('maia::index')
 @section('content')
     {{----}}

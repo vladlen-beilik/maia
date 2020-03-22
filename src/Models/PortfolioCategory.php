@@ -4,6 +4,7 @@ namespace SpaceCode\Maia\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use SpaceCode\Maia\Exceptions\PortfolioCategoryConflict;
 
 class PortfolioCategory extends Model
@@ -74,15 +75,28 @@ class PortfolioCategory extends Model
     }
 
     /**
+     * @param bool $arg
      * @return mixed|string
      */
-    public function getUrl()
+    public function getUrl($arg = false)
     {
         $url = $this->slug;
         $parent = $this;
         while ($parent = $parent->parent) {
             $url = $parent->slug . '/' . $url;
         }
-        return seo('seo_portfolio_categories_prefix') . '/' . $url;
+        $link = seo('seo_portfolio_categories_prefix') . '/' . $url;
+        return $arg ? url($link) : $link;
+    }
+
+    /**
+     * @param $string
+     * @param $limit
+     * @param $end
+     * @return mixed|string
+     */
+    public function limit($string, $limit, $end)
+    {
+        return Str::limit((string)$string, $limit, $end);
     }
 }

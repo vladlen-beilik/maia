@@ -5,7 +5,6 @@ namespace SpaceCode\Maia\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
@@ -19,6 +18,7 @@ use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
 use SpaceCode\Maia\Fields\Toggle;
+use Waynestate\Nova\CKEditor;
 
 class PostCategory extends Resource
 {
@@ -93,7 +93,7 @@ class PostCategory extends Resource
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('postCategories'))
-                        ->rules('required')
+                        ->required()
                         ->displayUsingLabels(),
 
                     Number::make(trans('maia::resources.order'), 'order')
@@ -130,9 +130,23 @@ class PostCategory extends Resource
                         ->rules('max:255')
                         ->hideFromIndex(),
 
-                    Code::make(trans('maia::resources.body'), 'body')->resolveUsing(function () {
-                        return is_null($this->body) ? '<?php></php>' : $this->body;
-                    })->language('php')->hideFromIndex(),
+                    CKEditor::make(trans('maia::resources.body'), 'body')->options([
+                        'height' => 600,
+                        'toolbar' => [
+                            ['Undo','Redo', '-'],
+                            ['Bold','Italic','Strike','-','Subscript','Superscript'],
+                            ['NumberedList','BulletedList','-','Outdent','Indent', '-', 'Blockquote','CreateDiv'],
+                            ['Image','Table','SpecialChar', '-'],
+                            ['JustifyLeft','JustifyCenter','JustifyRight'],
+                            ['Link','Unlink','Anchor'],
+                            '/',
+                            ['Source', '-', 'Replace', 'RemoveFormat'],
+                            ['Format'],
+                            ['Maximize', 'ShowBlocks','-']
+                        ],
+                        'language' => env('APP_LOCALE'),
+                        'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
+                    ])->hideFromIndex(),
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
@@ -146,7 +160,7 @@ class PostCategory extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->rules('required')
+                        ->required()
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')

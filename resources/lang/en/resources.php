@@ -216,8 +216,8 @@ return [
         'confirm' => 'Confirm Password'
     ],
     'visitors' => [
-        'all' => '`:view` visitors',
-        'unique' => '`:view` visitors (`:unique` unique visitors)',
+        'all' => ':view visitors',
+        'unique' => ':view visitors (:unique unique visitors)',
     ],
     'lic' => [
         'email' => 'User Email',

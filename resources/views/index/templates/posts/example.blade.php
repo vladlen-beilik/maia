@@ -1,5 +1,5 @@
 {{-- Template: Example --}}
-@include('maia::templates.single_slot_head', ['key' => 'posts', 'single' => $post, 'url' => url(seo('seo_posts_prefix') . '/' . $post->slug)])
+@include('maia::templates.single_slot_head', ['key' => 'posts', 'single' => $post, 'url' => $post->getUrl(true)])
 @extends('maia::index')
 @section('content')
     {{----}}

@@ -1,5 +1,5 @@
 {{-- Template: Example --}}
-@include('maia::templates.single_slot_head', ['key' => 'portfolio', 'single' => $portfolio, 'url' => url(seo('seo_portfolio_prefix') . '/' . $portfolio->slug)])
+@include('maia::templates.single_slot_head', ['key' => 'portfolio', 'single' => $portfolio, 'url' => $portfolio->getUrl(true)])
 @extends('maia::index')
 @section('content')
     {{----}}

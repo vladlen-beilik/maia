@@ -1,2 +1,2 @@
-<link rel="stylesheet" href="{{ mix('vendor/maia/bootstrap.css') }}">
-<link rel="stylesheet" href="{{ mix('assets/css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('vendor/maia/bootstrap.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">

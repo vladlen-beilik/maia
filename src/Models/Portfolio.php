@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Portfolio extends Model
 {
@@ -33,6 +34,7 @@ class Portfolio extends Model
         $attributes['status'] = $attributes['status'] ?? 'pending';
         $attributes['template'] = $attributes['template'] ?? 'default';
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
+        $attributes['view'] = $attributes['view'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('portfolio');
     }
@@ -59,5 +61,26 @@ class Portfolio extends Model
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(PortfolioTag::class, 'relation_portfolio_tag', 'portfolio_id', 'tag_id');
+    }
+
+    /**
+     * @param bool $arg
+     * @return mixed|string
+     */
+    public function getUrl($arg = false)
+    {
+        $url = seo('seo_portfolio_prefix') . '/' . $this->slug;
+        return $arg ? url($url) : $url;
+    }
+
+    /**
+     * @param $string
+     * @param $limit
+     * @param $end
+     * @return mixed|string
+     */
+    public function limit($string, $limit, $end)
+    {
+        return Str::limit((string)$string, $limit, $end);
     }
 }

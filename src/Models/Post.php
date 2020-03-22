@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -34,6 +35,7 @@ class Post extends Model
         $attributes['status'] = $attributes['status'] ?? 'pending';
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         $attributes['comments'] = $attributes['comments'] ?? 0;
+        $attributes['view'] = $attributes['view'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('posts');
     }
@@ -60,5 +62,26 @@ class Post extends Model
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(PostTag::class, 'relation_post_tag', 'post_id', 'tag_id');
+    }
+
+    /**
+     * @param bool $arg
+     * @return mixed|string
+     */
+    public function getUrl($arg = false)
+    {
+        $url = seo('seo_posts_prefix') . '/' . $this->slug;
+        return $arg ? url($url) : $url;
+    }
+
+    /**
+     * @param $string
+     * @param $limit
+     * @param $end
+     * @return mixed|string
+     */
+    public function limit($string, $limit, $end)
+    {
+        return Str::limit((string)$string, $limit, $end);
     }
 }

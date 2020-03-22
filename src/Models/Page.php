@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use SpaceCode\Maia\Models\Seo;
 use SpaceCode\Maia\Exceptions\PageConflict;
 
@@ -94,16 +95,28 @@ class Page extends Model
     }
 
     /**
+     * @param bool $arg
      * @return mixed|string
      */
-    public function getUrl()
+    public function getUrl($arg = false)
     {
         $url = $this->slug;
         $parent = $this;
         while ($parent = $parent->parent) {
             $url = $parent->slug . '/' . $url;
         }
-        return $url;
+        return $arg ? url($url) : $url;
+    }
+
+    /**
+     * @param $string
+     * @param $limit
+     * @param $end
+     * @return mixed|string
+     */
+    public function limit($string, $limit, $end)
+    {
+        return Str::limit((string)$string, $limit, $end);
     }
 
     /**
