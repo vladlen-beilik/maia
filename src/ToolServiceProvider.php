@@ -113,6 +113,9 @@ class ToolServiceProvider extends ServiceProvider
         Gate::policy(Models\Permission::class, Policy\PermissionPolicy::class);
         Gate::policy(Models\Role::class, Policy\RolePolicy::class);
         Gate::policy(Models\Page::class, Policy\PagePolicy::class);
+        if(isBlog() || isPortfolio()) {
+            Gate::policy(Models\Comment::class, Policy\CommentPolicy::class);
+        }
         if(isBlog()) {
             Gate::policy(Models\Post::class, Policy\PostPolicy::class);
             Gate::policy(Models\PostCategory::class, Policy\PostCategoryPolicy::class);
@@ -201,8 +204,8 @@ class ToolServiceProvider extends ServiceProvider
 
     protected function registerModelBindings()
     {
-        $this->app->bind(Contracts\PermissionContract::class, Models\Permission::class);
-        $this->app->bind(Contracts\RoleContract::class, Models\Role::class);
+        $this->app->bind(Contracts\Permission::class, Models\Permission::class);
+        $this->app->bind(Contracts\Role::class, Models\Role::class);
     }
 
     protected function registerBladeExtensions()

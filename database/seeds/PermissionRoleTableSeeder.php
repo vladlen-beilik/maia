@@ -27,6 +27,7 @@ class PermissionRoleTableSeeder extends Seeder
             'viewAny roles', 'view roles', 'create roles', 'update roles', 'delete roles',
             'viewAny permissions', 'view permissions', 'create permissions', 'update permissions', 'delete permissions',
             'viewAny users', 'view users', 'create users', 'update users', 'delete users',
+            'viewAny comments', 'view comments', 'update comments', 'delete comments', 'restore comments', 'forceDelete comments',
             'viewAny posts', 'view posts', 'create posts', 'update posts', 'attachAnyPostCategory posts', 'detachAnyPostCategory posts', 'attachAnyPostTag posts', 'detachAnyPostTag posts', 'delete posts', 'restore posts', 'forceDelete posts',
             'viewAny postTags', 'view postTags', 'create postTags', 'update postTags', 'delete postTags', 'restore postTags', 'forceDelete postTags',
             'viewAny postCategories', 'view postCategories', 'create postCategories', 'update postCategories', 'delete postCategories', 'restore postCategories', 'forceDelete postCategories',
