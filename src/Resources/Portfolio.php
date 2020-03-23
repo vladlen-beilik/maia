@@ -193,10 +193,22 @@ class Portfolio extends Resource
                         ->sortable()
                 ],
                 trans('maia::resources.categories') => [
-                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PortfolioCategory::class)
+                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PortfolioCategory::class)->fields(function () {
+                        return [
+                            Text::make('type')->resolveUsing(function () {
+                                return 'portfolio_category';
+                            })->hideWhenCreating(),
+                        ];
+                    })
                 ],
                 trans('maia::resources.tags') => [
-                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PortfolioTag::class)
+                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PortfolioTag::class)->fields(function () {
+                        return [
+                            Text::make('type')->resolveUsing(function () {
+                                return 'portfolio_tag';
+                            })->hideWhenCreating(),
+                        ];
+                    })
                 ],
                 trans('maia::resources.meta_fields') => [
                     Select::make(trans('maia::resources.document_state'), 'document_state')

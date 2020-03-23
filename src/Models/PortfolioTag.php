@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use SpaceCode\Maia\Guard;
 
@@ -26,6 +27,16 @@ class PortfolioTag extends Model
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         parent::__construct($attributes);
         $this->setTable('portfolio_tags');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model) {
+            DB::table('relationships')->where(['type' => 'portfolio_tag', 'term_id' => $model->id])->delete();
+            return true;
+        });
     }
 
     /**

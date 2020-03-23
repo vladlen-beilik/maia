@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,6 +51,8 @@ class Post extends Model
             if(!is_null($model->image) && $storage->exists($model->image)) {
                 $storage->delete($model->image);
             }
+            DB::table('relationships')->where(['type' => 'post_tag', 'item_id' => $model->id])->delete();
+            DB::table('relationships')->where(['type' => 'post_category', 'item_id' => $model->id])->delete();
             return true;
         });
     }

@@ -191,10 +191,22 @@ class Post extends Resource
                         ->sortable()
                 ],
                 trans('maia::resources.categories') => [
-                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)
+                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
+                        return [
+                            Text::make('type')->resolveUsing(function () {
+                                return 'post_category';
+                            })->hideWhenCreating(),
+                        ];
+                    })
                 ],
                 trans('maia::resources.tags') => [
-                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)
+                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)->fields(function () {
+                        return [
+                            Text::make('type')->resolveUsing(function () {
+                                return 'post_tag';
+                            })->hideWhenCreating(),
+                        ];
+                    })
                 ],
                 trans('maia::resources.meta_fields') => [
                     Select::make(trans('maia::resources.document_state'), 'document_state')

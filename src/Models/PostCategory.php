@@ -4,6 +4,7 @@ namespace SpaceCode\Maia\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use SpaceCode\Maia\Exceptions\PostCategoryConflict;
 
@@ -20,27 +21,18 @@ class PostCategory extends Model
     {
         parent::boot();
 
-        static::creating(function($model) {
-
+        static::saving(function($model) {
             $already = self::all()->map(function ($postCategory) {
                 return $postCategory->getUrl();
             });
             if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
                 throw PostCategoryConflict::url($model->getUrl(), $model->guard_name);
             }
-
             return true;
         });
 
-        static::updating(function($model) {
-
-            $already = self::all()->map(function ($postCategory) {
-                return $postCategory->getUrl();
-            });
-            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
-                throw PostCategoryConflict::url($model->getUrl(), $model->guard_name);
-            }
-
+        static::deleting(function($model) {
+            DB::table('relationships')->where(['type' => 'post_category', 'term_id' => $model->id])->delete();
             return true;
         });
     }

@@ -2,6 +2,7 @@
 namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PostTag extends Model
@@ -24,6 +25,16 @@ class PostTag extends Model
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         parent::__construct($attributes);
         $this->setTable('post_tags');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model) {
+            DB::table('relationships')->where(['type' => 'post_tag', 'term_id' => $model->id])->delete();
+            return true;
+        });
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -38,6 +39,21 @@ class Portfolio extends Model
         $attributes['view'] = $attributes['view'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('portfolio');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model) {
+            $storage = Storage::disk(config('maia.filemanager.disk'));
+            if(!is_null($model->image) && $storage->exists($model->image)) {
+                $storage->delete($model->image);
+            }
+            DB::table('relationships')->where(['type' => 'portfolio_tag', 'item_id' => $model->id])->delete();
+            DB::table('relationships')->where(['type' => 'portfolio_category', 'item_id' => $model->id])->delete();
+            return true;
+        });
     }
 
     /**

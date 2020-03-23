@@ -29,8 +29,7 @@ class Page extends Model
     {
         parent::boot();
 
-        static::creating(function($model) {
-
+        static::saving(function($model) {
             $prefixes = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
             if($prefixes->count() > 0 && !is_null($model->parent_id) && in_array($model->parent->slug, $prefixes->toArray())) {
                 throw PageConflict::ban($model->getUrl());
@@ -42,24 +41,6 @@ class Page extends Model
             if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
                 throw PageConflict::url($model->getUrl(), $model->guard_name);
             }
-
-            return true;
-        });
-
-        static::updating(function($model) {
-
-            $prefixes = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
-            if($prefixes->count() > 0 && !is_null($model->parent_id) && in_array($model->parent->slug, $prefixes->toArray())) {
-                throw PageConflict::ban($model->getUrl());
-            }
-
-            $already = self::all()->map(function ($page) {
-                return $page->getUrl();
-            });
-            if($already->count() > 0 && !is_null($model->parent_id) && in_array($model->getUrl(), $already->toArray())) {
-                throw PageConflict::url($model->getUrl(), $model->guard_name);
-            }
-
             return true;
         });
     }

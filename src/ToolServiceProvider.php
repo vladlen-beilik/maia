@@ -5,25 +5,18 @@ use Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
-use Laravel\Nova\Tools\Dashboard;
-use SpaceCode\Maia\Models;
 use App\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route as Routing;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Compilers\BladeCompiler;
-use SpaceCode\Maia\Contracts;
-use SpaceCode\Maia\Middlewares\FilemanagerAuthorize;
-use SpaceCode\Maia\Middlewares\SettingsAuthorize;
-use SpaceCode\Maia\Middlewares\SeoAuthorize;
-use SpaceCode\Maia\Middlewares\HorizonAuthorize;
-use SpaceCode\Maia\Jobs;
-use SpaceCode\Maia\Observers;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
-use Illuminate\Console\Scheduling\Schedule;
 use SpaceCode\Maia\Tools;
+use SpaceCode\Maia\Contracts;
+use SpaceCode\Maia\Middlewares;
+use SpaceCode\Maia\Models;
 
 class ToolServiceProvider extends ServiceProvider
 {
@@ -173,11 +166,11 @@ class ToolServiceProvider extends ServiceProvider
         if ($this->app->routesAreCached()) {
             return;
         }
-        Routing::middleware(['nova', HorizonAuthorize::class])->prefix('nova-vendor/maia-horizon')->group(__DIR__ . '/../routes/horizon.php');
+        Routing::middleware(['nova', Middlewares\HorizonAuthorize::class])->prefix('nova-vendor/maia-horizon')->group(__DIR__ . '/../routes/horizon.php');
         Routing::middleware(['nova'])->prefix('nova-vendor/maia-sluggable')->group(__DIR__.'/../routes/sluggable.php');
-        Routing::middleware(['nova', FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
-        Routing::middleware(['nova', SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
-        Routing::middleware(['nova', SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
+        Routing::middleware(['nova', Middlewares\FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
+        Routing::middleware(['nova', Middlewares\SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
+        Routing::middleware(['nova', Middlewares\SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
 //        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
     }
 
