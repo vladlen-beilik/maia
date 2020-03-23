@@ -32,7 +32,12 @@ class SettingsTableSeeder extends Seeder
             'cache_driver' => 'file',
             'site_blog' => 1,
             'site_portfolio' => 0,
-            'site_shop' => 0
+            'site_shop' => 0,
+            'comments_confirmed' => 1,
+            'comments_userLoggedIn' => 1,
+            'comments_autoClose' => 7,
+            'comments_nested' => 3,
+            'comments_display' => 'older'
         ];
         foreach ($settings as $key => $value) {
             $a = Settings::find($key);
