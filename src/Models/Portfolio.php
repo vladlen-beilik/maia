@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Portfolio extends Model
@@ -52,7 +53,7 @@ class Portfolio extends Model
      */
     public function categories() : BelongsToMany
     {
-        return $this->belongsToMany(PortfolioCategory::class, 'relation_portfolio_category', 'portfolio_id', 'category_id');
+        return $this->belongsToMany(PortfolioCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'portfolio_category');
     }
 
     /**
@@ -60,7 +61,7 @@ class Portfolio extends Model
      */
     public function tags() : BelongsToMany
     {
-        return $this->belongsToMany(PortfolioTag::class, 'relation_portfolio_tag', 'portfolio_id', 'tag_id');
+        return $this->belongsToMany(PortfolioCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'portfolio_tag');
     }
 
     /**
@@ -71,6 +72,17 @@ class Portfolio extends Model
     {
         $url = seo('seo_portfolio_prefix') . '/' . $this->slug;
         return $arg ? url($url) : $url;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function thumbnail()
+    {
+        if(!is_null($this->image)) {
+            return Storage::disk(config('maia.filemanager.disk'))->url($this->image);
+        }
+        return '#';
     }
 
     /**

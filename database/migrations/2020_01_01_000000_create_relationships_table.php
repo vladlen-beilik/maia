@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRelationPostCategoryTable extends Migration
+class CreateRelationshipsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateRelationPostCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('relation_post_category', function (Blueprint $table) {
+        Schema::create('relationships', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('post_id');
-            $table->integer('category_id');
+            $table->bigInteger('item_id');
+            $table->bigInteger('term_id');
+            $table->string('type');
         });
     }
 
@@ -27,6 +28,6 @@ class CreateRelationPostCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('relation_post_category');
+        Schema::dropIfExists('relationships');
     }
 }

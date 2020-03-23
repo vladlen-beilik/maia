@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -40,6 +41,19 @@ class Post extends Model
         $this->setTable('posts');
     }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model) {
+            $storage = Storage::disk(config('maia.filemanager.disk'));
+            if(!is_null($model->image) && $storage->exists($model->image)) {
+                $storage->delete($model->image);
+            }
+            return true;
+        });
+    }
+
     /**
      * @return BelongsTo
      */
@@ -53,7 +67,7 @@ class Post extends Model
      */
     public function categories() : BelongsToMany
     {
-        return $this->belongsToMany(PostCategory::class, 'relation_post_category', 'post_id', 'category_id');
+        return $this->belongsToMany(PostCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_category');
     }
 
     /**
@@ -61,7 +75,7 @@ class Post extends Model
      */
     public function tags() : BelongsToMany
     {
-        return $this->belongsToMany(PostTag::class, 'relation_post_tag', 'post_id', 'tag_id');
+        return $this->belongsToMany(PostTag::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_tag');
     }
 
     /**
@@ -72,6 +86,17 @@ class Post extends Model
     {
         $url = seo('seo_posts_prefix') . '/' . $this->slug;
         return $arg ? url($url) : $url;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function thumbnail()
+    {
+        if(!is_null($this->image)) {
+            return Storage::disk(config('maia.filemanager.disk'))->url($this->image);
+        }
+        return '#';
     }
 
     /**
