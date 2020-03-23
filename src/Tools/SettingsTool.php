@@ -61,8 +61,7 @@ class SettingsTool extends Tool
                                 return $fail('The field can\'t be `http://localhost`, name it differently.');
                             }
                         }),
-                    Text::make(trans('maia::resources.site.title'), 'site_title')
-                        ->rules('required'),
+                    Text::make(trans('maia::resources.site.title'), 'site_title'),
                     Text::make(trans('maia::resources.site.excerpt'), 'site_excerpt'),
                     Text::make(trans('maia::resources.site.description'), 'site_description'),
                     AdvancedImage::make(trans('maia::resources.site.logo'), 'site_logo')
@@ -86,15 +85,11 @@ class SettingsTool extends Tool
                         ->stacked(),
                     Number::make(trans('maia::resources.commentsSettings.autoClose'), 'comments_autoClose')
                         ->min(7)
-                        ->max(360)
-                        ->step(1)
-                        ->rules('required', 'numeric', 'min:7', 'max:360')
+                        ->max(30)
                         ->stacked(),
                     Number::make(trans('maia::resources.commentsSettings.nested'), 'comments_nested')
                         ->min(1)
                         ->max(10)
-                        ->step(1)
-                        ->rules('required', 'numeric', 'min:1', 'max:10')
                         ->stacked(),
                     Select::make(trans('maia::resources.commentsSettings.display'), 'comments_display')
                         ->options(['older' => trans('maia::resources.commentsSettings.older'), 'newer' => trans('maia::resources.commentsSettings.newer')])

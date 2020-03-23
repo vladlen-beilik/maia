@@ -68,12 +68,12 @@ class Comment extends Resource
         });
 //        if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
 //            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-//                ->rules('required')
+//                ->required()
 //                ->hideWhenCreating()
 //                ->sortable();
 //        } else {
 //            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-//                ->rules('required')
+//                ->required()
 //                ->hideWhenCreating()
 //                ->sortable()
 //                ->readonly();
@@ -102,7 +102,7 @@ class Comment extends Resource
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                             return [$key => ucfirst($key)];
                         }))->onlyOnForms()
-                        ->rules('required')
+                        ->required()
                         ->displayUsingLabels()
                 ],
 //                trans('maia::resources.parent') => [
