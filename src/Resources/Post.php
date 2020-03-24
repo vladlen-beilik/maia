@@ -91,12 +91,18 @@ class Post extends Resource
         $guardOptions = collect(config('auth.guards'))->mapWithKeys(function ($value, $key) {
             return [$key => $key];
         });
-        if(Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')->rules(['required'])->hideWhenCreating()->sortable();
+        if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+                ->rules('required')
+                ->hideWhenCreating()
+                ->sortable();
         } else {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')->rules(['required'])->hideWhenCreating()->sortable()->readonly();
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+                ->rules('required')
+                ->hideWhenCreating()
+                ->sortable()
+                ->readonly();
         }
-
         return [
             (new Tabs($this->singularLabel(), [
                 trans('maia::resources.general') => [
@@ -105,26 +111,28 @@ class Post extends Resource
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
                         ->rules('required', Rule::in($guardOptions))
-                        ->sortable(),
+                        ->hideFromIndex(),
 
                     $author,
 
                     Select::make(trans('maia::resources.template'), 'template')
-                        ->options(getTemplate('posts'))
-                        ->required()
+                        ->options(getTemplate('portfolio'))
+                        ->rules('required')
+                        ->hideFromIndex()
                         ->displayUsingLabels(),
 
                     Badge::make(trans('maia::resources.status'), 'status', function () {
                         if (!is_null($this->deleted_at))
                             return 'deleted';
                         return $this->status;
-                    })->map(static::$statuses)->sortable(),
+                    })->map(static::$statuses)
+                        ->sortable(),
 
                     Select::make(trans('maia::resources.status'), 'status')
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                             return [$key => ucfirst($key)];
                         }))->onlyOnForms()
-                        ->required()
+                        ->rules('required')
                         ->displayUsingLabels(),
 
                     Toggle::make(trans('maia::resources.comments'), 'comments')
@@ -138,7 +146,7 @@ class Post extends Resource
                             $unique = is_null($this->view_unique) ? 0 : intval($this->view_unique);
                             return $view === $unique ? trans('maia::resources.visitors.all', ['view' => $view]) : trans('maia::resources.visitors.unique', ['view' => $view, 'unique' => $unique]);
                         })->exceptOnForms()
-                        ->hideFromIndex(),
+                        ->hideFromIndex()
                 ],
                 trans('maia::resources.content') => [
                     Image::make(trans('maia::resources.image'), 'image')
@@ -154,11 +162,16 @@ class Post extends Resource
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
                         ->slugUnique()
-                        ->hideFromIndex()
+                        ->onlyOnForms()
                         ->slugModel(static::$model)
                         ->rules('required', 'max:255')
                         ->creationRules('unique:posts,slug')
                         ->updateRules('unique:posts,slug,{{resourceId}}'),
+
+                    Text::make(trans('maia::resources.site.url'), 'slug', function () {
+                        $url = str_replace(['https://', 'http://'], '', $this->getUrl(true));
+                        return "<a class='cursor-pointer dim inline-block text-primary font-bold' href='{$this->getUrl(true)}' target='_blank' aria-role='button' style='text-decoration: none;'>{$url}</a>";
+                    })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
                         ->rules('max:255')
@@ -184,11 +197,25 @@ class Post extends Resource
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
-                        ->sortable(),
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.created_at'), 'created_at')
+                        ->onlyOnIndex()
+                        ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        }),
 
                     DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->onlyOnIndex()
                         ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        })
                 ],
                 trans('maia::resources.categories') => [
                     BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
@@ -212,7 +239,7 @@ class Post extends Resource
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')

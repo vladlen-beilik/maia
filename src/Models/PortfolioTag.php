@@ -5,7 +5,6 @@ namespace SpaceCode\Maia\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use SpaceCode\Maia\Guard;
 
 class PortfolioTag extends Model
 {

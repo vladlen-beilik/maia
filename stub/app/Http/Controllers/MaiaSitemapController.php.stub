@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\File;
@@ -16,7 +15,7 @@ class MaiaSitemapController extends Controller
     public function index()
     {
         $sitemap = App::make('sitemap');
-//        if(siteIndex()) {
+        if(siteIndex()) {
             $homemod = File::exists(resource_path('views/home.blade.php')) ? date('c', File::lastModified(resource_path('views/home.blade.php'))) : '';
             $sitemap->addSitemap(URL::to('sitemap-homepage.xml'), $homemod);
 
@@ -30,13 +29,16 @@ class MaiaSitemapController extends Controller
                 if($posts->count() > 0)
                     $sitemap->addSitemap(URL::to('sitemap-posts.xml'), $this->formatC($posts));
 
-                $postCategories = Models\PostCategory::where(['guard_name' => 'web']);
-                if($postCategories->count() > 0)
-                    $sitemap->addSitemap(URL::to('sitemap-post-categories.xml'), $this->formatC($postCategories));
-
-                $postTags = Models\PostTag::where(['guard_name' => 'web']);
-                if($postTags->count() > 0)
-                    $sitemap->addSitemap(URL::to('sitemap-post-tags.xml'), $this->formatC($postTags));
+                if(seo('seo_post_categories_show_index')) {
+                    $postCategories = Models\PostCategory::where(['guard_name' => 'web']);
+                    if($postCategories->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-post-categories.xml'), $this->formatC($postCategories));
+                }
+                if(seo('seo_post_tags_show_index')) {
+                    $postTags = Models\PostTag::where(['guard_name' => 'web']);
+                    if($postTags->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-post-tags.xml'), $this->formatC($postTags));
+                }
 
             }
             if(isPortfolio()) {
@@ -45,16 +47,19 @@ class MaiaSitemapController extends Controller
                 if($portfolio->count() > 0)
                     $sitemap->addSitemap(URL::to('sitemap-portfolio.xml'), $this->formatC($portfolio));
 
-                $portfolioCategories = Models\PortfolioCategory::where(['guard_name' => 'web']);
-                if($portfolioCategories->count() > 0)
-                    $sitemap->addSitemap(URL::to('sitemap-portfolio-categories.xml'), $this->formatC($portfolioCategories));
-
-                $portfolioTags = Models\PortfolioTag::where(['guard_name' => 'web']);
-                if($portfolioTags->count() > 0)
-                    $sitemap->addSitemap(URL::to('sitemap-portfolio-tags.xml'), $this->formatC($portfolioTags));
+                if(seo('seo_portfolio_categories_show_index')) {
+                    $portfolioCategories = Models\PortfolioCategory::where(['guard_name' => 'web']);
+                    if($portfolioCategories->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-portfolio-categories.xml'), $this->formatC($portfolioCategories));
+                }
+                if(seo('seo_portfolio_tags_show_index')) {
+                    $portfolioTags = Models\PortfolioTag::where(['guard_name' => 'web']);
+                    if($portfolioTags->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-portfolio-tags.xml'), $this->formatC($portfolioTags));
+                }
 
             }
-//        }
+        }
         return $sitemap->render('sitemapindex');
     }
 
