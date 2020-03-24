@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use SpaceCode\Maia\Models\Seo;
 use SpaceCode\Maia\Exceptions\PageConflict;
 
 class Page extends Model

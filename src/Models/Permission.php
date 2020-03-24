@@ -11,8 +11,7 @@ use SpaceCode\Maia\Exceptions\PermissionDoesNotExist;
 use SpaceCode\Maia\PermissionRegistrar;
 use SpaceCode\Maia\Traits\HasRoles;
 use SpaceCode\Maia\Traits\RefreshesPermissionCache;
-use SpaceCode\Maia\Exceptions\PermissionAlreadyExists;
-use Illuminate\Database\Eloquent\Builder;
+//use SpaceCode\Maia\Exceptions\PermissionAlreadyExists;
 
 class Permission extends Model implements PermissionContract
 {

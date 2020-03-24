@@ -106,6 +106,7 @@ return [
     'active' => 'Active',
     'inactive' => 'Inactive',
     'prefixslug' => 'Prefix Slug',
+    'showindex' => 'Show in Index',
     'robots' => 'Robots',
     'googlebot' => 'Google Bot',
     'yandexbot' => 'Yandex Bot',

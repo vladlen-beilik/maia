@@ -97,17 +97,31 @@ class Permission extends Resource
                 ->sortable(),
 
             Select::make(trans('maia::resources.guard_name'), 'guard_name')
+                ->hideFromIndex()
                 ->options($guardOptions->toArray())
-                ->rules('required', Rule::in($guardOptions))
-                ->sortable(),
+                ->rules('required', Rule::in($guardOptions)),
 
             DateTime::make(trans('maia::resources.created_at'), 'created_at')
                 ->exceptOnForms()
-                ->sortable(),
+                ->hideFromIndex(),
+
+            Text::make(trans('maia::resources.created_at'), 'created_at')
+                ->onlyOnIndex()
+                ->sortable()
+                ->displayUsing(function($date) {
+                    return $date->diffForHumans();
+                }),
 
             DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                 ->exceptOnForms()
-                ->sortable(),
+                ->hideFromIndex(),
+
+            Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                ->onlyOnIndex()
+                ->sortable()
+                ->displayUsing(function($date) {
+                    return $date->diffForHumans();
+                }),
 
             RoleBooleanGroup::make(trans('maia::resources.roles')),
 
