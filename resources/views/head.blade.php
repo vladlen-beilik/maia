@@ -22,9 +22,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta name="author" content="SpaceCode">
-    <link rel="author" href="https://spacecode.dev">
-    <meta name="csrf-token" content="{{csrf_token()}}">
+    <meta name="author" content="{{ setting('site_title') ?? '' }}">
+    <link rel="author" href="{{ url('') }}">
+    <link rel="me" href="https://spacecode.dev">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+@if(trim($__env->yieldContent('parent')))    <link rel="up" href="@yield('parent')">{{"\n"}}@endif
+@if(trim($__env->yieldContent('paginationFirst')))    <link rel="first" href="@yield('paginationFirst')">{{"\n"}}@endif
+@if(trim($__env->yieldContent('paginationLast')))    <link rel="last" href="@yield('paginationLast')">{{"\n"}}@endif
+@if(trim($__env->yieldContent('paginationNext')))    <link rel="next" href="@yield('paginationNext')">{{"\n"}}@endif
+@if(trim($__env->yieldContent('paginationPrev')))    <link rel="prev" href="@yield('paginationPrev')">{{"\n"}}@endif
+    <link rel="canonical" href="{{ url()->current() }}"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -39,7 +47,7 @@
 
     <!-- Metatags content -->
     <title>@yield('meta_title')</title>{{"\n"}}
-    @if (trim($__env->yieldContent('meta_description')))<meta name="description" content="@yield('meta_description')">{{"\n"}}@endif
-    @if (trim($__env->yieldContent('meta_keywords')))<meta name="keywords" content="@yield('meta_keywords')">{{"\n"}}@endif
-    @if (trim($__env->yieldContent('open_graph'))){!! html_entity_decode($__env->yieldContent('open_graph'), ENT_COMPAT, 'UTF-8') . "\n" !!}@endif{{"\n"}}
+@if (trim($__env->yieldContent('meta_description')))    <meta name="description" content="@yield('meta_description')">{{"\n"}}@endif
+@if (trim($__env->yieldContent('meta_keywords')))    <meta name="keywords" content="@yield('meta_keywords')">{{"\n"}}@endif
+@if (trim($__env->yieldContent('open_graph')))    {!! html_entity_decode($__env->yieldContent('open_graph'), ENT_COMPAT, 'UTF-8') . "\n" !!}@endif{{"\n"}}
 </head>
