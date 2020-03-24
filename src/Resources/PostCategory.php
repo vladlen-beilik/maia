@@ -100,7 +100,7 @@ class PostCategory extends Resource
                         ->min(1)
                         ->max(1000)
                         ->step(1)
-                        ->rules('required', 'digits_between:1,1000')
+                        ->rules('required', 'numeric', 'min:1', 'max:1000')
                         ->sortable()
                 ],
                 trans('maia::resources.parent') => [

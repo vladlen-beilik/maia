@@ -4,33 +4,24 @@ namespace SpaceCode\Maia\Tools;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
-use SpaceCode\Maia\Resources\ContactForm;
-use SpaceCode\Maia\Resources\Page;
-use SpaceCode\Maia\Resources\Permission;
-use SpaceCode\Maia\Resources\Portfolio;
-use SpaceCode\Maia\Resources\PortfolioCategory;
-use SpaceCode\Maia\Resources\PortfolioTag;
-use SpaceCode\Maia\Resources\Post;
-use SpaceCode\Maia\Resources\PostCategory;
-use SpaceCode\Maia\Resources\PostTag;
-use SpaceCode\Maia\Resources\Role;
+use SpaceCode\Maia\Resources;
 
 class NovaTool extends Tool
 {
-    public $roleResource = Role::class;
-    public $permissionResource = Permission::class;
-    public $pageResource = Page::class;
-    public $postResource = Post::class;
-    public $postCategoryResource = PostCategory::class;
-    public $postTagResource = PostTag::class;
-    public $portfolioResource = Portfolio::class;
-    public $portfolioCategoryResource = PortfolioCategory::class;
-    public $portfolioTagResource = PortfolioTag::class;
-    public $contactFormResource = ContactForm::class;
+    public $roleResource = Resources\Role::class;
+    public $permissionResource = Resources\Permission::class;
+    public $pageResource = Resources\Page::class;
+    public $commentResource = Resources\Comment::class;
+    public $postResource = Resources\Post::class;
+    public $postCategoryResource = Resources\PostCategory::class;
+    public $postTagResource = Resources\PostTag::class;
+    public $portfolioResource = Resources\Portfolio::class;
+    public $portfolioCategoryResource = Resources\PortfolioCategory::class;
+    public $portfolioTagResource = Resources\PortfolioTag::class;
+    public $contactFormResource = Resources\ContactForm::class;
 
     public function boot()
     {
-
         if(!isBlog()) {
             $this->postResource = null;
             $this->postCategoryResource = null;
@@ -41,10 +32,14 @@ class NovaTool extends Tool
             $this->portfolioCategoryResource = null;
             $this->portfolioTagResource = null;
         }
+        if(!isBlog() && !isPortfolio()) {
+            $this->commentResource = null;
+        }
         Nova::resources(array_filter([
             $this->roleResource,
             $this->permissionResource,
             $this->pageResource,
+            $this->commentResource,
             $this->postResource,
             $this->postCategoryResource,
             $this->postTagResource,
@@ -82,6 +77,16 @@ class NovaTool extends Tool
     public function pageResource(string $pageResource)
     {
         $this->pageResource = $pageResource;
+        return $this;
+    }
+
+    /**
+     * @param string $commentResource
+     * @return $this
+     */
+    public function commentResource(string $commentResource)
+    {
+        $this->commentResource = $commentResource;
         return $this;
     }
 
