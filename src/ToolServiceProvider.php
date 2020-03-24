@@ -87,6 +87,7 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
+            Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
 
             Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
