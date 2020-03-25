@@ -1,7 +1,7 @@
 <head>
-{!! $globalKey['tracking-head'] !!}
-{!! $globalKey['json_ld'] !!}
-{!! $globalKey['favicon'] !!}
+{!! $globalKey->tracking_head !!}
+{!! $globalKey->json_ld !!}
+{!! $globalKey->favicon !!}
     <!-- Robots -->
 @if(trim($__env->yieldContent('robots_all')) && siteIndex())
     <meta name="robots" content="@yield('robots_all')">
