@@ -5,6 +5,8 @@ namespace SpaceCode\Maia\Controllers;
 use App\Http\Controllers\Controller;
 use SpaceCode\Maia\Models;
 use Illuminate\Support\Facades\View;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View as ViewModel;
 
 class IndexController extends Controller
 {
@@ -39,7 +41,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function pageIndex($slug)
     {
@@ -49,11 +51,11 @@ class IndexController extends Controller
     }
 
     /**
-     * @return mixed
+     * @param $slugs
+     * @return Factory|ViewModel
      */
-    public function parentPageIndex()
+    public function parentPageIndex($slugs)
     {
-        $slugs = collect(func_get_args());
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\Page::whereSlug($slugs->shift())->where(['status' => 'published', 'deleted_at' => null])->with('children')->firstOrFail());
@@ -63,7 +65,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function postIndex($slug)
     {
@@ -75,7 +77,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function postCategoryIndex($slug)
     {
@@ -85,11 +87,11 @@ class IndexController extends Controller
     }
 
     /**
-     * @return mixed
+     * @param $slugs
+     * @return Factory|ViewModel
      */
-    public function parentPostCategoryIndex()
+    public function parentPostCategoryIndex($slugs)
     {
-        $slugs = collect(func_get_args());
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\PostCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
@@ -99,7 +101,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function postTagIndex($slug)
     {
@@ -110,7 +112,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function portfolioIndex($slug)
     {
@@ -122,7 +124,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function portfolioCategoryIndex($slug)
     {
@@ -132,11 +134,11 @@ class IndexController extends Controller
     }
 
     /**
-     * @return mixed
+     * @param $slugs
+     * @return Factory|ViewModel
      */
-    public function parentPortfolioCategoryIndex()
+    public function parentPortfolioCategoryIndex($slugs)
     {
-        $slugs = collect(func_get_args());
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\PortfolioCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
@@ -146,7 +148,7 @@ class IndexController extends Controller
 
     /**
      * @param $slug
-     * @return mixed
+     * @return Factory|ViewModel
      */
     public function portfolioTagIndex($slug)
     {
