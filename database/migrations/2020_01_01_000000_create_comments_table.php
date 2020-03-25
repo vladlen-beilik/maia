@@ -16,13 +16,20 @@ class CreateCommentsTable extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('parent_id');
-            $table->string('author_id');
+            $table->string('author_id')->nullable();
             $table->string('guard_name');
+            $table->string('parent_id')->nullable();
             $table->text('body')->nullable();
             $table->enum('status', Comment::$statuses)->default(Comment::STATUS_PENDING);
             $table->softDeletes();
             $table->timestamps();
+        });
+
+        Schema::create('comments_relationships', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->bigInteger('comment_id');
+            $table->bigInteger('item_id');
+            $table->string('type');
         });
     }
 
@@ -34,5 +41,6 @@ class CreateCommentsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('comments');
+        Schema::dropIfExists('comments_relationships');
     }
 }

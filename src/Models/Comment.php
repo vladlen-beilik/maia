@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use SpaceCode\Maia\Collections\CommentCollection;
 
 class Comment extends Model
 {
@@ -51,49 +52,33 @@ class Comment extends Model
     /**
      * @return BelongsTo
      */
-    public function parent(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_id');
+        return $this->belongsTo('App\\User', 'author_id');
     }
-
-    /**
-     * @return HasMany
-     */
-    public function children(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_id', 'id');
-    }
-
-//    /**
-//     * @param bool $arg
-//     * @return mixed|string
-//     */
-//    public function getUrl($arg = false)
-//    {
-//        $url = $this->slug;
-//        $parent = $this;
-//        while ($parent = $parent->parent) {
-//            $url = $parent->slug . '/' . $url;
-//        }
-//        return $arg ? url($url) : $url;
-//    }
-
-//    /**
-//     * @param $string
-//     * @param $limit
-//     * @param $end
-//     * @return mixed|string
-//     */
-//    public function limit($string, $limit, $end)
-//    {
-//        return Str::limit((string)$string, $limit, $end);
-//    }
 
 //    /**
 //     * @return BelongsTo
 //     */
-//    public function user(): BelongsTo
+//    public function parent(): BelongsTo
 //    {
-//        return $this->belongsTo('App\\User', 'author_id');
+//        return $this->belongsTo(self::class, 'parent_id');
+//    }
+
+//    /**
+//     * @return HasMany
+//     */
+//    public function children(): HasMany
+//    {
+//        return $this->hasMany(self::class, 'parent_id', 'id');
+//    }
+
+//    /**
+//     * @param array $models
+//     * @return \Illuminate\Database\Eloquent\Collection|CommentCollection
+//     */
+//    public function newCollection(array $models = [])
+//    {
+//        return new CommentCollection($models);
 //    }
 }
