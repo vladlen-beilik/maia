@@ -81,6 +81,7 @@ class SeoTool extends Tool
             ]);
             $array = Arr::add($array, trans('maia::resources.postCategories'), [
 
+                Toggle::make(trans('maia::resources.showindex'), 'seo_post_categories_show_index'),
                 Text::make(trans('maia::resources.prefixslug'), 'seo_post_categories_prefix')->rules('required'),
                 Text::make(trans('maia::resources.meta_title'), 'seo_post_categories_meta_title')->rules('max:55'),
                 Textarea::make(trans('maia::resources.meta_description'), 'seo_post_categories_meta_description'),
@@ -98,6 +99,7 @@ class SeoTool extends Tool
             ]);
             $array = Arr::add($array, trans('maia::resources.postTags'), [
 
+                Toggle::make(trans('maia::resources.showindex'), 'seo_post_tags_show_index'),
                 Text::make(trans('maia::resources.prefixslug'), 'seo_post_tags_prefix')->rules('required'),
                 Text::make(trans('maia::resources.meta_title'), 'seo_post_tags_meta_title')->rules('max:55'),
                 Textarea::make(trans('maia::resources.meta_description'), 'seo_post_tags_meta_description'),
@@ -134,6 +136,7 @@ class SeoTool extends Tool
 //            ]);
 //            $array = Arr::add($array, trans('maia::resources.productCategories'), [
 //
+//                Toggle::make(trans('maia::resources.showindex'), 'seo_product_categories_show_index'),
 //                Text::make(trans('maia::resources.prefixslug'), 'seo_product_categories_prefix')->rules('required'),
 //                Text::make(trans('maia::resources.meta_title'), 'seo_product_categories_meta_title')->rules('max:55'),
 //                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_categories_meta_description'),
@@ -151,6 +154,7 @@ class SeoTool extends Tool
 //            ]);
 //            $array = Arr::add($array, trans('maia::resources.productTags'), [
 //
+//                Toggle::make(trans('maia::resources.showindex'), 'seo_product_tags_show_index'),
 //                Text::make(trans('maia::resources.prefixslug'), 'seo_product_tags_prefix')->rules('required'),
 //                Text::make(trans('maia::resources.meta_title'), 'seo_product_tags_meta_title')->rules('max:55'),
 //                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_tags_meta_description'),
@@ -187,6 +191,7 @@ class SeoTool extends Tool
             ]);
             $array = Arr::add($array, trans('maia::resources.portfolioCategories'), [
 
+                Toggle::make(trans('maia::resources.showindex'), 'seo_portfolio_categories_show_index'),
                 Text::make(trans('maia::resources.prefixslug'), 'seo_portfolio_categories_prefix')->rules('required'),
                 Text::make(trans('maia::resources.meta_title'), 'seo_portfolio_categories_meta_title')->rules('max:55'),
                 Textarea::make(trans('maia::resources.meta_description'), 'seo_portfolio_categories_meta_description'),
@@ -204,6 +209,7 @@ class SeoTool extends Tool
             ]);
             $array = Arr::add($array, trans('maia::resources.portfolioTags'), [
 
+                Toggle::make(trans('maia::resources.showindex'), 'seo_portfolio_tags_show_index'),
                 Text::make(trans('maia::resources.prefixslug'), 'seo_portfolio_tags_prefix')->rules('required'),
                 Text::make(trans('maia::resources.meta_title'), 'seo_portfolio_tags_meta_title')->rules('max:55'),
                 Textarea::make(trans('maia::resources.meta_description'), 'seo_portfolio_tags_meta_description'),

@@ -467,7 +467,7 @@ if (!function_exists('meta_description')) {
             if(!is_null($item->meta_description)) {
                 $meta_description = str_replace(variables_array(), variables_result($item, $url), $item->meta_description);
             } else {
-                is_null($global) ? $meta_description = '' : $meta_description = str_replace(variables_array(), variables_result($item, $url), $global);
+                $meta_description = is_null($global) ? '' : str_replace(variables_array(), variables_result($item, $url), $global);
             }
         }
         return $meta_description;
@@ -484,7 +484,7 @@ if (!function_exists('meta_keywords')) {
             if (!is_null($item->meta_keywords)) {
                 $meta_keywords = str_replace(variables_array(), variables_result($item, $url), $item->meta_keywords);
             } else {
-                is_null($global) ? $meta_keywords = '' : $meta_keywords = str_replace(variables_array(), variables_result($item, $url), $global);
+                $meta_keywords = is_null($global) ? '' : str_replace(variables_array(), variables_result($item, $url), $global);
             }
         }
         return $meta_keywords;
@@ -501,7 +501,7 @@ if (!function_exists('json_ld')) {
             if ($item->json_ld !== '') {
                 $json_ld = str_replace(variables_array(), variables_result($item, $url), $item->json_ld);
             } else {
-                $global != '' ? $json_ld = str_replace(variables_array(), variables_result($item, $url), $global) : $json_ld = '';
+                $json_ld = is_null($global) ? '' : str_replace(variables_array(), variables_result($item, $url), $global);
             }
         }
         return $json_ld;
@@ -518,7 +518,7 @@ if (!function_exists('open_graph')) {
             if ($item->open_graph !== '') {
                 $open_graph = str_replace(variables_array(), variables_result($item, $url), $item->open_graph);
             } else {
-                $global !== '' ? $open_graph = str_replace(variables_array(), variables_result($item, $url), $global) : $open_graph = '';
+                $open_graph = is_null($global) ? '' : str_replace(variables_array(), variables_result($item, $url), $global);
             }
         }
         return $open_graph;
@@ -658,5 +658,34 @@ if (!function_exists('isDeveloper')) {
             }
         }
         return false;
+    }
+}
+
+if (!function_exists('isParent')) {
+    function isParent($single)
+    {
+        if(isset($single->parent_id) && !is_null($single->parent_id)) {
+            return $single->parent()->getUrl(true);
+        }
+        return '';
+    }
+}
+
+if (!function_exists('isPagination')) {
+    function isPagination($single, $type)
+    {
+        $paginate = $single->paginateItems;
+        if(isset($paginate)) {
+            if($type === 'first') {
+                return $single->getUrl(true);
+            } elseif ($type === 'last') {
+                return url()->current() . '?page=' . $paginate->lastPage();
+            } elseif ($type === 'next') {
+                return $paginate->nextPageUrl();
+            } elseif ($type === 'prev') {
+                return str_replace('?page=1', '', $paginate->previousPageUrl());
+            }
+        }
+        return '';
     }
 }

@@ -82,15 +82,16 @@ class ToolServiceProvider extends ServiceProvider
     protected function assets() {
         Nova::serving(function () {
 //            Nova::script('license', __DIR__ . '/../dist/js/license.js');
-            Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::script('multiselect', __DIR__ . '/../dist/js/multiselect.js');
-            Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
-            Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
             Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
+
+            Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
+            Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
+            Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
             Nova::style('toggle', __DIR__.'/../dist/css/toggle.css');
         });
     }

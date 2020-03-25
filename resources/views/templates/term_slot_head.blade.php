@@ -11,3 +11,8 @@
 @section('meta_keywords', meta_keywords($key, $url, $term))
 @section('json_ld', json_ld($key, $url, $term))
 @section('open_graph', open_graph($key, $url, $term))
+@section('parent', isParent($term))
+@section('paginationFirst', isPagination($term, 'first'))
+@section('paginationLast', isPagination($term, 'last'))
+@section('paginationNext', isPagination($term, 'next'))
+@section('paginationPrev', isPagination($term, 'prev'))

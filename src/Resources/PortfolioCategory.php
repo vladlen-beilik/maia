@@ -89,11 +89,12 @@ class PortfolioCategory extends Resource
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
                         ->rules('required', Rule::in($guardOptions))
-                        ->sortable(),
+                        ->hideFromIndex(),
 
                     Select::make(trans('maia::resources.template'), 'template')
                         ->options(getTemplate('portfolioCategories'))
-                        ->required()
+                        ->rules('required')
+                        ->hideFromIndex()
                         ->displayUsingLabels(),
 
                     Number::make(trans('maia::resources.order'), 'order')
@@ -122,9 +123,18 @@ class PortfolioCategory extends Resource
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
                         ->slugUnique()
-                        ->hideFromIndex()
+                        ->onlyOnForms()
                         ->slugModel(static::$model)
                         ->rules('required', 'max:255'),
+
+                    Text::make(trans('maia::resources.site.url'), 'slug', function () {
+                        if(seo('seo_portfolio_categories_show_index')) {
+                            $url = str_replace(['https://', 'http://'], '', $this->getUrl(true));
+                            return "<a class='cursor-pointer dim inline-block text-primary font-bold' href='{$this->getUrl(true)}' target='_blank' aria-role='button' style='text-decoration: none;'>{$url}</a>";
+                        } else {
+                            return "<p>—</p>";
+                        }
+                    })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
                         ->rules('max:255')
@@ -150,17 +160,31 @@ class PortfolioCategory extends Resource
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
-                        ->sortable(),
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.created_at'), 'created_at')
+                        ->onlyOnIndex()
+                        ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        }),
 
                     DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->onlyOnIndex()
                         ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        })
                 ],
                 trans('maia::resources.meta_fields') => [
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
-                        ->required()
+                        ->rules('required')
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.meta_title'), 'meta_title')
