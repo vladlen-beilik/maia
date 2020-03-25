@@ -2,24 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Notifications\CustomAnswer;
-use Illuminate\Support\Facades\Notification;
-use SpaceCode\Maia\Facades\Maia;
-use SpaceCode\Maia\Models\ContactForm;
 use SpaceCode\Maia\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View as ViewModel;
-use Illuminate\Http\JsonResponse;
 use SpaceCode\Maia\Controllers\IndexController;
-use Validator;
 
 class MaiaIndexController extends IndexController
 {
     public function __construct()
     {
-        parent::__construct($global ?? []);
+        parent::__construct($global ?? false);
     }
 
     /**

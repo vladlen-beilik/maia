@@ -3,6 +3,7 @@ namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
@@ -80,6 +81,32 @@ class Post extends Model
     {
         return $this->belongsToMany(PostTag::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_tag');
     }
+
+//    /**
+//     * @return HasManyThrough
+//     */
+//    public function comments() : HasManyThrough
+//    {
+//        return $this->hasManyThrough(Comment::class, 'comments_relationships', 'item_id', 'comment_id')->where('comments_relationships.type', 'post');
+//    }
+
+//    /**
+//     * @return mixed
+//     */
+//    public function getThreadedComments(){
+//        return $this->comments()->with('user')->get()->threaded();
+//    }
+
+//    /**
+//     * @param $attributes
+//     * @return Model
+//     */
+//    public function addComment($attributes)
+//    {
+//        $comment = (new Comment())->forceFill($attributes);
+//        $comment->author_id = Auth::id();
+//        return $this->comments()->save($comment);
+//    }
 
     /**
      * @param bool $arg
