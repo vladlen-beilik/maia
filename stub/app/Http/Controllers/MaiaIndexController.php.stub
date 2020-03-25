@@ -2,46 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller as Controller;
 use App\Notifications\CustomAnswer;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\View;
 use SpaceCode\Maia\Facades\Maia;
 use SpaceCode\Maia\Models\ContactForm;
-use SpaceCode\Maia\Models\Page;
-use SpaceCode\Maia\Models\Portfolio;
-use SpaceCode\Maia\Models\PortfolioCategory;
-use SpaceCode\Maia\Models\PortfolioTag;
 use SpaceCode\Maia\Models\Post;
-use SpaceCode\Maia\Models\PostCategory;
-use SpaceCode\Maia\Models\PostTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View as ViewModel;
+use Illuminate\Http\JsonResponse;
+use SpaceCode\Maia\Controllers\IndexController;
+use Validator;
 
-class MaiaIndexController extends Controller
+class MaiaIndexController extends IndexController
 {
     public function __construct()
     {
-        // Google Tag Manager
-        $global['tracking-head'] = setting('tracking_google_tag_manager_head');
-        $global['tracking-body'] = setting('tracking_google_tag_manager_body');
-        $global['json_ld'] = null;
-        if(isset($__env) && trim($__env->yieldContent('json_ld'))) {
-            $global['json_ld'] = "<!-- Schema -->\n" . str_replace('&#039;', '"', html_entity_decode($__env->yieldContent('json_ld'), ENT_COMPAT, 'UTF-8')) . "\n";
-        }
-        $global['favicon'] = null;
-        $siteFavicon = siteFavicon();
-        if(!is_null($siteFavicon) && !empty($siteFavicon)) {
-            $global['favicon'] = "    <!-- Favicon -->\n" . "    <link rel='icon' sizes='180x180' href='" . favicon(siteFavicon(), '180') . "' />\n" . "    <link rel='icon' sizes='32x32' href='" . favicon(siteFavicon(), '32') . "' />\n";
-        }
-        View::share('globalKey', $global);
+        parent::__construct($global ?? []);
     }
 
+    /**
+     * @return Factory|ViewModel|void
+     */
     public function homeIndex()
     {
-        return view('home');
+        $item = parent::homeIndex();
+        return view($item->indexView, ['home' => $item]);
     }
 
     /**
@@ -50,10 +37,8 @@ class MaiaIndexController extends Controller
      */
     public function pageIndex($slug)
     {
-        $page = Page::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        return view($page->template === 'default' ? 'page' : 'templates.pages.' . $page->template,
-            ['page' => $page]
-        );
+        $item = parent::pageIndex($slug);
+        return view($item->indexView, ['page' => $item]);
     }
 
     /**
@@ -61,13 +46,8 @@ class MaiaIndexController extends Controller
      */
     public function parentPageIndex()
     {
-        $slugs = collect(func_get_args());
-        $page = $slugs->reduce(function($page, $slug) {
-            return ($page->children()->where('slug', $slug)->firstOrFail());
-        }, Page::whereSlug($slugs->shift())->where(['status' => 'published', 'deleted_at' => null])->with('children')->firstOrFail());
-        return view($page->template === 'default' ? 'page' : 'templates.pages.' . $page->template,
-            ['page' => $page]
-        );
+        $item = parent::parentPageIndex();
+        return view($item->indexView, ['page' => $item]);
     }
 
     /**
@@ -76,11 +56,8 @@ class MaiaIndexController extends Controller
      */
     public function postIndex($slug)
     {
-        $post = Post::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        put_session_view('posts', $post);
-        return view($post->template === 'default' ? 'post' : 'templates.posts.' . $post->template,
-            ['post' => $post]
-        );
+        $item = parent::postIndex($slug);
+        return view($item->indexView, ['post' => $item]);
     }
 
     /**
@@ -89,10 +66,8 @@ class MaiaIndexController extends Controller
      */
     public function postCategoryIndex($slug)
     {
-        $postCategory = PostCategory::whereSlug($slug)->firstOrFail();
-        return view($postCategory->template === 'default' ? 'postCategory' : 'templates.postCategories.' . $postCategory->template,
-            ['postCategory' => $postCategory]
-        );
+        $item = parent::postCategoryIndex($slug);
+        return view($item->indexView, ['postCategory' => $item]);
     }
 
     /**
@@ -100,13 +75,8 @@ class MaiaIndexController extends Controller
      */
     public function parentPostCategoryIndex()
     {
-        $slugs = collect(func_get_args());
-        $postCategory = $slugs->reduce(function($postCategory, $slug) {
-            return ($postCategory->children()->where('slug', $slug)->firstOrFail());
-        }, PostCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
-        return view($postCategory->template === 'default' ? 'postCategory' : 'templates.postCategories.' . $postCategory->template,
-            ['postCategory' => $postCategory]
-        );
+        $item = parent::parentPostCategoryIndex();
+        return view($item->indexView, ['postCategory' => $item]);
     }
 
     /**
@@ -115,10 +85,8 @@ class MaiaIndexController extends Controller
      */
     public function postTagIndex($slug)
     {
-        $postTag = PostTag::whereSlug($slug)->firstOrFail();
-        return view($postTag->template === 'default' ? 'postTag' : 'templates.postTags.' . $postTag->template,
-            ['postTag' => $postTag]
-        );
+        $item = parent::postTagIndex($slug);
+        return view($item->indexView, ['postTag' => $item]);
     }
 
     /**
@@ -127,11 +95,8 @@ class MaiaIndexController extends Controller
      */
     public function portfolioIndex($slug)
     {
-        $portfolio = Portfolio::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        put_session_view('portfolio', $portfolio);
-        return view($portfolio->template === 'default' ? 'portfolio' : 'templates.portfolio.' . $portfolio->template,
-            ['portfolio' => $portfolio]
-        );
+        $item = parent::portfolioIndex($slug);
+        return view($item->indexView, ['portfolio' => $item]);
     }
 
     /**
@@ -140,10 +105,8 @@ class MaiaIndexController extends Controller
      */
     public function portfolioCategoryIndex($slug)
     {
-        $portfolioCategory = PortfolioCategory::whereSlug($slug)->firstOrFail();
-        return view($portfolioCategory->template === 'default' ? 'portfolioCategory' : 'templates.portfolioCategories.' . $portfolioCategory->template,
-            ['portfolioCategory' => $portfolioCategory]
-        );
+        $item = parent::portfolioCategoryIndex($slug);
+        return view($item->indexView, ['portfolioCategory' => $item]);
     }
 
     /**
@@ -151,13 +114,8 @@ class MaiaIndexController extends Controller
      */
     public function parentPortfolioCategoryIndex()
     {
-        $slugs = collect(func_get_args());
-        $portfolioCategory = $slugs->reduce(function($portfolioCategory, $slug) {
-            return ($portfolioCategory->children()->where('slug', $slug)->firstOrFail());
-        }, PortfolioCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
-        return view($portfolioCategory->template === 'default' ? 'portfolioCategory' : 'templates.portfolioCategories.' . $portfolioCategory->template,
-            ['portfolioCategory' => $portfolioCategory]
-        );
+        $item = parent::parentPortfolioCategoryIndex();
+        return view($item->indexView, ['portfolioCategory' => $item]);
     }
 
     /**
@@ -166,9 +124,7 @@ class MaiaIndexController extends Controller
      */
     public function portfolioTagIndex($slug)
     {
-        $portfolioTag = PortfolioTag::whereSlug($slug)->firstOrFail();
-        return view($portfolioTag->template === 'default' ? 'portfolioTag' : 'templates.portfolioTags.' . $portfolioTag->template,
-            ['portfolioTag' => $portfolioTag]
-        );
+        $item = parent::portfolioTagIndex($slug);
+        return view($item->indexView, ['portfolioTag' => $item]);
     }
 }
