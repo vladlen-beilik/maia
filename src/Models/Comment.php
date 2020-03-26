@@ -57,21 +57,21 @@ class Comment extends Model
         return $this->belongsTo('App\\User', 'author_id');
     }
 
-//    /**
-//     * @return BelongsTo
-//     */
-//    public function parent(): BelongsTo
-//    {
-//        return $this->belongsTo(self::class, 'parent_id');
-//    }
+    /**
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
 
-//    /**
-//     * @return HasMany
-//     */
-//    public function children(): HasMany
-//    {
-//        return $this->hasMany(self::class, 'parent_id', 'id');
-//    }
+    /**
+     * @return HasMany
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
+    }
 
 //    /**
 //     * @param array $models

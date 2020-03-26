@@ -665,7 +665,7 @@ if (!function_exists('isParent')) {
     function isParent($single)
     {
         if(isset($single->parent_id) && !is_null($single->parent_id)) {
-            return $single->parent()->getUrl(true);
+            return $single->parent->getUrl(true);
         }
         return '';
     }

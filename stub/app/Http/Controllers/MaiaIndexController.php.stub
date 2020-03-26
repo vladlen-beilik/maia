@@ -34,11 +34,12 @@ class MaiaIndexController extends IndexController
     }
 
     /**
+     * @param $slug
      * @return Factory|ViewModel
      */
-    public function parentPageIndex()
+    public function parentPageIndex($slug)
     {
-        $item = parent::parentPageIndex();
+        $item = parent::parentPageIndex(collect(func_get_args()));
         return view($item->indexView, ['page' => $item]);
     }
 
@@ -63,11 +64,12 @@ class MaiaIndexController extends IndexController
     }
 
     /**
+     * @param $slug
      * @return Factory|ViewModel
      */
-    public function parentPostCategoryIndex()
+    public function parentPostCategoryIndex($slug)
     {
-        $item = parent::parentPostCategoryIndex();
+        $item = parent::parentPostCategoryIndex(collect(func_get_args()));
         return view($item->indexView, ['postCategory' => $item]);
     }
 
@@ -102,11 +104,12 @@ class MaiaIndexController extends IndexController
     }
 
     /**
+     * @param $slug
      * @return Factory|ViewModel
      */
-    public function parentPortfolioCategoryIndex()
+    public function parentPortfolioCategoryIndex($slug)
     {
-        $item = parent::parentPortfolioCategoryIndex();
+        $item = parent::parentPortfolioCategoryIndex(collect(func_get_args()));
         return view($item->indexView, ['portfolioCategory' => $item]);
     }
 
