@@ -96,7 +96,7 @@ class Post extends Model
 //    public function getThreadedComments(){
 //        return $this->comments()->with('user')->get()->threaded();
 //    }
-
+//
 //    /**
 //     * @param $attributes
 //     * @return Model
