@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use SpaceCode\Maia\Models\Post;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View as ViewModel;
 use SpaceCode\Maia\Controllers\IndexController;

@@ -18,7 +18,6 @@ use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
 use SpaceCode\Maia\Fields\Toggle;
-use Waynestate\Nova\CKEditor;
 
 class Page extends Resource
 {
@@ -142,31 +141,43 @@ class Page extends Resource
                         ->rules('required', 'max:255'),
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {
-                        $url = str_replace(['https://', 'http://'], '', $this->getUrl(true));
-                        return "<a class='cursor-pointer dim inline-block text-primary font-bold' href='{$this->getUrl(true)}' target='_blank' aria-role='button' style='text-decoration: none;'>{$url}</a>";
+                        return linkSvg($this->getUrl(true));
                     })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
                         ->rules('max:255')
                         ->hideFromIndex(),
 
-                    CKEditor::make(trans('maia::resources.body'), 'body')->options([
-                        'height' => 600,
-                        'toolbar' => [
-                            ['Undo','Redo', '-'],
-                            ['Bold','Italic','Strike','-','Subscript','Superscript'],
-                            ['NumberedList','BulletedList','-','Outdent','Indent', '-', 'Blockquote','CreateDiv'],
-                            ['Image','Table','SpecialChar', '-'],
-                            ['JustifyLeft','JustifyCenter','JustifyRight'],
-                            ['Link','Unlink','Anchor'],
-                            '/',
-                            ['Source', '-', 'Replace', 'RemoveFormat'],
-                            ['Format'],
-                            ['Maximize', 'ShowBlocks','-']
-                        ],
-                        'language' => env('APP_LOCALE'),
-                        'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
-                    ])->hideFromIndex(),
+//                    CKEditor::make(trans('maia::resources.body'), 'body')->options([
+//                        'height' => 600,
+//                        'toolbar' => [
+//                            ['Undo','Redo', '-'],
+//                            ['Bold','Italic','Strike','-','Subscript','Superscript'],
+//                            ['NumberedList','BulletedList','-','Outdent','Indent', '-', 'Blockquote','CreateDiv'],
+//                            ['Image','Table','SpecialChar', '-'],
+//                            ['JustifyLeft','JustifyCenter','JustifyRight'],
+//                            ['Link','Unlink','Anchor'],
+//                            '/',
+//                            ['Source', '-', 'Replace', 'RemoveFormat'],
+//                            ['Format'],
+//                            ['Maximize', 'ShowBlocks','-']
+//                        ],
+//                        'language' => env('APP_LOCALE'),
+//                        'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
+//                    ])->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.robots'), 'index')
+                        ->onlyOnIndex()
+                        ->displayUsing(function() {
+                            $robots = !is_null(jsonProp($this->index, 'robots')) && json_decode($this->index)->robots === '1' ? successSvg() : errorSvg();
+                            $google = !is_null(jsonProp($this->index, 'google')) && json_decode($this->index)->google === '1' ? successSvg() : errorSvg();
+                            $yandex = !is_null(jsonProp($this->index, 'yandex')) && json_decode($this->index)->yandex === '1' ? successSvg() : errorSvg();
+                            $bing = !is_null(jsonProp($this->index, 'bing')) && json_decode($this->index)->bing === '1' ? successSvg() : errorSvg();
+                            $duck = !is_null(jsonProp($this->index, 'duck')) && json_decode($this->index)->duck === '1' ? successSvg() : errorSvg();
+                            $baidu = !is_null(jsonProp($this->index, 'baidu')) && json_decode($this->index)->baidu === '1' ? successSvg() : errorSvg();
+                            $yahoo = !is_null(jsonProp($this->index, 'yahoo')) && json_decode($this->index)->yahoo === '1' ? successSvg() : errorSvg();
+                            return $robots . $google . $yandex . $bing . $duck . $baidu . $yahoo;
+                        })->asHtml(),
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()

@@ -11,7 +11,7 @@ class NovaTool extends Tool
     public $roleResource = Resources\Role::class;
     public $permissionResource = Resources\Permission::class;
     public $pageResource = Resources\Page::class;
-    public $commentResource = Resources\Comment::class;
+//    public $commentResource = Resources\Comment::class;
     public $postResource = Resources\Post::class;
     public $postCategoryResource = Resources\PostCategory::class;
     public $postTagResource = Resources\PostTag::class;
@@ -32,14 +32,14 @@ class NovaTool extends Tool
             $this->portfolioCategoryResource = null;
             $this->portfolioTagResource = null;
         }
-        if(!isBlog() && !isPortfolio()) {
-            $this->commentResource = null;
-        }
+//        if(!isBlog() && !isPortfolio()) {
+//            $this->commentResource = null;
+//        }
         Nova::resources(array_filter([
             $this->roleResource,
             $this->permissionResource,
             $this->pageResource,
-            $this->commentResource,
+//            $this->commentResource,
             $this->postResource,
             $this->postCategoryResource,
             $this->postTagResource,
@@ -80,15 +80,15 @@ class NovaTool extends Tool
         return $this;
     }
 
-    /**
-     * @param string $commentResource
-     * @return $this
-     */
-    public function commentResource(string $commentResource)
-    {
-        $this->commentResource = $commentResource;
-        return $this;
-    }
+//    /**
+//     * @param string $commentResource
+//     * @return $this
+//     */
+//    public function commentResource(string $commentResource)
+//    {
+//        $this->commentResource = $commentResource;
+//        return $this;
+//    }
 
     /**
      * @param string $postResource

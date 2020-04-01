@@ -2,6 +2,7 @@
 namespace SpaceCode\Maia;
 
 use Gate;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Events\ServingNova;
 use Laravel\Nova\Nova;
@@ -13,6 +14,7 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
+use SpaceCode\Maia\Jobs;
 use SpaceCode\Maia\Tools;
 use SpaceCode\Maia\Contracts;
 use SpaceCode\Maia\Middlewares;
@@ -88,17 +90,21 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
+            Nova::script('ckeditor5-classic-field', __DIR__.'/../dist/js/editor.js');
 
             Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
             Nova::style('tabs', __DIR__ . '/../dist/css/tabs.css');
             Nova::style('toggle', __DIR__.'/../dist/css/toggle.css');
+            Nova::style('ckeditor5-classic-field', __DIR__.'/../dist/css/editor.css');
         });
     }
 
     protected function schedule() {
-//        $schedule = app(Schedule::class);
-//        $schedule->job(new Jobs\UpdateJob)->dailyAt('23:00');
+        $schedule = app(Schedule::class);
+        $schedule->call(function () {
+            (new Jobs\PruneStaleAttachments)();
+        })->daily();
     }
 
     protected function loadHelper() {
@@ -175,6 +181,7 @@ class ToolServiceProvider extends ServiceProvider
         Routing::middleware(['nova', Middlewares\FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
         Routing::middleware(['nova', Middlewares\SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
         Routing::middleware(['nova', Middlewares\SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
+        Routing::middleware(['nova'])->prefix('nova-vendor/ckeditor5-classic')->group(__DIR__ . '/../routes/editor.php');
 //        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
     }
 
