@@ -314,27 +314,23 @@ if (!function_exists('variables_array')) {
     function variables_array()
     {
         return [
-            '%%author_id%%',
             '%%author_name%%',
-            '%%author_first_name%%',
-            '%%author_last_name%%',
-            '%%author_middle_name%%',
-            '%%author_email%%',
-            '%%url%%',
-            '%%title%%',
-            '%%excerpt%%',
-            '%%thumbnail%%',
-            '%%meta_title%%',
-            '%%meta_description%%',
-            '%%meta_keywords%%',
-            '%%status%%',
-            '%%created_at%%',
-            '%%updated_at%%',
+            '%%author_firstName%%',
+            '%%author_lastName%%',
+            '%%author_middleName%%',
+            '%%resource_url%%',
+            '%%resource_title%%',
+            '%%resource_excerpt%%',
+            '%%resource_meta_title%%',
+            '%%resource_meta_description%%',
+            '%%resource_meta_keywords%%',
+            '%%resource_status%%',
+            '%%resource_created_at%%',
+            '%%resource_updated_at%%',
             '%%website_url%%',
             '%%website_title%%',
             '%%website_excerpt%%',
-            '%%website_description%%',
-            '%%website_logo%%'
+            '%%website_description%%'
         ];
     }
 }
@@ -345,7 +341,14 @@ if (!function_exists('check_author')) {
         if (isset($id)) {
             $user = User::find($id);
             if (!is_null($user->$result)) {
-                return $user->$result;
+                if(Str::contains($result, '->')) {
+                    $str = explode('->', $result, 2);
+                    if(!is_null(jsonProp($user->{$str[0]}, $str[1]))) {
+                        return json_decode($user->$result)->{$str[1]};
+                    }
+                } else {
+                    return $user->$result;
+                }
             } else {
                 return '';
             }
@@ -355,86 +358,60 @@ if (!function_exists('check_author')) {
     }
 }
 
-if (!function_exists('check_thumbnail')) {
-    function check_thumbnail($thumbnail)
-    {
-        is_null($thumbnail) ? $return = '' : $return = Maia::image($thumbnail);
-        return $return;
-    }
-}
-
-if (!function_exists('check_logo')) {
-    function check_logo()
-    {
-        is_null(setting('site.logo')) ? $return = '' : $return = Maia::image(setting('site.logo'));
-        return $return;
-    }
-}
-
 if (!function_exists('variables_result')) {
     function variables_result($item, $url)
     {
         if (is_null($item)) {
-            $author_id = '';
             $author_name = '';
             $author_first_name = '';
             $author_last_name = '';
             $author_middle_name = '';
-            $author_email = '';
-            $url = url('');
-            $title = '';
-            $excerpt = '';
-            $thumbnail = '';
-            $meta_title = seo('seo_home_meta_title');
-            $meta_description = seo('seo_home_meta_description');
-            $meta_keywords = seo('seo_home_meta_keywords');
-            $status = '';
-            $created_at = '';
-            $updated_at = '';
+            $resource_url = url('');
+            $resource_title = '';
+            $resource_excerpt = '';
+            $resource_meta_title = strip_tags(seo('seo_home_meta_title'));
+            $resource_meta_description = strip_tags(seo('seo_home_meta_description'));
+            $resource_meta_keywords = strip_tags(seo('seo_home_meta_keywords'));
+            $resource_status = '';
+            $resource_created_at = '';
+            $resource_updated_at = '';
         } else {
-            $author_id = check_author($item->author_id, 'id');
             $author_name = check_author($item->author_id, 'name');
-            $author_first_name = check_author($item->author_id, 'first_name');
-            $author_last_name = check_author($item->author_id, 'last_name');
-            $author_middle_name = check_author($item->author_id, 'middle_name');
-            $author_email = check_author($item->author_id, 'email');
-            isset($item->name) ? $title = $item->name : $title = $item->title;
-            $excerpt = strip_tags($item->excerpt);
-            $thumbnail = check_thumbnail($item->image);
-            $meta_title = strip_tags($item->meta_title);
-            $meta_description = strip_tags($item->meta_description);
-            $meta_keywords = strip_tags($item->meta_keywords);
-            $status = $item->status;
-            $created_at = date('Y-m-d', strtotime($item->created_at));
-            $updated_at = date('Y-m-d', strtotime($item->updated_at));
+            $author_first_name = check_author($item->author_id, 'fullName->firstName');
+            $author_last_name = check_author($item->author_id, 'fullName->lastName');
+            $author_middle_name = check_author($item->author_id, 'fullName->middleName');
+            $resource_url = $url;
+            $resource_title = $item->title;
+            $resource_excerpt = strip_tags($item->excerpt);
+            $resource_meta_title = strip_tags($item->meta_title);
+            $resource_meta_description = strip_tags($item->meta_description);
+            $resource_meta_keywords = strip_tags($item->meta_keywords);
+            $resource_status = isset($item->status) ? $item->status : '';
+            $resource_created_at = date('Y-m-d', strtotime($item->created_at));
+            $resource_updated_at = date('Y-m-d', strtotime($item->updated_at));
         }
         $website_url = env('APP_URL');
         $website_title = setting('site_title');
         $website_excerpt = setting('site_excerpt');
         $website_description = setting('site_description');
-        $website_logo = check_logo();
         return [
-            $author_id,
             $author_name,
             $author_first_name,
             $author_last_name,
             $author_middle_name,
-            $author_email,
-            $url,
-            $title,
-            $excerpt,
-            $thumbnail,
-            $meta_title,
-            $meta_description,
-            $meta_keywords,
-            __($status),
-            $created_at,
-            $updated_at,
+            $resource_url,
+            $resource_title,
+            $resource_excerpt,
+            $resource_meta_title,
+            $resource_meta_description,
+            $resource_meta_keywords,
+            $resource_status,
+            $resource_created_at,
+            $resource_updated_at,
             $website_url,
             $website_title,
             $website_excerpt,
-            $website_description,
-            $website_logo
+            $website_description
         ];
     }
 }
@@ -444,13 +421,12 @@ if (!function_exists('meta_title')) {
     {
         $global = seo('seo_' . $name . '_meta_title');
         if($name === 'home') {
-            is_null($global) ? $meta_title = trans('maia::resources.home') : $meta_title = str_replace(variables_array(), variables_result(null, null), $global);
+            $meta_title = is_null($global) ? trans('maia::resources.home') : str_replace(variables_array(), variables_result(null, null), $global);
         } else {
             if(!is_null($item->meta_title)) {
                 $meta_title = str_replace(variables_array(), variables_result($item, $url), $item->meta_title);
             } else {
-                isset($item->name) ? $title = $item->name : $title = $item->title;
-                $meta_title = str_replace(variables_array(), variables_result($item, $url), $title);
+                $meta_title = str_replace(variables_array(), variables_result($item, $url), $item->title);
             }
         }
         return $meta_title;
@@ -464,10 +440,13 @@ if (!function_exists('meta_description')) {
         if($name === 'home') {
             $meta_description = str_replace(variables_array(), variables_result($item, $url), $global);
         } else {
+            $meta_description = '';
             if(!is_null($item->meta_description)) {
                 $meta_description = str_replace(variables_array(), variables_result($item, $url), $item->meta_description);
-            } else {
-                $meta_description = is_null($global) ? '' : str_replace(variables_array(), variables_result($item, $url), $global);
+            } elseif (!is_null($global)) {
+                $meta_description = str_replace(variables_array(), variables_result($item, $url), $global);
+            } elseif (!is_null($item->excerpt)) {
+                $meta_description = str_replace(variables_array(), variables_result($item, $url), $item->excerpt);
             }
         }
         return $meta_description;
@@ -687,5 +666,26 @@ if (!function_exists('isPagination')) {
             }
         }
         return '';
+    }
+}
+
+if (!function_exists('successSvg')) {
+    function successSvg()
+    {
+        return "<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' aria-labelledby='check-circle' role='presentation' class='fill-current text-success'><path d='M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-2.3-8.7l1.3 1.29 3.3-3.3a1 1 0 0 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-2-2a1 1 0 0 1 1.4-1.42z'></path></svg>";
+    }
+}
+
+if (!function_exists('errorSvg')) {
+    function errorSvg()
+    {
+        return "<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' aria-labelledby='x-circle' role='presentation' class='fill-current text-danger'><path d='M4.93 19.07A10 10 0 1 1 19.07 4.93 10 10 0 0 1 4.93 19.07zm1.41-1.41A8 8 0 1 0 17.66 6.34 8 8 0 0 0 6.34 17.66zM13.41 12l1.42 1.41a1 1 0 1 1-1.42 1.42L12 13.4l-1.41 1.42a1 1 0 1 1-1.42-1.42L10.6 12l-1.42-1.41a1 1 0 1 1 1.42-1.42L12 10.6l1.41-1.42a1 1 0 1 1 1.42 1.42L13.4 12z'></path></svg>";
+    }
+}
+
+if (!function_exists('linkSvg')) {
+    function linkSvg($url)
+    {
+        return "<a style='padding-top: 2px; text-decoration: none' class='inline-flex cursor-pointer text-70 hover:text-primary' href='{$url}' target='_blank' aria-role='button'><svg width='22' height='22' class='fill-current' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M9.26 13a2 2 0 0 1 .01-2.01A3 3 0 0 0 9 5H5a3 3 0 0 0 0 6h.08a6.06 6.06 0 0 0 0 2H5A5 5 0 0 1 5 3h4a5 5 0 0 1 .26 10zm1.48-6a2 2 0 0 1-.01 2.01A3 3 0 0 0 11 15h4a3 3 0 0 0 0-6h-.08a6.06 6.06 0 0 0 0-2H15a5 5 0 0 1 0 10h-4a5 5 0 0 1-.26-10z' /></svg></a>";
     }
 }

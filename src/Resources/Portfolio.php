@@ -164,8 +164,7 @@ class Portfolio extends Resource
                         ->updateRules('unique:portfolio,slug,{{resourceId}}'),
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {
-                        $url = str_replace(['https://', 'http://'], '', $this->getUrl(true));
-                        return "<a class='cursor-pointer dim inline-block text-primary font-bold' href='{$this->getUrl(true)}' target='_blank' aria-role='button' style='text-decoration: none;'>{$url}</a>";
+                        return linkSvg($this->getUrl(true));
                     })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
@@ -189,6 +188,19 @@ class Portfolio extends Resource
                         'language' => env('APP_LOCALE'),
                         'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
                     ])->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.robots'), 'index')
+                        ->onlyOnIndex()
+                        ->displayUsing(function() {
+                            $robots = is_null(jsonProp($this->index, 'robots')) ? successSvg() : errorSvg();
+                            $google = is_null(jsonProp($this->index, 'google')) ? successSvg() : errorSvg();
+                            $yandex = is_null(jsonProp($this->index, 'yandex')) ? successSvg() : errorSvg();
+                            $bing = is_null(jsonProp($this->index, 'duck')) ? successSvg() : errorSvg();
+                            $duck = is_null(jsonProp($this->index, 'google')) ? successSvg() : errorSvg();
+                            $baidu = is_null(jsonProp($this->index, 'baidu')) ? successSvg() : errorSvg();
+                            $yahoo = is_null(jsonProp($this->index, 'yahoo')) ? successSvg() : errorSvg();
+                            return $robots . $google . $yandex . $bing . $duck . $baidu . $yahoo;
+                        })->asHtml(),
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
