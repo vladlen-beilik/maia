@@ -140,13 +140,13 @@ class PostTag extends Resource
                     Text::make(trans('maia::resources.robots'), 'index')
                         ->onlyOnIndex()
                         ->displayUsing(function() {
-                            $robots = is_null(jsonProp($this->index, 'robots')) ? successSvg() : errorSvg();
-                            $google = is_null(jsonProp($this->index, 'google')) ? successSvg() : errorSvg();
-                            $yandex = is_null(jsonProp($this->index, 'yandex')) ? successSvg() : errorSvg();
-                            $bing = is_null(jsonProp($this->index, 'duck')) ? successSvg() : errorSvg();
-                            $duck = is_null(jsonProp($this->index, 'google')) ? successSvg() : errorSvg();
-                            $baidu = is_null(jsonProp($this->index, 'baidu')) ? successSvg() : errorSvg();
-                            $yahoo = is_null(jsonProp($this->index, 'yahoo')) ? successSvg() : errorSvg();
+                            $robots = !is_null(jsonProp($this->index, 'robots')) && json_decode($this->index)->robots === '1' ? successSvg() : errorSvg();
+                            $google = !is_null(jsonProp($this->index, 'google')) && json_decode($this->index)->google === '1' ? successSvg() : errorSvg();
+                            $yandex = !is_null(jsonProp($this->index, 'yandex')) && json_decode($this->index)->yandex === '1' ? successSvg() : errorSvg();
+                            $bing = !is_null(jsonProp($this->index, 'bing')) && json_decode($this->index)->bing === '1' ? successSvg() : errorSvg();
+                            $duck = !is_null(jsonProp($this->index, 'duck')) && json_decode($this->index)->duck === '1' ? successSvg() : errorSvg();
+                            $baidu = !is_null(jsonProp($this->index, 'baidu')) && json_decode($this->index)->baidu === '1' ? successSvg() : errorSvg();
+                            $yahoo = !is_null(jsonProp($this->index, 'yahoo')) && json_decode($this->index)->yahoo === '1' ? successSvg() : errorSvg();
                             return $robots . $google . $yandex . $bing . $duck . $baidu . $yahoo;
                         })->asHtml(),
 
