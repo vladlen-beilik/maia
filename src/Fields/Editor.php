@@ -82,4 +82,14 @@ class Editor extends Trix
             };
         }
     }
+
+    /**
+     * Get the full path that the field is stored at on disk.
+     *
+     * @return string|null
+     */
+    public function getStoragePath()
+    {
+        return $this->storagePath;
+    }
 }

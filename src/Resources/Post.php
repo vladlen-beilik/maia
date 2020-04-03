@@ -180,24 +180,6 @@ class Post extends Resource
                     Editor::make(trans('maia::resources.body'), 'body')->withFiles(config('maia.filemanager.disk'))
                         ->hideFromIndex(),
 
-//                    CKEditor::make(trans('maia::resources.body'), 'body')->options([
-//                        'height' => 600,
-//                        'toolbar' => [
-//                            ['Undo','Redo', '-'],
-//                            ['Bold','Italic','Strike','-','Subscript','Superscript'],
-//                            ['NumberedList','BulletedList','-','Outdent','Indent', '-', 'Blockquote','CreateDiv'],
-//                            ['Image','Table','SpecialChar', '-'],
-//                            ['JustifyLeft','JustifyCenter','JustifyRight'],
-//                            ['Link','Unlink','Anchor'],
-//                            '/',
-//                            ['Source', '-', 'Replace', 'RemoveFormat'],
-//                            ['Format'],
-//                            ['Maximize', 'ShowBlocks','-']
-//                        ],
-//                        'language' => env('APP_LOCALE'),
-//                        'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
-//                    ])->hideFromIndex(),
-
                     Boolean::make(trans('maia::resources.comments'), 'comments')
                         ->onlyOnIndex(),
 

@@ -176,13 +176,13 @@ class ToolServiceProvider extends ServiceProvider
         if ($this->app->routesAreCached()) {
             return;
         }
+//        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
         Routing::middleware(['nova', Middlewares\HorizonAuthorize::class])->prefix('nova-vendor/maia-horizon')->group(__DIR__ . '/../routes/horizon.php');
         Routing::middleware(['nova'])->prefix('nova-vendor/maia-sluggable')->group(__DIR__.'/../routes/sluggable.php');
         Routing::middleware(['nova', Middlewares\FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
         Routing::middleware(['nova', Middlewares\SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
         Routing::middleware(['nova', Middlewares\SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
         Routing::middleware(['nova'])->prefix('nova-vendor/ckeditor5-classic')->group(__DIR__ . '/../routes/editor.php');
-//        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
     }
 
     /**

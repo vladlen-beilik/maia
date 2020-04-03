@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
+use SpaceCode\Maia\Fields\Editor;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
@@ -118,23 +119,8 @@ class PostTag extends Resource
                         ->rules('max:255')
                         ->hideFromIndex(),
 
-//                    CKEditor::make(trans('maia::resources.body'), 'body')->options([
-//                        'height' => 600,
-//                        'toolbar' => [
-//                            ['Undo','Redo', '-'],
-//                            ['Bold','Italic','Strike','-','Subscript','Superscript'],
-//                            ['NumberedList','BulletedList','-','Outdent','Indent', '-', 'Blockquote','CreateDiv'],
-//                            ['Image','Table','SpecialChar', '-'],
-//                            ['JustifyLeft','JustifyCenter','JustifyRight'],
-//                            ['Link','Unlink','Anchor'],
-//                            '/',
-//                            ['Source', '-', 'Replace', 'RemoveFormat'],
-//                            ['Format'],
-//                            ['Maximize', 'ShowBlocks','-']
-//                        ],
-//                        'language' => env('APP_LOCALE'),
-//                        'format_tags' => 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
-//                    ])->hideFromIndex(),
+                    Editor::make(trans('maia::resources.body'), 'body')->withFiles(config('maia.filemanager.disk'))
+                        ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.robots'), 'index')
                         ->onlyOnIndex()
