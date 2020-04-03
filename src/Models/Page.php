@@ -42,6 +42,11 @@ class Page extends Model
             }
             return true;
         });
+
+        static::deleting(function($model) {
+            Page::where('parent_id', $model->id)->update(['parent_id' => null]);
+            return true;
+        });
     }
 
     /**
