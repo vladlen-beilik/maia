@@ -76,7 +76,6 @@ return [
             'heading' => [
                 'options' => [
                     ['model' => 'paragraph', 'title' => 'Paragraph', 'class' => ''],
-                    ['model' => 'heading1', 'view' => 'h1', 'title' => 'Heading 1', 'class' => ''],
                     ['model' => 'heading2', 'view' => 'h2', 'title' => 'Heading 2', 'class' => ''],
                     ['model' => 'heading3', 'view' => 'h3', 'title' => 'Heading 3', 'class' => ''],
                     ['model' => 'heading4', 'view' => 'h4', 'title' => 'Heading 4', 'class' => ''],
