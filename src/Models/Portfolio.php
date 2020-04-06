@@ -52,6 +52,10 @@ class Portfolio extends Model
             }
             DB::table('relationships')->where(['type' => 'portfolio_tag', 'item_id' => $model->id])->delete();
             DB::table('relationships')->where(['type' => 'portfolio_category', 'item_id' => $model->id])->delete();
+
+            DB::table('comments_relationships')->where(['type' => 'portfolio', 'item_id' => $model->id])->delete();
+            $model->comments->delete();
+
             return true;
         });
     }
@@ -78,6 +82,14 @@ class Portfolio extends Model
     public function tags() : BelongsToMany
     {
         return $this->belongsToMany(PortfolioCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'portfolio_tag');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function commentsList() : BelongsToMany
+    {
+        return $this->belongsToMany(Comment::class, 'comments_relationships', 'item_id', 'comment_id')->where('comments_relationships.type', 'portfolio');
     }
 
     /**

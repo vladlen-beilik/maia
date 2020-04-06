@@ -3,7 +3,6 @@ namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +53,10 @@ class Post extends Model
             }
             DB::table('relationships')->where(['type' => 'post_tag', 'item_id' => $model->id])->delete();
             DB::table('relationships')->where(['type' => 'post_category', 'item_id' => $model->id])->delete();
+
+            DB::table('comments_relationships')->where(['type' => 'post', 'item_id' => $model->id])->delete();
+            $model->comments->delete();
+
             return true;
         });
     }
@@ -71,6 +74,7 @@ class Post extends Model
      */
     public function categories() : BelongsToMany
     {
+        request()->input('type', 'post_category');
         return $this->belongsToMany(PostCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_category');
     }
 
@@ -82,31 +86,14 @@ class Post extends Model
         return $this->belongsToMany(PostTag::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_tag');
     }
 
-//    /**
-//     * @return HasManyThrough
-//     */
-//    public function comments() : HasManyThrough
-//    {
-//        return $this->hasManyThrough(Comment::class, 'comments_relationships', 'item_id', 'comment_id')->where('comments_relationships.type', 'post');
-//    }
 
-//    /**
-//     * @return mixed
-//     */
-//    public function getThreadedComments(){
-//        return $this->comments()->with('user')->get()->threaded();
-//    }
-//
-//    /**
-//     * @param $attributes
-//     * @return Model
-//     */
-//    public function addComment($attributes)
-//    {
-//        $comment = (new Comment())->forceFill($attributes);
-//        $comment->author_id = Auth::id();
-//        return $this->comments()->save($comment);
-//    }
+    /**
+     * @return BelongsToMany
+     */
+    public function commentsList() : BelongsToMany
+    {
+        return $this->belongsToMany(Comment::class, 'comments_relationships', 'item_id', 'comment_id')->where('comments_relationships.type', 'post');
+    }
 
     /**
      * @param bool $arg

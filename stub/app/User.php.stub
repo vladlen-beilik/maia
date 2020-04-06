@@ -74,4 +74,25 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        $return = $this->name;
+        if(!is_null($this->fullName)) {
+            $first = jsonProp($this->fullName, 'firstName');
+            $last = jsonProp($this->fullName, 'lastName');
+            $middle = jsonProp($this->fullName, 'middleName');
+            if(!is_null($first) && !is_null($last) && !is_null($middle)) {
+                $return = $last . ' ' . $first . ' ' . $middle;
+            } elseif (!is_null($first) && !is_null($last) && is_null($middle)) {
+                $return = $first . ' ' . $last;
+            } elseif (!is_null($first)) {
+                $return = $first;
+            }
+        }
+        return $return;
+    }
 }

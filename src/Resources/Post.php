@@ -17,6 +17,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
 use SpaceCode\Maia\Fields\Editor;
+use SpaceCode\Maia\Fields\Hidden;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
@@ -221,18 +222,14 @@ class Post extends Resource
                 trans('maia::resources.categories') => [
                     BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
                         return [
-                            Text::make('type')->resolveUsing(function () {
-                                return 'post_category';
-                            })->hideWhenCreating(),
+                            Hidden::make('type')->default('post_category')
                         ];
                     })
                 ],
                 trans('maia::resources.tags') => [
                     BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)->fields(function () {
                         return [
-                            Text::make('type')->resolveUsing(function () {
-                                return 'post_tag';
-                            })->hideWhenCreating(),
+                            Hidden::make('type')->default('post_tag')
                         ];
                     })
                 ],

@@ -16,6 +16,8 @@ if (
     !\Request::is('admin/*') &&
     !\Request::is('nova-api') &&
     !\Request::is('nova-api/*') &&
+    !\Request::is('maia-api') &&
+    !\Request::is('maia-api/*') &&
     !\Request::is('nova-vendor') &&
     !\Request::is('nova-vendor/*')
 ) {

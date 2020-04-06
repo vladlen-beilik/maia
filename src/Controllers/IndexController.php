@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use SpaceCode\Maia\Models;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\View\Factory;
@@ -71,6 +72,7 @@ class IndexController extends Controller
     {
         $item = Models\Post::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
         $item->indexView = $item->template === 'default' ? 'post' : 'templates.posts.' . $item->template;
+        getVariableVue($item);
         put_session_view('posts', $item);
         return $item;
     }
@@ -118,7 +120,8 @@ class IndexController extends Controller
     {
         $item = Models\Portfolio::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
         $item->indexView = $item->template === 'default' ? 'portfolio' : 'templates.portfolio.' . $item->template;
-        put_session_view('portfolio', $portfolio);
+        getVariableVue($item);
+        put_session_view('portfolio', $item);
         return $item;
     }
 

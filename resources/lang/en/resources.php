@@ -138,6 +138,7 @@ return [
         'portfolioComments' => 'Portfolio Comments Settings',
         'shop' => 'Shop'
     ],
+    'resource' => 'Resource',
     'resourcestitle' => 'Resources',
     'servicestitle' => 'Services',
     'services' => [

@@ -3,24 +3,24 @@
 namespace SpaceCode\Maia\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
+use SpaceCode\Maia\Fields\Hidden;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
 
 class Comment extends Resource
 {
     use TabsOnEdit;
-
-    protected $casts = [
-        'index' => 'array'
-    ];
 
     /**
      * @var string
@@ -38,6 +38,7 @@ class Comment extends Resource
     public static $statuses = [
         'pending' => 'warning',
         'published' => 'success',
+        'spam' => 'info',
         'deleted' => 'danger'
     ];
 
@@ -66,19 +67,13 @@ class Comment extends Resource
         $guardOptions = collect(config('auth.guards'))->mapWithKeys(function ($value, $key) {
             return [$key => $key];
         });
-//        if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-//            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-//                ->rules('required')
-//                ->hideWhenCreating()
-//                ->sortable();
-//        } else {
-//            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
-//                ->rules('required')
-//                ->hideWhenCreating()
-//                ->sortable()
-//                ->readonly();
-//        }
-
+        if($this->getCommentType() === 'post') {
+            $res = BelongsToMany::make(trans('maia::resources.resource'), 'post', Post::class)->nullable();
+        } else if ($this->getCommentType() === 'portfolio') {
+            $res = BelongsToMany::make(trans('maia::resources.resource'), 'portfolio', Portfolio::class)->nullable();
+        } else {
+            $res = Hidden::make(trans('maia::resources.resource'), 'resource');
+        }
         return [
             (new Tabs($this->singularLabel(), [
                 trans('maia::resources.general') => [
@@ -87,9 +82,11 @@ class Comment extends Resource
                     Select::make(trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
                         ->rules('required', Rule::in($guardOptions))
-                        ->sortable(),
+                        ->hideFromIndex(),
 
-//                    $author,
+                    Text::make(trans('maia::resources.author'), 'author_id', function () {
+                        return '<p>' . $this->author_id === 0 ? '—' : $this->user->getName() . '</p>';
+                    })->exceptOnForms()->asHtml(),
 
                     Badge::make(trans('maia::resources.status'), 'status', function () {
                         if (!is_null($this->deleted_at))
@@ -105,23 +102,41 @@ class Comment extends Resource
                         ->rules('required')
                         ->displayUsingLabels()
                 ],
-//                trans('maia::resources.parent') => [
-//                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)
-//                        ->nullable()
-//                        ->searchable()
-//                ],
+                trans('maia::resources.parent') => [
+                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)
+                        ->onlyOnDetail()
+                        ->nullable()
+                        ->searchable()
+                ],
+                trans('maia::resources.resource') => [
+                    $res
+                ],
                 trans('maia::resources.content') => [
                     Textarea::make(trans('maia::resources.body'), 'body')
-                        ->rules('required')
-                        ->hideFromIndex(),
+                        ->rules('required', 'min:3')
+                        ->showOnIndex(true),
 
                     DateTime::make(trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
-                        ->sortable(),
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.created_at'), 'created_at')
+                        ->onlyOnIndex()
+                        ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        }),
 
                     DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
+                        ->hideFromIndex(),
+
+                    Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                        ->onlyOnIndex()
                         ->sortable()
+                        ->displayUsing(function($date) {
+                            return $date->diffForHumans();
+                        }),
                 ]
             ]))->withToolbar()
         ];
@@ -161,5 +176,14 @@ class Comment extends Resource
     public function actions(Request $request)
     {
         return [];
+    }
+
+    /**
+     * @return $this
+     */
+    public function getCommentType()
+    {
+        $relation = DB::table('comments_relationships')->where('comment_id', $this->id)->first();
+        return !$relation ? null : $relation->type;
     }
 }

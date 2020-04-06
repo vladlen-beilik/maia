@@ -16,6 +16,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
 use SpaceCode\Maia\Fields\Editor;
+use SpaceCode\Maia\Fields\Hidden;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Toggle;
@@ -212,18 +213,14 @@ class Portfolio extends Resource
                 trans('maia::resources.categories') => [
                     BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PortfolioCategory::class)->fields(function () {
                         return [
-                            Text::make('type')->resolveUsing(function () {
-                                return 'portfolio_category';
-                            })->hideWhenCreating(),
+                            Hidden::make('type')->default('portfolio_category')
                         ];
                     })
                 ],
                 trans('maia::resources.tags') => [
                     BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PortfolioTag::class)->fields(function () {
                         return [
-                            Text::make('type')->resolveUsing(function () {
-                                return 'portfolio_tag';
-                            })->hideWhenCreating(),
+                            Hidden::make('type')->default('portfolio_tag')
                         ];
                     })
                 ],

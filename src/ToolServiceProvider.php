@@ -14,6 +14,9 @@ use Illuminate\View\Compilers\BladeCompiler;
 use Illuminate\Foundation\AliasLoader;
 use SpaceCode\Maia\Facades\Maia as MaiaFacade;
 use SpaceCode\Maia\Facades\Robots as RobotsFacade;
+use SpaceCode\Maia\Javascript\JavaScriptFacade;
+use SpaceCode\Maia\JavaScript\LaravelViewBinder;
+use SpaceCode\Maia\Javascript\Transformers\Transformer;
 use SpaceCode\Maia\Jobs;
 use SpaceCode\Maia\Tools;
 use SpaceCode\Maia\Contracts;
@@ -91,6 +94,7 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
             Nova::script('ckeditor5-classic-field', __DIR__.'/../dist/js/editor.js');
+            Nova::script('hidden-field', __DIR__.'/../dist/js/hidden.js');
 
             Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
@@ -183,6 +187,7 @@ class ToolServiceProvider extends ServiceProvider
         Routing::middleware(['nova', Middlewares\SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
         Routing::middleware(['nova', Middlewares\SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');
         Routing::middleware(['nova'])->prefix('nova-vendor/ckeditor5-classic')->group(__DIR__ . '/../routes/editor.php');
+        Routing::middleware(['web'])->prefix('maia-api')->group(__DIR__ . '/../routes/api.php');
     }
 
     /**
@@ -192,11 +197,15 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton('JavaScript', function ($app) {
+            return new Transformer(new LaravelViewBinder($app['events'], 'footer'), 'window');
+        });
         $this->app->bind('sitemap', function ($app) {
             $config = config('maia.sitemap');
             return new Sitemap($config, $app['Illuminate\Cache\Repository'], $app['config'], $app['files'], $app['Illuminate\Contracts\Routing\ResponseFactory'], $app['view']);
         });
         $loader = AliasLoader::getInstance();
+        $loader->alias('JavaScript', JavaScriptFacade::class);
         $loader->alias('sitemap', Sitemap::class);
         $loader->alias('Maia', MaiaFacade::class);
         $this->app->booting(function($loader) {

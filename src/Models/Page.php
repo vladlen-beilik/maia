@@ -3,9 +3,11 @@ namespace SpaceCode\Maia\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use SpaceCode\Maia\Exceptions\PageConflict;
 
@@ -45,6 +47,8 @@ class Page extends Model
 
         static::deleting(function($model) {
             Page::where('parent_id', $model->id)->update(['parent_id' => null]);
+            DB::table('comments_relationships')->where(['type' => 'page', 'item_id' => $model->id])->delete();
+            $model->comments->delete();
             return true;
         });
     }
@@ -77,6 +81,14 @@ class Page extends Model
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id', 'id');
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function comments() : HasManyThrough
+    {
+        return $this->hasManyThrough(Comment::class, 'comments_relationships', 'item_id', 'comment_id')->where('comments_relationships.type', 'page');
     }
 
     /**

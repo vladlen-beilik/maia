@@ -75,6 +75,38 @@ class CommentPolicy
     }
 
     /**
+     * @return bool
+     */
+    public function attachAnyPost()
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function detachAnyPost()
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function attachAnyPortfolio()
+    {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function detachAnyPortfolio()
+    {
+        return false;
+    }
+
+    /**
      * @param $user
      * @return bool
      */
