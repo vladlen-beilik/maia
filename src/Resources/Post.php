@@ -163,9 +163,7 @@ class Post extends Resource
                         ->sortable(),
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->slugUnique()
                         ->onlyOnForms()
-                        ->slugModel(static::$model)
                         ->rules('required', 'max:255')
                         ->creationRules('unique:posts,slug')
                         ->updateRules('unique:posts,slug,{{resourceId}}'),

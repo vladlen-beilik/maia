@@ -100,9 +100,7 @@ class PortfolioTag extends Resource
                         ->sortable(),
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->slugUnique()
                         ->onlyOnForms()
-                        ->slugModel(static::$model)
                         ->rules('required', 'max:255')
                         ->creationRules('unique:portfolio_tags,slug')
                         ->updateRules('unique:portfolio_tags,slug,{{resourceId}}'),

@@ -18,6 +18,7 @@ class NovaTool extends Tool
     public $portfolioResource = Resources\Portfolio::class;
     public $portfolioCategoryResource = Resources\PortfolioCategory::class;
     public $portfolioTagResource = Resources\PortfolioTag::class;
+    public $shopResource = Resources\Shop::class;
     public $contactFormResource = Resources\ContactForm::class;
 
     public function boot()
@@ -32,7 +33,10 @@ class NovaTool extends Tool
             $this->portfolioCategoryResource = null;
             $this->portfolioTagResource = null;
         }
-        if(!isBlog() && !isPortfolio()) {
+//        if(!isShop()) {
+            $this->shopResource = null;
+//        }
+        if(!isBlog() && !isPortfolio() && !isShop()) {
             $this->commentResource = null;
         }
         Nova::resources(array_filter([
@@ -46,6 +50,7 @@ class NovaTool extends Tool
             $this->portfolioResource,
             $this->portfolioCategoryResource,
             $this->portfolioTagResource,
+            $this->shopResource,
             $this->contactFormResource,
         ]));
     }
@@ -147,6 +152,16 @@ class NovaTool extends Tool
     public function portfolioTagResource(string $portfolioTagResource)
     {
         $this->portfolioTagResource = $portfolioTagResource;
+        return $this;
+    }
+
+    /**
+     * @param string $shopResource
+     * @return $this
+     */
+    public function shopResource(string $shopResource)
+    {
+        $this->shopResource = $shopResource;
         return $this;
     }
 

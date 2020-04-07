@@ -89,7 +89,7 @@ class ToolServiceProvider extends ServiceProvider
 //            Nova::script('license', __DIR__ . '/../dist/js/license.js');
             Nova::script('multiselect', __DIR__ . '/../dist/js/multiselect.js');
             Nova::script('tabs', __DIR__ . '/../dist/js/tabs.js');
-            Nova::script('maia-sluggable', __DIR__.'/../dist/js/sluggable.js');
+            Nova::script('slug-field', __DIR__.'/../dist/js/slug.js');
             Nova::script('filemanager-field', __DIR__.'/../dist/js/filemanager-field.js');
             Nova::script('image-field', __DIR__.'/../dist/js/advanced-image.js');
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
@@ -124,7 +124,7 @@ class ToolServiceProvider extends ServiceProvider
         Gate::policy(Models\Permission::class, Policy\PermissionPolicy::class);
         Gate::policy(Models\Role::class, Policy\RolePolicy::class);
         Gate::policy(Models\Page::class, Policy\PagePolicy::class);
-        if(isBlog() || isPortfolio()) {
+        if(isBlog() || isPortfolio() || isShop()) {
             Gate::policy(Models\Comment::class, Policy\CommentPolicy::class);
         }
         if(isBlog()) {
@@ -137,6 +137,9 @@ class ToolServiceProvider extends ServiceProvider
             Gate::policy(Models\PortfolioCategory::class, Policy\PortfolioCategoryPolicy::class);
             Gate::policy(Models\PortfolioTag::class, Policy\PortfolioTagPolicy::class);
         }
+//        if(isShop()) {
+            Gate::policy(Models\Shop::class, Policy\ShopPolicy::class);
+//        }
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);
     }
 
@@ -182,7 +185,6 @@ class ToolServiceProvider extends ServiceProvider
         }
 //        Routing::middleware(['nova'])->prefix('nova-vendor/maia-license')->group(__DIR__ . '/../routes/license.php');
         Routing::middleware(['nova', Middlewares\HorizonAuthorize::class])->prefix('nova-vendor/maia-horizon')->group(__DIR__ . '/../routes/horizon.php');
-        Routing::middleware(['nova'])->prefix('nova-vendor/maia-sluggable')->group(__DIR__.'/../routes/sluggable.php');
         Routing::middleware(['nova', Middlewares\FilemanagerAuthorize::class])->namespace('SpaceCode\Maia\Controllers')->prefix('nova-vendor/maia-filemanager/nova-filemanager')->group(__DIR__.'/../routes/filemanager.php');
         Routing::middleware(['nova', Middlewares\SettingsAuthorize::class])->group(__DIR__ . '/../routes/settings.php');
         Routing::middleware(['nova', Middlewares\SeoAuthorize::class])->group(__DIR__ . '/../routes/seo.php');

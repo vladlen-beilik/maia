@@ -122,9 +122,7 @@ class PortfolioCategory extends Resource
                         ->sortable(),
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->slugUnique()
                         ->onlyOnForms()
-                        ->slugModel(static::$model)
                         ->rules('required', 'max:255'),
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {

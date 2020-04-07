@@ -157,9 +157,7 @@ class Portfolio extends Resource
                         ->sortable(),
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
-                        ->slugUnique()
                         ->onlyOnForms()
-                        ->slugModel(static::$model)
                         ->rules('required', 'max:255')
                         ->creationRules('unique:portfolio,slug')
                         ->updateRules('unique:portfolio,slug,{{resourceId}}'),

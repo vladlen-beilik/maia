@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpaceCode\Maia\Fields;
 
-use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Element;
+use Laravel\Nova\Fields\Field;
 
 class Slug extends Field
 {
@@ -12,55 +14,82 @@ class Slug extends Field
      *
      * @var string
      */
-    public $component = 'maia-sluggable-slug-field';
+    public $component = 'slug-field';
 
-    protected $options = [
-        'event' => 'keyup',
-    ];
+    /**
+     * Disable auto update behavior
+     *
+     * @var bool
+     */
+    private $disableAutoUpdateWhenUpdating = false;
 
-    public function __construct($name, $attribute = null, callable $resolveCallback = null)
+    /**
+     * Optionally show a full url
+     * @var null|string
+     */
+    private $showUrlPreview;
+
+    /**
+     * Passing options to the js library used for the slug generation
+     * https://www.npmjs.com/package/speakingurl
+     *
+     * @var array
+     */
+    private $slugifyOptions = [];
+
+    /**
+     * Add prefix for generated slug
+     *
+     * @var null|string
+     */
+    private $slugPrefix;
+
+    /**
+     * Specify options to pass to speakingurl.
+     *
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function slugifyOptions(array $options): Element
     {
-        $this->withMeta(['options' => $this->options, 'asHtml' => false]);
-        parent::__construct($name, $attribute, $resolveCallback);
+        $this->slugifyOptions = $options;
+        return $this;
     }
 
-    public function slugModel(string $model): Element
+    /**
+     * Specify that the element should not be automatically updated when
+     * updating the parent field
+     *
+     * @return $this
+     */
+    public function disableAutoUpdateWhenUpdating(): Element
     {
-        return $this->withMeta(['model' => $model]);
+        $this->disableAutoUpdateWhenUpdating = true;
+        return $this;
     }
 
-    public function slugUnique(): Element
+    /**
+     * Specify that the element should not be automatically updated when
+     * updating the parent field
+     *
+     * @return $this
+     */
+    public function showUrlPreview(string $url): Element
     {
-        return $this->setOption('generateUniqueSlugs', true);
+        $this->showUrlPreview = $url;
+        return $this;
     }
 
-    public function slugMaxLength(int $length): Element
+    /**
+     * Add prefix to generated url
+     *
+     * @return $this
+     */
+    public function slugPrefix(string $prefix): Element
     {
-        return $this->setOption('maximumLength', $length);
-    }
-
-    public function slugSeparator(string $separator): Element
-    {
-        return $this->setOption('slugSeparator', $separator);
-    }
-
-    public function slugLanguage(string $language): Element
-    {
-        return $this->setOption('slugLanguage', $language);
-    }
-
-    public function event(string $eventType): Element
-    {
-        if (in_array($eventType, ['keyup', 'blur'])) {
-            return $this->setOption('event', $eventType);
-        }
-        return $this->setOption('event', 'keyup');
-    }
-
-    protected function setOption(string $name, string $value): Element
-    {
-        $this->options[$name] = $value;
-        return $this->withMeta(['options' => $this->options]);
+        $this->slugPrefix = $prefix;
+        return $this;
     }
 
     /**
@@ -71,5 +100,16 @@ class Slug extends Field
     public function asHtml()
     {
         return $this->withMeta(['asHtml' => true]);
+    }
+
+    public function jsonSerialize()
+    {
+        return array_merge([
+            'disableAutoUpdateWhenUpdating' => $this->disableAutoUpdateWhenUpdating,
+            'slugifyOptions' => $this->slugifyOptions,
+            'showPreviewUrl' => $this->showUrlPreview,
+            'slugPrefix' => $this->slugPrefix,
+
+        ], parent::jsonSerialize());
     }
 }

@@ -3,24 +3,27 @@
 namespace SpaceCode\Maia\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
-use SpaceCode\Maia\Fields\Editor;
+//use SpaceCode\Maia\Fields\Editor;
+use SpaceCode\Maia\Fields\Hidden;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
 use SpaceCode\Maia\Fields\Toggle;
 
-class PostCategory extends Resource
+class Shop extends Resource
 {
     use TabsOnEdit;
 
@@ -31,19 +34,27 @@ class PostCategory extends Resource
     /**
      * @var string
      */
-    public static $model = \SpaceCode\Maia\Models\PostCategory::class;
+    public static $model = \SpaceCode\Maia\Models\Shop::class;
 
     /**
      * @var string
      */
-    public static $title = 'title';
-
+    public static $name = 'name';
 
     /**
      * @var array
      */
     public static $search = [
-        'slug', 'title',
+        'slug', 'name',
+    ];
+
+    /**
+     * @var array
+     */
+    public static $statuses = [
+        'pending' => 'warning',
+        'published' => 'success',
+        'deleted' => 'danger'
     ];
 
     /**
@@ -53,7 +64,7 @@ class PostCategory extends Resource
      */
     public static function group()
     {
-        return trans('maia::navigation.sidebar-blog');
+        return trans('maia::navigation.sidebar-ecommerce');
     }
 
     /**
@@ -61,7 +72,7 @@ class PostCategory extends Resource
      */
     public static function label()
     {
-        return trans('maia::resources.postCategories');
+        return trans('maia::resources.shops');
     }
 
     /**
@@ -69,7 +80,7 @@ class PostCategory extends Resource
      */
     public static function singularLabel()
     {
-        return trans('maia::resources.postCategory');
+        return trans('maia::resources.shop');
     }
 
     /**
@@ -81,6 +92,18 @@ class PostCategory extends Resource
         $guardOptions = collect(config('auth.guards'))->mapWithKeys(function ($value, $key) {
             return [$key => $key];
         });
+        if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+                ->rules('required')
+                ->hideWhenCreating()
+                ->sortable();
+        } else {
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+                ->rules('required')
+                ->hideWhenCreating()
+                ->sortable()
+                ->readonly();
+        }
         return [
             (new Tabs($this->singularLabel(), [
                 trans('maia::resources.general') => [
@@ -91,53 +114,60 @@ class PostCategory extends Resource
                         ->rules('required', Rule::in($guardOptions))
                         ->hideFromIndex(),
 
+                    $author,
+
                     Select::make(trans('maia::resources.template'), 'template')
-                        ->options(getTemplate('postCategories'))
+                        ->options(getTemplate('shops'))
                         ->rules('required')
                         ->hideFromIndex()
                         ->displayUsingLabels(),
 
-                    Number::make(trans('maia::resources.order'), 'order')
-                        ->min(1)
-                        ->max(1000)
-                        ->step(1)
-                        ->rules('required', 'digits_between:1,1000')
-                        ->sortable()
-                ],
-                trans('maia::resources.parent') => [
-                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)
-                        ->nullable()
-                        ->searchable()
+                    Badge::make(trans('maia::resources.status'), 'status', function () {
+                        if (!is_null($this->deleted_at))
+                            return 'deleted';
+                        return $this->status;
+                    })->map(static::$statuses)
+                        ->sortable(),
+
+                    Select::make(trans('maia::resources.status'), 'status')
+                        ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
+                            return [$key => ucfirst($key)];
+                        }))->onlyOnForms()
+                        ->rules('required')
+                        ->displayUsingLabels(),
+
+                    Text::make(trans('maia::resources.view'), 'view')
+                        ->displayUsing(function ($value) {
+                            $view = is_null($this->view) ? 0 : intval($this->view);
+                            $unique = is_null($this->view_unique) ? 0 : intval($this->view_unique);
+                            return $view === $unique ? trans('maia::resources.visitors.all', ['view' => $view]) : trans('maia::resources.visitors.unique', ['view' => $view, 'unique' => $unique]);
+                        })->exceptOnForms()
+                        ->hideFromIndex()
                 ],
                 trans('maia::resources.content') => [
-                    Image::make(trans('maia::resources.image'), 'image')
+                    Image::make(trans('maia::resources.logo'), 'logo')
                         ->disk(config('maia.filemanager.disk'))
-                        ->path('postCategories/images')
+                        ->path('shops/images')
                         ->deletable(false)
                         ->prunable(),
 
-                    SluggableText::make(trans('maia::resources.title'), 'title')
+                    SluggableText::make(trans('maia::resources.name'), 'name')
                         ->slug()
                         ->rules('required', 'max:255')
                         ->sortable(),
 
                     Slug::make(trans('maia::resources.slug'), 'slug')
                         ->onlyOnForms()
-                        ->rules('required', 'max:255'),
+                        ->rules('required', 'max:255')
+                        ->creationRules('unique:shops,slug')
+                        ->updateRules('unique:shops,slug,{{resourceId}}'),
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {
-                        if(seo('seo_post_categories_show_index')) {
-                            return linkSvg($this->getUrl(true));
-                        } else {
-                            return "<p>—</p>";
-                        }
+                        return linkSvg($this->getUrl(true));
                     })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
                         ->rules('max:255')
-                        ->hideFromIndex(),
-
-                    Editor::make(trans('maia::resources.body'), 'body')->withFiles(config('maia.filemanager.disk'))
                         ->hideFromIndex(),
 
                     Text::make(trans('maia::resources.robots'), 'index')
@@ -173,8 +203,22 @@ class PostCategory extends Resource
                         ->sortable()
                         ->displayUsing(function($date) {
                             return $date->diffForHumans();
-                        })
+                        }),
                 ],
+//                trans('maia::resources.categories') => [
+//                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
+//                        return [
+//                            Hidden::make('type')->default('post_category')
+//                        ];
+//                    })
+//                ],
+//                trans('maia::resources.tags') => [
+//                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)->fields(function () {
+//                        return [
+//                            Hidden::make('type')->default('post_tag')
+//                        ];
+//                    })
+//                ],
                 trans('maia::resources.meta_fields') => [
                     Select::make(trans('maia::resources.document_state'), 'document_state')
                         ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])

@@ -23,6 +23,8 @@ return [
     'permission' => 'Permission',
     'user' => 'User',
     'users' => 'Users',
+    'shop' => 'Shop',
+    'shops' => 'Shops',
     'roles' => 'Roles',
     'role' => 'Role',
     'categories' => 'Categories',
@@ -122,6 +124,7 @@ return [
         'name' => 'Name',
         'debug' => 'Debug'
     ],
+    'logo' => 'Logo',
     'sitetitle' => 'Website',
     'site' => [
         'index' => 'Index',
