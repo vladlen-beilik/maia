@@ -74,7 +74,7 @@ class Shop extends Model
      */
     public function getUrl($arg = false)
     {
-        $url = seo('seo_posts_prefix') . '/' . $this->slug;
+        $url = seo('seo_shops_prefix') . '/' . $this->slug;
         return $arg ? url($url) : $url;
     }
 

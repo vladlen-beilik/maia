@@ -10,6 +10,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Tool;
+use SpaceCode\Maia\Fields\DependencyContainer;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\Toggle;
 
@@ -77,28 +78,34 @@ class SettingsTool extends Tool
                 ],
                 trans('maia::resources.resourcestitle') => [
                     Toggle::make(trans('maia::resources.site.blog'), 'site_blog'),
-//                    Toggle::make(trans('maia::resources.site.portfolio'), 'site_portfolio'),
-//                    Toggle::make(trans('maia::resources.site.shop'), 'site_shop'),
-                    Heading::make(trans('maia::resources.commentsSettings.title')),
-                    Toggle::make(trans('maia::resources.commentsSettings.confirmation'), 'comments_confirmed')
-                        ->stacked(),
-                    Toggle::make(trans('maia::resources.commentsSettings.authorization'), 'comments_userLoggedIn')
-                        ->stacked(),
-                    Number::make(trans('maia::resources.commentsSettings.autoClose'), 'comments_autoClose')
-                        ->min(7)
-                        ->max(360)
-                        ->step(1)
-                        ->rules('required', 'numeric', 'min:7', 'max:360')
-                        ->stacked(),
-                    Number::make(trans('maia::resources.commentsSettings.nested'), 'comments_nested')
-                        ->min(1)
-                        ->max(10)
-                        ->step(1)
-                        ->rules('required', 'numeric', 'min:1', 'max:10')
-                        ->stacked(),
-                    Select::make(trans('maia::resources.commentsSettings.display'), 'comments_display')
-                        ->options(['older' => trans('maia::resources.commentsSettings.older'), 'newer' => trans('maia::resources.commentsSettings.newer')])
-                        ->stacked()
+
+                    DependencyContainer::make([
+                        Heading::make(trans('maia::resources.commentsSettings.title')),
+                        Toggle::make(trans('maia::resources.commentsSettings.confirmation'), 'comments_confirmed')
+                            ->stacked(),
+                        Toggle::make(trans('maia::resources.commentsSettings.authorization'), 'comments_userLoggedIn')
+                            ->stacked(),
+                        Number::make(trans('maia::resources.commentsSettings.autoClose'), 'comments_autoClose')
+                            ->min(7)
+                            ->max(360)
+                            ->step(1)
+                            ->rules('required', 'numeric', 'min:7', 'max:360')
+                            ->stacked(),
+                        Number::make(trans('maia::resources.commentsSettings.nested'), 'comments_nested')
+                            ->min(1)
+                            ->max(10)
+                            ->step(1)
+                            ->rules('required', 'numeric', 'min:1', 'max:10')
+                            ->stacked(),
+                        Select::make(trans('maia::resources.commentsSettings.display'), 'comments_display')
+                            ->options(['older' => trans('maia::resources.commentsSettings.older'), 'newer' => trans('maia::resources.commentsSettings.newer')])
+                            ->stacked()
+                    ])->dependsOn('site_blog', 1),
+
+
+
+                    //                    Toggle::make(trans('maia::resources.site.portfolio'), 'site_portfolio'),
+                    Toggle::make(trans('maia::resources.site.shop'), 'site_shop')
                 ],
                 trans('maia::resources.servicestitle') => [
                     Heading::make(trans('maia::resources.services.mailgun.title')),

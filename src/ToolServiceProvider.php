@@ -95,6 +95,7 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('toggle', __DIR__.'/../dist/js/toggle.js');
             Nova::script('ckeditor5-classic-field', __DIR__.'/../dist/js/editor.js');
             Nova::script('hidden-field', __DIR__.'/../dist/js/hidden.js');
+            Nova::script('dependency-container-field', __DIR__.'/../dist/js/dependon.js');
 
             Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
@@ -137,9 +138,9 @@ class ToolServiceProvider extends ServiceProvider
             Gate::policy(Models\PortfolioCategory::class, Policy\PortfolioCategoryPolicy::class);
             Gate::policy(Models\PortfolioTag::class, Policy\PortfolioTagPolicy::class);
         }
-//        if(isShop()) {
+        if(isShop()) {
             Gate::policy(Models\Shop::class, Policy\ShopPolicy::class);
-//        }
+        }
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);
     }
 

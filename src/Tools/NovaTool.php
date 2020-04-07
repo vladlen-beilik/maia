@@ -33,9 +33,9 @@ class NovaTool extends Tool
             $this->portfolioCategoryResource = null;
             $this->portfolioTagResource = null;
         }
-//        if(!isShop()) {
+        if(!isShop()) {
             $this->shopResource = null;
-//        }
+        }
         if(!isBlog() && !isPortfolio() && !isShop()) {
             $this->commentResource = null;
         }

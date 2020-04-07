@@ -28,9 +28,18 @@ class SettingsController extends Controller
         $panels = $this->panelsWithDefaultLabel(trans('maia::resources.settings'), new NovaRequest);
 
         $addResolveCallback = function (&$field) {
-            if (!empty($field->attribute)) {
-                $setting = Settings::where('key', $field->attribute)->first();
-                $field->resolve([$field->attribute => isset($setting) ? $setting->value : '']);
+            if($field->component === 'dependency-container-field') {
+                foreach ($field->meta['fields'] as $meta) {
+                    if (!empty($meta->attribute)) {
+                        $setting = Settings::where('key', $meta->attribute)->first();
+                        $meta->resolve([$meta->attribute => isset($setting) ? $setting->value : '']);
+                    }
+                }
+            } else {
+                if (!empty($field->attribute)) {
+                    $setting = Settings::where('key', $field->attribute)->first();
+                    $field->resolve([$field->attribute => isset($setting) ? $setting->value : '']);
+                }
             }
         };
 
@@ -46,7 +55,7 @@ class SettingsController extends Controller
 
     public function save(NovaRequest $request)
     {
-        $fields = $this->availableFields();
+        $fields = $this->availableSaveFields();
 
         $rules = [];
         foreach ($fields as $field) {
@@ -195,6 +204,20 @@ class SettingsController extends Controller
     protected function availableFields()
     {
         return new FieldCollection(($this->filter(SettingsTool::getFields())));
+    }
+
+    protected function availableSaveFields()
+    {
+        $collection = collect([]);
+        foreach ($this->filter(SettingsTool::getFields()) as $field) {
+            if($field->component === 'dependency-container-field') {
+                foreach ($field->meta['fields'] as $meta) {
+                    $collection->push($meta);
+                }
+            }
+            $collection->push($field);
+        }
+        return new FieldCollection($collection);
     }
 
     protected function fields(Request $request)
