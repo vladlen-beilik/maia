@@ -3,7 +3,6 @@
 namespace SpaceCode\Maia\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use SpaceCode\Maia\Models;
 use Illuminate\Support\Facades\View;
 use Illuminate\Contracts\View\Factory;
@@ -157,6 +156,66 @@ class IndexController extends Controller
     {
         $item = Models\PortfolioTag::whereSlug($slug)->firstOrFail();
         $item->indexView = $item->template === 'default' ? 'portfolioTag' : 'templates.portfolioTags.' . $item->template;
+        return $item;
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function shopIndex($slug)
+    {
+        $item = Models\Shop::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
+        $item->indexView = $item->template === 'default' ? 'shop' : 'templates.shops.' . $item->template;
+        put_session_view('shops', $item);
+        return $item;
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productIndex($slug)
+    {
+        $item = Models\Product::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
+        $item->indexView = $item->template === 'default' ? 'product' : 'templates.products.' . $item->template;
+        getVariableVue($item);
+        put_session_view('products', $item);
+        return $item;
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productCategoryIndex($slug)
+    {
+        $item = Models\ProductCategory::whereSlug($slug)->firstOrFail();
+        $item->indexView = $item->template === 'default' ? 'productCategory' : 'templates.productCategories.' . $item->template;
+        return $item;
+    }
+
+    /**
+     * @param $slugs
+     * @return Factory|ViewModel
+     */
+    public function parentProductCategoryIndex($slugs)
+    {
+        $item = $slugs->reduce(function ($item, $slug) {
+            return ($item->children()->where('slug', $slug)->firstOrFail());
+        }, Models\ProductCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
+        $item->indexView = $item->template === 'default' ? 'productCategory' : 'templates.productCategories.' . $item->template;
+        return $item;
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productTagIndex($slug)
+    {
+        $item = Models\ProductTag::whereSlug($slug)->firstOrFail();
+        $item->indexView = $item->template === 'default' ? 'productTag' : 'templates.productTags.' . $item->template;
         return $item;
     }
 }

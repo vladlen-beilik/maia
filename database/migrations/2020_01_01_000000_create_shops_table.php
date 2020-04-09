@@ -16,7 +16,7 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('author_id');
+            $table->bigInteger('author_id');
             $table->string('name');
             $table->string('guard_name');
             $table->text('excerpt')->nullable();
@@ -39,6 +39,7 @@ class CreateShopsTable extends Migration
 
         Schema::create('shops_meta', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->bigInteger('shop_id');
             $table->string('key');
             $table->longText('value');
         });

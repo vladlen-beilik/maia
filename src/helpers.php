@@ -31,9 +31,8 @@ if (!function_exists('setting')) {
             } else {
                 return $setting->value;
             }
-        } else {
-            return null;
         }
+        return null;
     }
 }
 
@@ -47,9 +46,8 @@ if (!function_exists('seo')) {
             } else {
                 return $seo->value;
             }
-        } else {
-            return null;
         }
+        return null;
     }
 }
 
@@ -350,12 +348,9 @@ if (!function_exists('check_author')) {
                 } else {
                     return $user->$result;
                 }
-            } else {
-                return '';
             }
-        } else {
-            return '';
         }
+        return '';
     }
 }
 
@@ -509,8 +504,15 @@ if (!function_exists('jsonProp')) {
     function jsonProp($json, $property)
     {
         $return = null;
-        if (!is_null($json) && property_exists(json_decode($json), $property)) {
-            $return =  json_decode($json)->$property;
+        if(Str::contains($property, '->')) {
+            $property = explode('->', $property, 2);
+            if (!is_null($json) && property_exists(json_decode($json), $property[0]) && property_exists(json_decode($json)->{$property[0]}, $property[1])) {
+                $return =  json_decode($json)->{$property[0]}->{$property[1]};
+            }
+        } else {
+            if (!is_null($json) && property_exists(json_decode($json), $property)) {
+                $return =  json_decode($json)->$property;
+            }
         }
         return $return;
     }
@@ -606,6 +608,22 @@ if (!function_exists('isShop')) {
             Cache::forever('siteShop', boolval(setting('site_shop')));
         }
         return Cache::get('siteShop');
+    }
+}
+
+if (!function_exists('isActiveShop')) {
+    function isActiveShop()
+    {
+        if(!Schema::hasTable('settings')) {
+            return false;
+        }
+        if(Cache::get('siteShop')) {
+            $shop = \SpaceCode\Maia\Models\Shop::where(['author_id' => Auth::id(), 'deleted_at' => null])->whereIn('status', ['published', 'pending'])->count();
+            if($shop > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

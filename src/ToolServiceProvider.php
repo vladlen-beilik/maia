@@ -96,6 +96,8 @@ class ToolServiceProvider extends ServiceProvider
             Nova::script('ckeditor5-classic-field', __DIR__.'/../dist/js/editor.js');
             Nova::script('hidden-field', __DIR__.'/../dist/js/hidden.js');
             Nova::script('dependency-container-field', __DIR__.'/../dist/js/dependon.js');
+            Nova::script('time', __DIR__ . '/../dist/js/time.js');
+            Nova::script('money-field', __DIR__.'/../dist/js/money.js');
 
             Nova::style('maia-theme', __DIR__ . '/../dist/css/maia.css');
             Nova::style('multiselect', __DIR__ . '/../dist/css/multiselect.css');
@@ -140,6 +142,11 @@ class ToolServiceProvider extends ServiceProvider
         }
         if(isShop()) {
             Gate::policy(Models\Shop::class, Policy\ShopPolicy::class);
+            if(isActiveShop()) {
+                Gate::policy(Models\Product::class, Policy\ProductPolicy::class);
+                Gate::policy(Models\ProductCategory::class, Policy\ProductCategoryPolicy::class);
+                Gate::policy(Models\ProductTag::class, Policy\ProductTagPolicy::class);
+            }
         }
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);
     }
@@ -166,6 +173,7 @@ class ToolServiceProvider extends ServiceProvider
     {
         $this->publishes([__DIR__.'/../config/maia.php' => config_path('maia.php')], 'maia-config');
         $this->publishes([__DIR__.'/../dist/index' => public_path('vendor/maia')], 'maia-assets');
+        $this->publishes([__DIR__.'/../dist/images/vendor/map' => public_path('vendor/map')], 'maia-assets');
         $this->publishes([__DIR__.'/../resources/styles/sitemap' => public_path('vendor/sitemap')], 'maia-assets');
         $this->publishes([__DIR__.'/../resources/lang' => resource_path('lang/vendor/maia')], 'maia-lang');
         $this->publishes([__DIR__.'/../resources/views/index' => resource_path('views')], 'maia-views');

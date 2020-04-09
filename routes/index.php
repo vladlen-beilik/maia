@@ -49,6 +49,18 @@ if (
                     Route::get('sitemap-portfolio-tags.xml', ['uses' => 'MaiaSitemapController@portfolioTags', 'as' => 'sitemap-portfolio-tags-xml']);
                 }
             }
+            if(isShop()) {
+                if(isActiveShop()) {
+                    Route::get('sitemap-shops.xml', ['uses' => 'MaiaSitemapController@shops', 'as' => 'sitemap-shops-xml']);
+                    Route::get('sitemap-products.xml', ['uses' => 'MaiaSitemapController@products', 'as' => 'sitemap-products-xml']);
+                    if(seo('seo_product_categories_show_index')) {
+                        Route::get('sitemap-product-categories.xml', ['uses' => 'MaiaSitemapController@productCategories', 'as' => 'sitemap-product-categories-xml']);
+                    }
+                    if(seo('seo_product_tags_show_index')) {
+                        Route::get('sitemap-product-tags.xml', ['uses' => 'MaiaSitemapController@productTags', 'as' => 'sitemap-product-tags-xml']);
+                    }
+                }
+            }
 
             // Index
             Route::get('', ['uses' => 'MaiaIndexController@homeIndex', 'as' => 'home']);
@@ -69,6 +81,18 @@ if (
                 }
                 if(seo('seo_portfolio_tags_show_index')) {
                     Route::get(seo('seo_portfolio_tags_prefix') . '/{slug}', ['uses' => 'MaiaIndexController@portfolioTagIndex', 'as' => 'portfolio-tag']);
+                }
+            }
+            if(isShop()) {
+                if(isActiveShop()) {
+                    Route::get(setting('shops_prefix') . '/{slug}', ['uses' => 'MaiaIndexController@shopIndex', 'as' => 'shop']);
+                    Route::get(seo('seo_products_prefix') . '/{slug}', ['uses' => 'MaiaIndexController@productIndex', 'as' => 'product']);
+                    if(seo('seo_product_categories_show_index')) {
+                        Route::get(seo('seo_product_categories_prefix') . '{slug}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}/{slug8?}/{slug9?}/{slug10?}', ['uses' => 'MaiaIndexController@parentProductCategoryIndex', 'as' => 'parent-product-category']);
+                    }
+                    if(seo('seo_product_tags_show_index')) {
+                        Route::get(seo('seo_product_tags_prefix') . '/{slug}', ['uses' => 'MaiaIndexController@productTagIndex', 'as' => 'product-tag']);
+                    }
                 }
             }
             Route::get('{slug}/{slug2?}/{slug3?}/{slug4?}/{slug5?}/{slug6?}/{slug7?}/{slug8?}/{slug9?}/{slug10?}', ['uses' => 'MaiaIndexController@parentPageIndex', 'as' => 'parent-page']);

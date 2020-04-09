@@ -16,7 +16,7 @@ class CreatePortfolioTable extends Migration
     {
         Schema::create('portfolio', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('author_id');
+            $table->bigInteger('author_id');
             $table->string('title');
             $table->string('guard_name');
             $table->text('excerpt')->nullable();

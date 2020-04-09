@@ -2,6 +2,7 @@
 
 namespace SpaceCode\Maia\Resources;
 
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -80,12 +81,12 @@ class Page extends Resource
             return [$key => $key];
         });
         if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable();
         } else {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable()

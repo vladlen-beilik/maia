@@ -36,7 +36,7 @@ class Permission extends Model implements PermissionContract
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(
-            \SpaceCode\Maia\Models\Role::class,
+            Role::class,
             'role_has_permissions',
             'permission_id',
             'role_id'
@@ -91,14 +91,14 @@ class Permission extends Model implements PermissionContract
 
     /**
      * @param string $name
-     * @param string|null $guardName
+     * @param null $guardName
      * @return PermissionContract
      */
     public static function findOrCreate(string $name, $guardName = null): PermissionContract
     {
         $guardName = $guardName ?? Guard::getDefaultName(static::class);
         $permission = static::getPermissions(['name' => $name, 'guard_name' => $guardName])->first();
-        if (! $permission) {
+        if (!$permission) {
             return static::query()->create(['name' => $name, 'guard_name' => $guardName]);
         }
         return $permission;

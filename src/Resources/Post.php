@@ -2,6 +2,7 @@
 
 namespace SpaceCode\Maia\Resources;
 
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -94,12 +95,12 @@ class Post extends Resource
             return [$key => $key];
         });
         if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable();
         } else {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable()
@@ -138,12 +139,12 @@ class Post extends Resource
                         ->displayUsingLabels(),
 
                     Toggle::make(trans('maia::resources.comments'), 'comments')
-                        ->displayUsing(function ($value) {
+                        ->displayUsing(function () {
                             return $value === 0 ? trans('maia::resources.inactive') : trans('maia::resources.active');
                         })->hideFromIndex(),
 
                     Text::make(trans('maia::resources.view'), 'view')
-                        ->displayUsing(function ($value) {
+                        ->displayUsing(function () {
                             $view = is_null($this->view) ? 0 : intval($this->view);
                             $unique = is_null($this->view_unique) ? 0 : intval($this->view_unique);
                             return $view === $unique ? trans('maia::resources.visitors.all', ['view' => $view]) : trans('maia::resources.visitors.unique', ['view' => $view, 'unique' => $unique]);
@@ -218,14 +219,14 @@ class Post extends Resource
                         }),
                 ],
                 trans('maia::resources.categories') => [
-                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
+                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', PostCategory::class)->fields(function () {
                         return [
                             Hidden::make('type')->default('post_category')
                         ];
                     })
                 ],
                 trans('maia::resources.tags') => [
-                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)->fields(function () {
+                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', PostTag::class)->fields(function () {
                         return [
                             Hidden::make('type')->default('post_tag')
                         ];

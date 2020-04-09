@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\User;
 
 class Portfolio extends Model
 {
@@ -37,6 +38,7 @@ class Portfolio extends Model
         $attributes['template'] = $attributes['template'] ?? 'default';
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         $attributes['view'] = $attributes['view'] ?? 0;
+        $attributes['view_unique'] = $attributes['view_unique'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('portfolio');
     }
@@ -65,7 +67,7 @@ class Portfolio extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\\User', 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     /**

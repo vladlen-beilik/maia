@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\User;
 
 class Post extends Model
 {
@@ -38,6 +39,7 @@ class Post extends Model
         $attributes['document_state'] = $attributes['document_state'] ?? 'dynamic';
         $attributes['comments'] = $attributes['comments'] ?? 0;
         $attributes['view'] = $attributes['view'] ?? 0;
+        $attributes['view_unique'] = $attributes['view_unique'] ?? 0;
         parent::__construct($attributes);
         $this->setTable('posts');
     }
@@ -66,7 +68,7 @@ class Post extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\\User', 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     /**
@@ -74,7 +76,6 @@ class Post extends Model
      */
     public function categories() : BelongsToMany
     {
-        request()->input('type', 'post_category');
         return $this->belongsToMany(PostCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'post_category');
     }
 

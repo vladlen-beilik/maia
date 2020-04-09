@@ -37,7 +37,8 @@ class SettingsTableSeeder extends Seeder
             'comments_userLoggedIn' => 1,
             'comments_autoClose' => 7,
             'comments_nested' => 3,
-            'comments_display' => 'older'
+            'comments_display' => 'older',
+            'shops_prefix' => 'shop'
         ];
         foreach ($settings as $key => $value) {
             $a = Settings::find($key);

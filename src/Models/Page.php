@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use SpaceCode\Maia\Exceptions\PageConflict;
+use App\User;
 
 class Page extends Model
 {
@@ -121,6 +122,6 @@ class Page extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\\User', 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 }

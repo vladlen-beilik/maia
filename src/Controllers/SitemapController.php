@@ -60,6 +60,28 @@ class SitemapController extends Controller
                 }
 
             }
+            if(isShop() && isActiveShop()) {
+
+                $shops = Models\Shop::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+                if($shops->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-shops.xml'), $this->formatC($shops));
+
+                $products = Models\Product::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+                if($products->count() > 0)
+                    $sitemap->addSitemap(URL::to('sitemap-products.xml'), $this->formatC($products));
+
+                if(seo('seo_product_categories_show_index')) {
+                    $productCategories = Models\ProductCategory::where(['guard_name' => 'web']);
+                    if($productCategories->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-product-categories.xml'), $this->formatC($productCategories));
+                }
+                if(seo('seo_product_tags_show_index')) {
+                    $productTags = Models\ProductTag::where(['guard_name' => 'web']);
+                    if($productTags->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-product-tags.xml'), $this->formatC($productTags));
+                }
+
+            }
         }
         return $sitemap;
     }
@@ -139,6 +161,51 @@ class SitemapController extends Controller
 
     public function portfolioTags() {
         $items = Models\PortfolioTag::where(['guard_name' => 'web']);
+        $sitemap = App::make('sitemap');
+        if($items->count() > 0) {
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), $item->updated_at->format('c'), '0.8', 'daily');
+            }
+        }
+        return $sitemap->render('xml');
+    }
+
+    public function shops() {
+        $items = Models\Shop::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+        $sitemap = App::make('sitemap');
+        if($items->count() > 0) {
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), $item->updated_at->format('c'), '1.0', 'daily');
+            }
+        }
+        return $sitemap->render('xml');
+    }
+
+    public function products() {
+        $items = Models\Product::where(['guard_name' => 'web', 'deleted_at' => null, 'status' => 'published']);
+        $sitemap = App::make('sitemap');
+        if($items->count() > 0) {
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), $item->updated_at->format('c'), '0.9', 'daily');
+            }
+        }
+        return $sitemap->render('xml');
+    }
+
+    public function productCategories() {
+        $items = Models\ProductCategory::where(['guard_name' => 'web']);
+        $sitemap = App::make('sitemap');
+        if($items->count() > 0) {
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), $item->updated_at->format('c'), '0.8', 'daily');
+            }
+        }
+        return $sitemap->render('xml');
+
+    }
+
+    public function productTags() {
+        $items = Models\ProductTag::where(['guard_name' => 'web']);
         $sitemap = App::make('sitemap');
         if($items->count() > 0) {
             foreach ($items->orderBy('created_at', 'desc')->get() as $item) {

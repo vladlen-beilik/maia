@@ -5,8 +5,25 @@ return [
         'url' => 'This page `:slug` is already exists for guard `:guardName`.',
         'ban' => 'This page `:slug` can\'t be child if the page with prefix like `post and etc.`. Choose another parent.'
     ],
+    'product' => [
+        'price' => 'Regular Price can\'t be 0.00',
+        'discountPrice' => 'Discount Price can\'t be equal to the or more than Regular Price',
+        'dateFromWithNow' => 'Start At Date can\'t be equal to the or less than Current Date',
+        'dateToWithNow' => 'End At Date can\'t be equal to the or less than Current Date',
+        'dateFromAddMinutes' => 'Start At Date must be greater than the Current Date at least on 5 minutes',
+        'dateFromWithTo' => 'End At Date must be greater than Start At Date at least on 1 hour',
+        'wholesale_price' => 'Wholesale Price can\'t be 0.00',
+        'discountWholesale_price' => 'Wholesale Discount Price can\'t be equal to the or more than Wholesale Price',
+        'wholesale_dateFromWithNow' => 'Wholesale Start At Date can\'t be equal to the or less than Current Date',
+        'wholesale_dateToWithNow' => 'Wholesale End At Date can\'t be equal to the or less than Current Date',
+        'wholesale_dateFromAddMinutes' => 'Wholesale Start At Date must be greater than the Current Date at least on 5 minutes',
+        'wholesale_dateFromWithTo' => 'Wholesale End At Date must be greater than Wholesale Start At Date at least on 1 hour',
+    ],
     'postCategory' => [
         'url' => 'This post category `:slug` is already exists for guard `:guardName`.'
+    ],
+    'productCategory' => [
+        'url' => 'This product category `:slug` is already exists for guard `:guardName`.'
     ],
     'portfolioCategory' => [
         'url' => 'This portfolio category `:slug` is already exists for guard `:guardName`.'

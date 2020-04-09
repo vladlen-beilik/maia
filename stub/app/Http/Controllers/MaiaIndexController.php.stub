@@ -121,4 +121,54 @@ class MaiaIndexController extends IndexController
         $item = parent::portfolioTagIndex($slug);
         return view($item->indexView, ['portfolioTag' => $item]);
     }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function shopIndex($slug)
+    {
+        $item = parent::shopIndex($slug);
+        return view($item->indexView, ['shop' => $item]);
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productIndex($slug)
+    {
+        $item = parent::productIndex($slug);
+        return view($item->indexView, ['product' => $item]);
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productCategoryIndex($slug)
+    {
+        $item = parent::productCategoryIndex($slug);
+        return view($item->indexView, ['productCategory' => $item]);
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function parentProductCategoryIndex($slug)
+    {
+        $item = parent::parentProductCategoryIndex(collect(func_get_args()));
+        return view($item->indexView, ['productCategory' => $item]);
+    }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productTagIndex($slug)
+    {
+        $item = parent::productTagIndex($slug);
+        return view($item->indexView, ['productTag' => $item]);
+    }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use App\User;
 
 class Comment extends Model
 {
@@ -44,7 +45,7 @@ class Comment extends Model
      */
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\\User', 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     /**
@@ -60,7 +61,7 @@ class Comment extends Model
      */
     public function post(): BelongsToMany
     {
-        return $this->belongsToMany(\SpaceCode\Maia\Models\Post::class, 'comments_relationships', 'comment_id', 'item_id')->where('comments_relationships.type', 'post');
+        return $this->belongsToMany(Post::class, 'comments_relationships', 'comment_id', 'item_id')->where('comments_relationships.type', 'post');
     }
 
     /**
@@ -68,7 +69,7 @@ class Comment extends Model
      */
     public function portfolio(): BelongsToMany
     {
-        return $this->belongsToMany(\SpaceCode\Maia\Models\Portfolio::class, 'comments_relationships', 'comment_id', 'item_id')->where('comments_relationships.type', 'portfolio');
+        return $this->belongsToMany(Portfolio::class, 'comments_relationships', 'comment_id', 'item_id')->where('comments_relationships.type', 'portfolio');
     }
 
     /**

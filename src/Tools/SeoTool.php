@@ -116,61 +116,61 @@ class SeoTool extends Tool
 
             ]);
         }
-//        if(setting('site_shop') === 1) {
-//            $array = Arr::add($array, trans('maia::resources.products'), [
-//
-//                Text::make(trans('maia::resources.prefixslug'), 'seo_products_prefix')->rules('required'),
-//                Text::make(trans('maia::resources.meta_title'), 'seo_products_meta_title')->rules('max:55'),
-//                Textarea::make(trans('maia::resources.meta_description'), 'seo_products_meta_description'),
-//                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_products_meta_keywords'),
-//                Textarea::make(trans('maia::resources.json_ld'), 'seo_products_json_ld'),
-//                Textarea::make(trans('maia::resources.open_graph'), 'seo_products_open_graph'),
-//                Toggle::make(trans('maia::resources.robots'), 'seo_products_global_index'),
-//                Toggle::make(trans('maia::resources.googlebot'), 'seo_products_google_bot_index'),
-//                Toggle::make(trans('maia::resources.yandexbot'), 'seo_products_yandex_bot_index'),
-//                Toggle::make(trans('maia::resources.bingbot'), 'seo_products_bing_bot_index'),
-//                Toggle::make(trans('maia::resources.duckbot'), 'seo_products_duck_bot_index'),
-//                Toggle::make(trans('maia::resources.baidubot'), 'seo_products_baidu_bot_index'),
-//                Toggle::make(trans('maia::resources.yahoobot'), 'seo_products_slurp_bot_index'),
-//
-//            ]);
-//            $array = Arr::add($array, trans('maia::resources.productCategories'), [
-//
-//                Toggle::make(trans('maia::resources.showindex'), 'seo_product_categories_show_index'),
-//                Text::make(trans('maia::resources.prefixslug'), 'seo_product_categories_prefix')->rules('required'),
-//                Text::make(trans('maia::resources.meta_title'), 'seo_product_categories_meta_title')->rules('max:55'),
-//                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_categories_meta_description'),
-//                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_product_categories_meta_keywords'),
-//                Textarea::make(trans('maia::resources.json_ld'), 'seo_product_categories_json_ld'),
-//                Textarea::make(trans('maia::resources.open_graph'), 'seo_product_categories_open_graph'),
-//                Toggle::make(trans('maia::resources.robots'), 'seo_product_categories_global_index'),
-//                Toggle::make(trans('maia::resources.googlebot'), 'seo_product_categories_google_bot_index'),
-//                Toggle::make(trans('maia::resources.yandexbot'), 'seo_product_categories_yandex_bot_index'),
-//                Toggle::make(trans('maia::resources.bingbot'), 'seo_product_categories_bing_bot_index'),
-//                Toggle::make(trans('maia::resources.duckbot'), 'seo_product_categories_duck_bot_index'),
-//                Toggle::make(trans('maia::resources.baidubot'), 'seo_product_categories_baidu_bot_index'),
-//                Toggle::make(trans('maia::resources.yahoobot'), 'seo_product_categories_slurp_bot_index'),
-//
-//            ]);
-//            $array = Arr::add($array, trans('maia::resources.productTags'), [
-//
-//                Toggle::make(trans('maia::resources.showindex'), 'seo_product_tags_show_index'),
-//                Text::make(trans('maia::resources.prefixslug'), 'seo_product_tags_prefix')->rules('required'),
-//                Text::make(trans('maia::resources.meta_title'), 'seo_product_tags_meta_title')->rules('max:55'),
-//                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_tags_meta_description'),
-//                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_product_tags_meta_keywords'),
-//                Textarea::make(trans('maia::resources.json_ld'), 'seo_product_tags_json_ld'),
-//                Textarea::make(trans('maia::resources.open_graph'), 'seo_product_tags_open_graph'),
-//                Toggle::make(trans('maia::resources.robots'), 'seo_product_tags_global_index'),
-//                Toggle::make(trans('maia::resources.googlebot'), 'seo_product_tags_google_bot_index'),
-//                Toggle::make(trans('maia::resources.yandexbot'), 'seo_product_tags_yandex_bot_index'),
-//                Toggle::make(trans('maia::resources.bingbot'), 'seo_product_tags_bing_bot_index'),
-//                Toggle::make(trans('maia::resources.duckbot'), 'seo_product_tags_duck_bot_index'),
-//                Toggle::make(trans('maia::resources.baidubot'), 'seo_product_tags_baidu_bot_index'),
-//                Toggle::make(trans('maia::resources.yahoobot'), 'seo_product_tags_slurp_bot_index'),
-//
-//            ]);
-//        }
+        if(isShop() && isActiveShop()) {
+            $array = Arr::add($array, trans('maia::resources.products'), [
+
+                Text::make(trans('maia::resources.prefixslug'), 'seo_products_prefix')->rules('required'),
+                Text::make(trans('maia::resources.meta_title'), 'seo_products_meta_title')->rules('max:55'),
+                Textarea::make(trans('maia::resources.meta_description'), 'seo_products_meta_description'),
+                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_products_meta_keywords'),
+                Textarea::make(trans('maia::resources.json_ld'), 'seo_products_json_ld'),
+                Textarea::make(trans('maia::resources.open_graph'), 'seo_products_open_graph'),
+                Toggle::make(trans('maia::resources.robots'), 'seo_products_global_index'),
+                Toggle::make(trans('maia::resources.googlebot'), 'seo_products_google_bot_index'),
+                Toggle::make(trans('maia::resources.yandexbot'), 'seo_products_yandex_bot_index'),
+                Toggle::make(trans('maia::resources.bingbot'), 'seo_products_bing_bot_index'),
+                Toggle::make(trans('maia::resources.duckbot'), 'seo_products_duck_bot_index'),
+                Toggle::make(trans('maia::resources.baidubot'), 'seo_products_baidu_bot_index'),
+                Toggle::make(trans('maia::resources.yahoobot'), 'seo_products_slurp_bot_index'),
+
+            ]);
+            $array = Arr::add($array, trans('maia::resources.productCategories'), [
+
+                Toggle::make(trans('maia::resources.showindex'), 'seo_product_categories_show_index'),
+                Text::make(trans('maia::resources.prefixslug'), 'seo_product_categories_prefix')->rules('required'),
+                Text::make(trans('maia::resources.meta_title'), 'seo_product_categories_meta_title')->rules('max:55'),
+                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_categories_meta_description'),
+                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_product_categories_meta_keywords'),
+                Textarea::make(trans('maia::resources.json_ld'), 'seo_product_categories_json_ld'),
+                Textarea::make(trans('maia::resources.open_graph'), 'seo_product_categories_open_graph'),
+                Toggle::make(trans('maia::resources.robots'), 'seo_product_categories_global_index'),
+                Toggle::make(trans('maia::resources.googlebot'), 'seo_product_categories_google_bot_index'),
+                Toggle::make(trans('maia::resources.yandexbot'), 'seo_product_categories_yandex_bot_index'),
+                Toggle::make(trans('maia::resources.bingbot'), 'seo_product_categories_bing_bot_index'),
+                Toggle::make(trans('maia::resources.duckbot'), 'seo_product_categories_duck_bot_index'),
+                Toggle::make(trans('maia::resources.baidubot'), 'seo_product_categories_baidu_bot_index'),
+                Toggle::make(trans('maia::resources.yahoobot'), 'seo_product_categories_slurp_bot_index'),
+
+            ]);
+            $array = Arr::add($array, trans('maia::resources.productTags'), [
+
+                Toggle::make(trans('maia::resources.showindex'), 'seo_product_tags_show_index'),
+                Text::make(trans('maia::resources.prefixslug'), 'seo_product_tags_prefix')->rules('required'),
+                Text::make(trans('maia::resources.meta_title'), 'seo_product_tags_meta_title')->rules('max:55'),
+                Textarea::make(trans('maia::resources.meta_description'), 'seo_product_tags_meta_description'),
+                Textarea::make(trans('maia::resources.meta_keywords'), 'seo_product_tags_meta_keywords'),
+                Textarea::make(trans('maia::resources.json_ld'), 'seo_product_tags_json_ld'),
+                Textarea::make(trans('maia::resources.open_graph'), 'seo_product_tags_open_graph'),
+                Toggle::make(trans('maia::resources.robots'), 'seo_product_tags_global_index'),
+                Toggle::make(trans('maia::resources.googlebot'), 'seo_product_tags_google_bot_index'),
+                Toggle::make(trans('maia::resources.yandexbot'), 'seo_product_tags_yandex_bot_index'),
+                Toggle::make(trans('maia::resources.bingbot'), 'seo_product_tags_bing_bot_index'),
+                Toggle::make(trans('maia::resources.duckbot'), 'seo_product_tags_duck_bot_index'),
+                Toggle::make(trans('maia::resources.baidubot'), 'seo_product_tags_baidu_bot_index'),
+                Toggle::make(trans('maia::resources.yahoobot'), 'seo_product_tags_slurp_bot_index'),
+
+            ]);
+        }
         if(isPortfolio()) {
             $array = Arr::add($array, trans('maia::resources.portfolio'), [
 

@@ -35,7 +35,7 @@ class Role extends Model implements RoleContract
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(
-            \SpaceCode\Maia\Models\Permission::class,
+            Permission::class,
             'role_has_permissions',
             'role_id',
             'permission_id'

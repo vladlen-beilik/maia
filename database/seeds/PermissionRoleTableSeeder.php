@@ -34,6 +34,10 @@ class PermissionRoleTableSeeder extends Seeder
             'viewAny portfolio', 'view portfolio', 'create portfolio', 'update portfolio', 'attachAnyPortfolioCategory portfolio', 'detachAnyPortfolioCategory portfolio', 'attachAnyPortfolioTag portfolio', 'detachAnyPortfolioTag portfolio', 'delete portfolio', 'restore portfolio', 'forceDelete portfolio',
             'viewAny portfolioTags', 'view portfolioTags', 'create portfolioTags', 'update portfolioTags', 'delete portfolioTags', 'restore portfolioTags', 'forceDelete portfolioTags',
             'viewAny portfolioCategories', 'view portfolioCategories', 'create portfolioCategories', 'update portfolioCategories', 'delete portfolioCategories', 'restore portfolioCategories', 'forceDelete portfolioCategories',
+            'viewAny shops', 'view shops', 'create shops', 'update shops', 'delete shops', 'restore shops', 'forceDelete shops',
+            'viewAny products', 'view products', 'create products', 'update products', 'attachAnyPostCategory products', 'detachAnyPostCategory products', 'attachAnyPostTag products', 'detachAnyPostTag products', 'delete products', 'restore products', 'forceDelete products',
+            'viewAny productTags', 'view productTags', 'create productTags', 'update productTags', 'delete productTags', 'restore productTags', 'forceDelete productTags',
+            'viewAny productCategories', 'view productCategories', 'create productCategories', 'update productCategories', 'delete productCategories', 'restore productCategories', 'forceDelete productCategories',
             'viewAny contactForms', 'view contactForms', 'delete contactForms', 'restore contactForms', 'forceDelete contactForms',
         ];
         foreach ($permissions as $name) {

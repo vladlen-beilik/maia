@@ -34,7 +34,8 @@
         "intervention/image": "^2.5",
         "laravel/slack-notification-channel": "^2.0",
         "laminas/laminas-httphandlerrunner": "^1.1",
-        "intervention/imagecache": "~2.3"
+        "intervention/imagecache": "~2.3",
+        "moneyphp/money": "^3.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

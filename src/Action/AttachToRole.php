@@ -1,4 +1,5 @@
 <?php
+
 namespace SpaceCode\Maia\Action;
 
 use Illuminate\Bus\Queueable;

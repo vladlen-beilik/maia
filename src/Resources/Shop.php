@@ -2,25 +2,28 @@
 
 namespace SpaceCode\Maia\Resources;
 
+use App\Nova\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields\Badge;
 use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\Country;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Place;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Resource;
-//use SpaceCode\Maia\Fields\Editor;
-use SpaceCode\Maia\Fields\Hidden;
+use SpaceCode\Maia\Fields\DependencyContainer;
 use SpaceCode\Maia\Fields\SluggableText;
 use SpaceCode\Maia\Fields\Slug;
 use SpaceCode\Maia\Fields\Tabs;
 use SpaceCode\Maia\Fields\TabsOnEdit;
+use SpaceCode\Maia\Fields\Time;
 use SpaceCode\Maia\Fields\Toggle;
 
 class Shop extends Resource
@@ -28,7 +31,8 @@ class Shop extends Resource
     use TabsOnEdit;
 
     protected $casts = [
-        'index' => 'array'
+        'index' => 'array',
+        'communication' => 'array',
     ];
 
     /**
@@ -39,7 +43,7 @@ class Shop extends Resource
     /**
      * @var string
      */
-    public static $name = 'name';
+    public static $title = 'name';
 
     /**
      * @var array
@@ -93,12 +97,12 @@ class Shop extends Resource
             return [$key => $key];
         });
         if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable();
         } else {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', 'App\Nova\User')
+            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable()
@@ -137,7 +141,7 @@ class Shop extends Resource
                         ->displayUsingLabels(),
 
                     Text::make(trans('maia::resources.view'), 'view')
-                        ->displayUsing(function ($value) {
+                        ->displayUsing(function () {
                             $view = is_null($this->view) ? 0 : intval($this->view);
                             $unique = is_null($this->view_unique) ? 0 : intval($this->view_unique);
                             return $view === $unique ? trans('maia::resources.visitors.all', ['view' => $view]) : trans('maia::resources.visitors.unique', ['view' => $view, 'unique' => $unique]);
@@ -205,17 +209,95 @@ class Shop extends Resource
                             return $date->diffForHumans();
                         }),
                 ],
-//                trans('maia::resources.categories') => [
-//                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', \SpaceCode\Maia\Resources\PostCategory::class)->fields(function () {
+                trans('maia::resources.location') => [
+                    Country::make(trans('maia::resources.country'), 'country')
+                        ->resolveUsing(function () {
+                            return $this->getLocation('country');
+                        })
+                        ->rules('required')
+                        ->hideFromIndex(),
+                    Place::make(trans('maia::resources.city'), 'city')
+                        ->resolveUsing(function () {
+                            return $this->getLocation('city');
+                        })
+                        ->rules('required')
+                        ->language(env('APP_LOCALE'))
+                        ->onlyCities()
+                        ->hideFromIndex()
+                ],
+                trans('maia::resources.schedule_time') => [
+                    Toggle::make(trans('maia::resources.monday'), 'scheduleTimeMondayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeMondayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeMondayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeMondayValue', 1),
+
+                    Toggle::make(trans('maia::resources.tuesday'), 'scheduleTimeTuesdayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeTuesdayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeTuesdayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeTuesdayValue', 1),
+
+                    Toggle::make(trans('maia::resources.wednesday'), 'scheduleTimeWednesdayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeWednesdayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeWednesdayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeWednesdayValue', 1),
+
+                    Toggle::make(trans('maia::resources.thursday'), 'scheduleTimeThursdayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeThursdayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeThursdayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeThursdayValue', 1),
+
+                    Toggle::make(trans('maia::resources.friday'), 'scheduleTimeFridayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeFridayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeFridayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeFridayValue', 1),
+
+                    Toggle::make(trans('maia::resources.saturday'), 'scheduleTimeSaturdayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeSaturdayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeSaturdayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeSaturdayValue', 1),
+
+                    Toggle::make(trans('maia::resources.sunday'), 'scheduleTimeSundayValue')->hideFromIndex(),
+                    DependencyContainer::make([
+                        Time::make(trans('maia::resources.from'), 'scheduleTimeSundayFrom')->format('HH:mm'),
+                        Time::make(trans('maia::resources.to'), 'scheduleTimeSundayTo')->format('HH:mm')
+                    ])->dependsOn('scheduleTimeSundayValue', 1)
+                ],
+                trans('maia::resources.communication') => [
+                    KeyValue::make(trans('maia::resources.phones'), 'communication->phones')
+                        ->keyLabel(trans('maia::resources.contact_person'))
+                        ->valueLabel(trans('maia::resources.phone'))
+                        ->actionText(trans('maia::resources.add'))
+                        ->resolveUsing(function () {
+                            return is_null(jsonProp($this->communication, 'phones')) ? null : json_decode($this->communication)->phones;
+                        }),
+
+                    KeyValue::make(trans('maia::resources.emails'), 'communication->emails')
+                        ->keyLabel(trans('maia::resources.contact_person'))
+                        ->valueLabel(trans('maia::resources.email'))
+                        ->actionText(trans('maia::resources.add'))
+                        ->resolveUsing(function () {
+                            return is_null(jsonProp($this->communication, 'emails')) ? null : json_decode($this->communication)->emails;
+                        })
+                ],
+                trans('maia::resources.around_the_web') => [
+                    KeyValue::make(trans('maia::resources.links'), 'communication->links')
+                        ->keyLabel(trans('maia::resources.resource'))
+                        ->valueLabel(trans('maia::resources.link'))
+                        ->actionText(trans('maia::resources.add'))
+                        ->resolveUsing(function () {
+                            return is_null(jsonProp($this->communication, 'links')) ? null : json_decode($this->communication)->links;
+                        })
+                ],
+//                trans('maia::resources.products') => [
+//                    BelongsToMany::make(trans('maia::resources.categories'), 'categories', PostCategory::class)->fields(function () {
 //                        return [
 //                            Hidden::make('type')->default('post_category')
-//                        ];
-//                    })
-//                ],
-//                trans('maia::resources.tags') => [
-//                    BelongsToMany::make(trans('maia::resources.tags'), 'tags', \SpaceCode\Maia\Resources\PostTag::class)->fields(function () {
-//                        return [
-//                            Hidden::make('type')->default('post_tag')
 //                        ];
 //                    })
 //                ],
