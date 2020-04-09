@@ -20,6 +20,9 @@ class NovaTool extends Tool
     public $portfolioTagResource = Resources\PortfolioTag::class;
     public $shopResource = Resources\Shop::class;
     public $productResource = Resources\Product::class;
+    public $productCategoryResource = Resources\ProductCategory::class;
+    public $productTagResource = Resources\ProductTag::class;
+    public $productBrandResource = Resources\ProductBrand::class;
     public $contactFormResource = Resources\ContactForm::class;
 
     public function boot()
@@ -38,6 +41,9 @@ class NovaTool extends Tool
             $this->shopResource = null;
             if(!isActiveShop()) {
                 $this->productResource = null;
+                $this->productCategoryResource = null;
+                $this->productTagResource = null;
+                $this->productBrandResource = null;
             }
         }
         if(!isBlog() && !isPortfolio() && !isShop()) {
@@ -56,6 +62,9 @@ class NovaTool extends Tool
             $this->portfolioTagResource,
             $this->shopResource,
             $this->productResource,
+            $this->productCategoryResource,
+            $this->productTagResource,
+            $this->productBrandResource,
             $this->contactFormResource,
         ]));
     }
@@ -170,7 +179,6 @@ class NovaTool extends Tool
         return $this;
     }
 
-
     /**
      * @param string $productResource
      * @return $this
@@ -178,6 +186,36 @@ class NovaTool extends Tool
     public function productResource(string $productResource)
     {
         $this->productResource = $productResource;
+        return $this;
+    }
+
+    /**
+     * @param string $productCategoryResource
+     * @return $this
+     */
+    public function productCategoryResource(string $productCategoryResource)
+    {
+        $this->productCategoryResource = $productCategoryResource;
+        return $this;
+    }
+
+    /**
+     * @param string $productTagResource
+     * @return $this
+     */
+    public function productTagResource(string $productTagResource)
+    {
+        $this->productTagResource = $productTagResource;
+        return $this;
+    }
+
+    /**
+     * @param string $productBrandResource
+     * @return $this
+     */
+    public function productBrandResource(string $productBrandResource)
+    {
+        $this->productBrandResource = $productBrandResource;
         return $this;
     }
 

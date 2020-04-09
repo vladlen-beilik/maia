@@ -49,6 +49,8 @@ return [
     'productCategory' => 'Product Category',
     'productTags' => 'Product Tags',
     'productTag' => 'Product Tag',
+    'productBrands' => 'Product Brands',
+    'productBrand' => 'Product Brand',
     'title' => 'Title',
     'author' => 'Author',
     'guard_name' => 'Guard Name',

@@ -35,9 +35,10 @@ class PermissionRoleTableSeeder extends Seeder
             'viewAny portfolioTags', 'view portfolioTags', 'create portfolioTags', 'update portfolioTags', 'delete portfolioTags', 'restore portfolioTags', 'forceDelete portfolioTags',
             'viewAny portfolioCategories', 'view portfolioCategories', 'create portfolioCategories', 'update portfolioCategories', 'delete portfolioCategories', 'restore portfolioCategories', 'forceDelete portfolioCategories',
             'viewAny shops', 'view shops', 'create shops', 'update shops', 'delete shops', 'restore shops', 'forceDelete shops',
-            'viewAny products', 'view products', 'create products', 'update products', 'attachAnyPostCategory products', 'detachAnyPostCategory products', 'attachAnyPostTag products', 'detachAnyPostTag products', 'delete products', 'restore products', 'forceDelete products',
+            'viewAny products', 'view products', 'create products', 'update products', 'attachAnyPostCategory products', 'detachAnyPostCategory products', 'attachAnyPostTag products', 'detachAnyPostTag products', 'attachAnyPostBrand products', 'detachAnyPostBrand products', 'delete products', 'restore products', 'forceDelete products',
             'viewAny productTags', 'view productTags', 'create productTags', 'update productTags', 'delete productTags', 'restore productTags', 'forceDelete productTags',
             'viewAny productCategories', 'view productCategories', 'create productCategories', 'update productCategories', 'delete productCategories', 'restore productCategories', 'forceDelete productCategories',
+            'viewAny productBrands', 'view productBrands', 'create productBrands', 'update productBrands', 'delete productBrands', 'restore productBrands', 'forceDelete productBrands',
             'viewAny contactForms', 'view contactForms', 'delete contactForms', 'restore contactForms', 'forceDelete contactForms',
         ];
         foreach ($permissions as $name) {

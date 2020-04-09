@@ -146,6 +146,7 @@ class ToolServiceProvider extends ServiceProvider
                 Gate::policy(Models\Product::class, Policy\ProductPolicy::class);
                 Gate::policy(Models\ProductCategory::class, Policy\ProductCategoryPolicy::class);
                 Gate::policy(Models\ProductTag::class, Policy\ProductTagPolicy::class);
+                Gate::policy(Models\ProductBrand::class, Policy\ProductBrandPolicy::class);
             }
         }
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);

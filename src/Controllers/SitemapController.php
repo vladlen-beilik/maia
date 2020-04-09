@@ -75,6 +75,11 @@ class SitemapController extends Controller
                     if($productCategories->count() > 0)
                         $sitemap->addSitemap(URL::to('sitemap-product-categories.xml'), $this->formatC($productCategories));
                 }
+                if(seo('seo_product_brands_show_index')) {
+                    $productBrands = Models\ProductBrand::where(['guard_name' => 'web']);
+                    if($productBrands->count() > 0)
+                        $sitemap->addSitemap(URL::to('sitemap-product-brands.xml'), $this->formatC($productBrands));
+                }
                 if(seo('seo_product_tags_show_index')) {
                     $productTags = Models\ProductTag::where(['guard_name' => 'web']);
                     if($productTags->count() > 0)
@@ -201,7 +206,17 @@ class SitemapController extends Controller
             }
         }
         return $sitemap->render('xml');
+    }
 
+    public function productBrands() {
+        $items = Models\ProductBrand::where(['guard_name' => 'web']);
+        $sitemap = App::make('sitemap');
+        if($items->count() > 0) {
+            foreach ($items->orderBy('created_at', 'desc')->get() as $item) {
+                $sitemap->add(URL::to($item->getUrl()), $item->updated_at->format('c'), '0.8', 'daily');
+            }
+        }
+        return $sitemap->render('xml');
     }
 
     public function productTags() {

@@ -171,4 +171,14 @@ class MaiaIndexController extends IndexController
         $item = parent::productTagIndex($slug);
         return view($item->indexView, ['productTag' => $item]);
     }
+
+    /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productBrandIndex($slug)
+    {
+        $item = parent::productBrandIndex($slug);
+        return view($item->indexView, ['productBrand' => $item]);
+    }
 }

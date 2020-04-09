@@ -196,6 +196,17 @@ class IndexController extends Controller
     }
 
     /**
+     * @param $slug
+     * @return Factory|ViewModel
+     */
+    public function productBrandIndex($slug)
+    {
+        $item = Models\ProductBrand::whereSlug($slug)->firstOrFail();
+        $item->indexView = $item->template === 'default' ? 'productBrand' : 'templates.productBrands.' . $item->template;
+        return $item;
+    }
+
+    /**
      * @param $slugs
      * @return Factory|ViewModel
      */

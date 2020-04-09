@@ -106,6 +106,24 @@ class ProductPolicy
      * @param $user
      * @return bool
      */
+    public function attachAnyProductBrand($user)
+    {
+        return $this->checkAssignment($user, 'attachAnyProductBrand products');
+    }
+
+    /**
+     * @param $user
+     * @return bool
+     */
+    public function detachAnyProductBrand($user)
+    {
+        return $this->checkAssignment($user, 'detachAnyProductBrand products');
+    }
+
+    /**
+     * @param $user
+     * @return bool
+     */
     public function delete($user)
     {
         return $this->checkAssignment($user, 'delete products');

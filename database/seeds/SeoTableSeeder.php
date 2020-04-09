@@ -42,6 +42,10 @@ class SeoTableSeeder extends Seeder
             'seo_product_tags_prefix' => 'product-tag',
             'seo_product_tags_global_index' => 1,
             'seo_product_tags_google_bot_index' => 1,
+            'seo_product_brands_show_index' => 1,
+            'seo_product_brands_prefix' => 'product-tag',
+            'seo_product_brands_global_index' => 1,
+            'seo_product_brands_google_bot_index' => 1,
 
             'seo_home_document_state' => 'dynamic',
             'seo_home_global_index' => 1,

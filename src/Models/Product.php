@@ -161,6 +161,14 @@ class Product extends Model
     /**
      * @return BelongsToMany
      */
+    public function brands() : BelongsToMany
+    {
+        return $this->belongsToMany(ProductBrand::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'product_brand');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
     public function categories() : BelongsToMany
     {
         return $this->belongsToMany(ProductCategory::class, 'relationships', 'item_id', 'term_id')->where('relationships.type', 'product_category');
