@@ -2,8 +2,7 @@
 
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use SpaceCode\Maia\Models\Settings;
-use SpaceCode\Maia\Models\Seo;
+use SpaceCode\Maia\Models;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\Schema;
 if (!function_exists('settings')) {
     function settings($keys = null)
     {
-        $query = Settings::query();
+        $query = Models\Settings::query();
         if (isset($keys)) $query->whereIn('key', $keys);
         return $query->get()->pluck('value', 'key')->toArray();
     }
@@ -24,7 +23,7 @@ if (!function_exists('settings')) {
 if (!function_exists('setting')) {
     function setting($key)
     {
-        $setting = Settings::find($key);
+        $setting = Models\Settings::find($key);
         if(isset($setting)) {
             if($setting->value === '0' || $setting->value === '1') {
                 return intval($setting->value);
@@ -39,7 +38,7 @@ if (!function_exists('setting')) {
 if (!function_exists('seo')) {
     function seo($key)
     {
-        $seo = Seo::find($key);
+        $seo = Models\Seo::find($key);
         if(isset($seo)) {
             if($seo->value === '0' || $seo->value === '1') {
                 return intval($seo->value);
@@ -618,7 +617,7 @@ if (!function_exists('isActiveShop')) {
             return false;
         }
         if(Cache::get('siteShop')) {
-            $shop = \SpaceCode\Maia\Models\Shop::where(['author_id' => Auth::id(), 'deleted_at' => null])->whereIn('status', ['published', 'pending'])->count();
+            $shop = Models\Shop::where(['author_id' => Auth::id(), 'deleted_at' => null])->whereIn('status', ['published', 'pending'])->count();
             if($shop > 0) {
                 return true;
             }
