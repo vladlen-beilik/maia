@@ -58,7 +58,7 @@ class ToolServiceProvider extends ServiceProvider
             $this->schedule();
         });
         $this->registerPolicies($user);
-        $this->registerTools();
+        $this->registerTools($user);
         $this->assets();
         $this->registerMacroHelpers();
         $this->registerModelBindings();
@@ -152,7 +152,10 @@ class ToolServiceProvider extends ServiceProvider
         Gate::policy(Models\ContactForm::class, Policy\ContactFormPolicy::class);
     }
 
-    protected function registerTools()
+    /**
+     * @param $user
+     */
+    protected function registerTools($user)
     {
         Nova::tools([
             Tools\FilemanagerTool::make(),
@@ -162,7 +165,7 @@ class ToolServiceProvider extends ServiceProvider
             Tools\NovaTool::make()
         ]);
         Tools\SettingsTool::setSettingsFields();
-        Tools\SeoTool::setSeoFields();
+        Tools\SeoTool::setSeoFields($user);
     }
 
     /**

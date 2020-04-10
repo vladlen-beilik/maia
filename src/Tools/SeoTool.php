@@ -39,7 +39,10 @@ class SeoTool extends Tool
         self::$casts = array_merge(self::$casts, $casts ?? []);
     }
 
-    public static function setSeoFields()
+    /**
+     * @param $user
+     */
+    public static function setSeoFields($user)
     {
         $array = [
             trans('maia::resources.home') => [
@@ -58,9 +61,6 @@ class SeoTool extends Tool
                 Toggle::make(trans('maia::resources.yahoobot'), 'seo_home_slurp_bot_index'),
             ]
         ];
-        $seo_posts = null;
-        $seo_shop = null;
-        $seo_portfolio = null;
         if(isBlog()) {
             $array = Arr::add($array, trans('maia::resources.posts'), [
 
@@ -116,7 +116,7 @@ class SeoTool extends Tool
 
             ]);
         }
-        if(isShop() && isActiveShop()) {
+        if(isShop() && isActiveShop($user)) {
             $array = Arr::add($array, trans('maia::resources.products'), [
 
                 Text::make(trans('maia::resources.prefixslug'), 'seo_products_prefix')->rules('required'),
