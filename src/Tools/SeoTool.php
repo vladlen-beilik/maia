@@ -39,10 +39,7 @@ class SeoTool extends Tool
         self::$casts = array_merge(self::$casts, $casts ?? []);
     }
 
-    /**
-     * @param $user
-     */
-    public static function setSeoFields($user)
+    public static function setSeoFields()
     {
         $array = [
             trans('maia::resources.home') => [
@@ -116,7 +113,7 @@ class SeoTool extends Tool
 
             ]);
         }
-        if(isShop() && isActiveShop($user)) {
+        if(isShop()) {
             $array = Arr::add($array, trans('maia::resources.products'), [
 
                 Text::make(trans('maia::resources.prefixslug'), 'seo_products_prefix')->rules('required'),

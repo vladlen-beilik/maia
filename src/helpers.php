@@ -612,16 +612,13 @@ if (!function_exists('isShop')) {
 }
 
 if (!function_exists('isActiveShop')) {
-    function isActiveShop($user = false)
+    function isActiveShop()
     {
-        $id = Auth::id();
-        if($user)
-            $id = $user->id;
         if(!Schema::hasTable('settings')) {
             return false;
         }
         if(Cache::get('siteShop')) {
-            $shop = \SpaceCode\Maia\Models\Shop::where(['author_id' => $id, 'deleted_at' => null])->whereIn('status', ['published', 'pending'])->count();
+            $shop = \SpaceCode\Maia\Models\Shop::where(['author_id' => Auth::id(), 'deleted_at' => null])->whereIn('status', ['published', 'pending'])->count();
             if($shop > 0) {
                 return true;
             }
