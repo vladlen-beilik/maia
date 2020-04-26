@@ -60,7 +60,7 @@ class Page extends Resource
      */
     public static function label()
     {
-        return trans('maia::resources.pages');
+        return _trans('maia::resources.pages');
     }
 
     /**
@@ -68,7 +68,7 @@ class Page extends Resource
      */
     public static function singularLabel()
     {
-        return trans('maia::resources.page');
+        return _trans('maia::resources.page');
     }
 
     /**
@@ -81,12 +81,12 @@ class Page extends Resource
             return [$key => $key];
         });
         if (Auth::user()->hasRole('developer') || $this->author_id === Auth::user()->id) {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
+            $author = BelongsTo::make(_trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable();
         } else {
-            $author = BelongsTo::make(trans('maia::resources.author'), 'user', User::class)
+            $author = BelongsTo::make(_trans('maia::resources.author'), 'user', User::class)
                 ->rules('required')
                 ->hideWhenCreating()
                 ->sortable()
@@ -95,63 +95,63 @@ class Page extends Resource
 
         return [
             (new Tabs($this->singularLabel(), [
-                trans('maia::resources.general') => [
+                _trans('maia::resources.general') => [
                     ID::make()->asBigInt()->sortable(),
 
-                    Select::make(trans('maia::resources.guard_name'), 'guard_name')
+                    Select::make(_trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
                         ->rules('required', Rule::in($guardOptions))
                         ->hideFromIndex(),
 
                     $author,
 
-                    Select::make(trans('maia::resources.template'), 'template')
+                    Select::make(_trans('maia::resources.template'), 'template')
                         ->options(getTemplate('pages'))
                         ->rules('required')
                         ->hideFromIndex()
                         ->displayUsingLabels(),
 
-                    Badge::make(trans('maia::resources.status'), 'status', function () {
+                    Badge::make(_trans('maia::resources.status'), 'status', function () {
                         if (!is_null($this->deleted_at))
                             return 'deleted';
                         return $this->status;
                     })->map(static::$statuses)
                         ->sortable(),
 
-                    Select::make(trans('maia::resources.status'), 'status')
+                    Select::make(_trans('maia::resources.status'), 'status')
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                             return [$key => ucfirst($key)];
                         }))->onlyOnForms()
                         ->rules('required')
                         ->displayUsingLabels()
                 ],
-                trans('maia::resources.parent') => [
-                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)
+                _trans('maia::resources.parent') => [
+                    BelongsTo::make(_trans('maia::resources.parent'), 'parent', self::class)
                         ->nullable()
                         ->searchable()
                 ],
-                trans('maia::resources.content') => [
-                    SluggableText::make(trans('maia::resources.title'), 'title')
+                _trans('maia::resources.content') => [
+                    SluggableText::make(_trans('maia::resources.title'), 'title')
                         ->slug()
                         ->rules('required', 'max:255')
                         ->sortable(),
 
-                    Slug::make(trans('maia::resources.slug'), 'slug')
+                    Slug::make(_trans('maia::resources.slug'), 'slug')
                         ->onlyOnForms()
                         ->rules('required', 'max:255'),
 
-                    Text::make(trans('maia::resources.site.url'), 'slug', function () {
+                    Text::make(_trans('maia::resources.site.url'), 'slug', function () {
                         return $this->id ? linkSvg($this->getUrl(true)) : null;
                     })->exceptOnForms()->asHtml(),
 
-                    Textarea::make(trans('maia::resources.excerpt'), 'excerpt')
+                    Textarea::make(_trans('maia::resources.excerpt'), 'excerpt')
                         ->rules('max:255')
                         ->hideFromIndex(),
 
-                    Editor::make(trans('maia::resources.body'), 'body')->withFiles(config('maia.filemanager.disk'))
+                    Editor::make(_trans('maia::resources.body'), 'body')->withFiles(config('maia.filemanager.disk'))
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.robots'), 'index')
+                    Text::make(_trans('maia::resources.robots'), 'index')
                         ->onlyOnIndex()
                         ->displayUsing(function() {
                             $robots = !is_null(jsonProp($this->index, 'robots')) && json_decode($this->index)->robots === '1' ? successSvg() : errorSvg();
@@ -164,94 +164,94 @@ class Page extends Resource
                             return $robots . $google . $yandex . $bing . $duck . $baidu . $yahoo;
                         })->asHtml(),
 
-                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                    DateTime::make(_trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.created_at'), 'created_at')
+                    Text::make(_trans('maia::resources.created_at'), 'created_at')
                         ->onlyOnIndex()
                         ->sortable()
                         ->displayUsing(function($date) {
                             return $date->diffForHumans();
                         }),
 
-                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                    DateTime::make(_trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                    Text::make(_trans('maia::resources.updated_at'), 'updated_at')
                         ->onlyOnIndex()
                         ->sortable()
                         ->displayUsing(function($date) {
                             return $date->diffForHumans();
                         }),
                 ],
-                trans('maia::resources.meta_fields') => [
-                    Select::make(trans('maia::resources.document_state'), 'document_state')
-                        ->options(['static' => trans('maia::resources.static'), 'dynamic' => trans('maia::resources.dynamic')])
+                _trans('maia::resources.meta_fields') => [
+                    Select::make(_trans('maia::resources.document_state'), 'document_state')
+                        ->options(['static' => _trans('maia::resources.static'), 'dynamic' => _trans('maia::resources.dynamic')])
                         ->displayUsingLabels()
                         ->rules('required')
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.meta_title'), 'meta_title')
+                    Text::make(_trans('maia::resources.meta_title'), 'meta_title')
                         ->rules('max:55')
                         ->hideFromIndex(),
 
-                    Textarea::make(trans('maia::resources.meta_description'), 'meta_description')
+                    Textarea::make(_trans('maia::resources.meta_description'), 'meta_description')
                         ->hideFromIndex(),
 
-                    Textarea::make(trans('maia::resources.meta_keywords'), 'meta_keywords')
+                    Textarea::make(_trans('maia::resources.meta_keywords'), 'meta_keywords')
                         ->hideFromIndex()
                 ],
-                trans('maia::resources.json_ld') => [
-                    Textarea::make(trans('maia::resources.json_ld'), 'json_ld')
+                _trans('maia::resources.json_ld') => [
+                    Textarea::make(_trans('maia::resources.json_ld'), 'json_ld')
                         ->hideFromIndex()
                 ],
-                trans('maia::resources.open_graph') => [
-                    Textarea::make(trans('maia::resources.open_graph'), 'open_graph')
+                _trans('maia::resources.open_graph') => [
+                    Textarea::make(_trans('maia::resources.open_graph'), 'open_graph')
                         ->hideFromIndex()
                 ],
-                trans('maia::resources.indexing') => [
-                    Toggle::make(trans('maia::resources.robots'), 'index->robots')->resolveUsing(function () {
+                _trans('maia::resources.indexing') => [
+                    Toggle::make(_trans('maia::resources.robots'), 'index->robots')->resolveUsing(function () {
                         return is_null(jsonProp($this->index, 'robots')) ? 1 : json_decode($this->index)->robots;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'robots')) && json_decode($this->index)->robots === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'robots')) && json_decode($this->index)->robots === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.googlebot'), 'index->google')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.googlebot'), 'index->google')->resolveUsing(function () {
                         return is_null(jsonProp($this->index, 'google')) ? 1 : json_decode($this->index)->google;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'google')) && json_decode($this->index)->google === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'google')) && json_decode($this->index)->google === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.yandexbot'), 'index->yandex')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.yandexbot'), 'index->yandex')->resolveUsing(function () {
                         return !is_null(jsonProp($this->index, 'yandex')) ? json_decode($this->index)->yandex : 0;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'yandex')) && json_decode($this->index)->yandex === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'yandex')) && json_decode($this->index)->yandex === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.bingbot'), 'index->bing')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.bingbot'), 'index->bing')->resolveUsing(function () {
                         return !is_null(jsonProp($this->index, 'bing')) ? json_decode($this->index)->bing : 0;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'bing')) && json_decode($this->index)->bing === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'bing')) && json_decode($this->index)->bing === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.duckbot'), 'index->duck')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.duckbot'), 'index->duck')->resolveUsing(function () {
                         return !is_null(jsonProp($this->index, 'duck')) ? json_decode($this->index)->duck : 0;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'duck')) && json_decode($this->index)->duck === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'duck')) && json_decode($this->index)->duck === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.baidubot'), 'index->baidu')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.baidubot'), 'index->baidu')->resolveUsing(function () {
                         return !is_null(jsonProp($this->index, 'baidu')) ? json_decode($this->index)->baidu : 0;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'baidu')) && json_decode($this->index)->baidu === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'baidu')) && json_decode($this->index)->baidu === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex(),
 
-                    Toggle::make(trans('maia::resources.yahoobot'), 'index->yahoo')->resolveUsing(function () {
+                    Toggle::make(_trans('maia::resources.yahoobot'), 'index->yahoo')->resolveUsing(function () {
                         return !is_null(jsonProp($this->index, 'yahoo')) ? json_decode($this->index)->yahoo : 0;
                     })->displayUsing(function () {
-                        return !is_null(jsonProp($this->index, 'yahoo')) && json_decode($this->index)->yahoo === '1' ? trans('maia::resources.on') : trans('maia::resources.off');
+                        return !is_null(jsonProp($this->index, 'yahoo')) && json_decode($this->index)->yahoo === '1' ? _trans('maia::resources.on') : _trans('maia::resources.off');
                     })->hideFromIndex()
                 ]
             ]))->withToolbar()

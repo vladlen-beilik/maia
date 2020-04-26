@@ -17,6 +17,6 @@ class CreatePermission extends Command
     {
         $permissionClass = app(PermissionContract::class);
         $permission = $permissionClass::findOrCreate($this->argument('name'), $this->argument('guard'));
-        $this->info(trans('maia::commands.permission.created', ['name' => $permission->name]));
+        $this->info(_trans('maia::commands.permission.created', ['name' => $permission->name]));
     }
 }

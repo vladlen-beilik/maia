@@ -47,7 +47,7 @@ class Comment extends Resource
      */
     public static function label()
     {
-        return trans('maia::resources.comments');
+        return _trans('maia::resources.comments');
     }
 
     /**
@@ -55,7 +55,7 @@ class Comment extends Resource
      */
     public static function singularLabel()
     {
-        return trans('maia::resources.comment');
+        return _trans('maia::resources.comment');
     }
 
     /**
@@ -68,70 +68,70 @@ class Comment extends Resource
             return [$key => $key];
         });
         if($this->getCommentType() === 'post') {
-            $res = BelongsToMany::make(trans('maia::resources.resource'), 'post', Post::class)->nullable();
+            $res = BelongsToMany::make(_trans('maia::resources.resource'), 'post', Post::class)->nullable();
         } else if ($this->getCommentType() === 'portfolio') {
-            $res = BelongsToMany::make(trans('maia::resources.resource'), 'portfolio', Portfolio::class)->nullable();
+            $res = BelongsToMany::make(_trans('maia::resources.resource'), 'portfolio', Portfolio::class)->nullable();
         } else {
-            $res = Hidden::make(trans('maia::resources.resource'), 'resource');
+            $res = Hidden::make(_trans('maia::resources.resource'), 'resource');
         }
         return [
             (new Tabs($this->singularLabel(), [
-                trans('maia::resources.general') => [
+                _trans('maia::resources.general') => [
                     ID::make()->asBigInt()->sortable(),
 
-                    Select::make(trans('maia::resources.guard_name'), 'guard_name')
+                    Select::make(_trans('maia::resources.guard_name'), 'guard_name')
                         ->options($guardOptions->toArray())
                         ->rules('required', Rule::in($guardOptions))
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.author'), 'author_id', function () {
+                    Text::make(_trans('maia::resources.author'), 'author_id', function () {
                         return '<p>' . $this->author_id === 0 ? '—' : $this->user->getName() . '</p>';
                     })->exceptOnForms()->asHtml(),
 
-                    Badge::make(trans('maia::resources.status'), 'status', function () {
+                    Badge::make(_trans('maia::resources.status'), 'status', function () {
                         if (!is_null($this->deleted_at))
                             return 'deleted';
                         return $this->status;
                     })->map(static::$statuses)
                         ->sortable(),
 
-                    Select::make(trans('maia::resources.status'), 'status')
+                    Select::make(_trans('maia::resources.status'), 'status')
                         ->options(collect(static::$model::$statuses)->mapWithKeys(function ($key) {
                             return [$key => ucfirst($key)];
                         }))->onlyOnForms()
                         ->rules('required')
                         ->displayUsingLabels()
                 ],
-                trans('maia::resources.parent') => [
-                    BelongsTo::make(trans('maia::resources.parent'), 'parent', self::class)
+                _trans('maia::resources.parent') => [
+                    BelongsTo::make(_trans('maia::resources.parent'), 'parent', self::class)
                         ->onlyOnDetail()
                         ->nullable()
                         ->searchable()
                 ],
-                trans('maia::resources.resource') => [
+                _trans('maia::resources.resource') => [
                     $res
                 ],
-                trans('maia::resources.content') => [
-                    Textarea::make(trans('maia::resources.body'), 'body')
+                _trans('maia::resources.content') => [
+                    Textarea::make(_trans('maia::resources.body'), 'body')
                         ->rules('required', 'min:3')
                         ->showOnIndex(true),
 
-                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                    DateTime::make(_trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.created_at'), 'created_at')
+                    Text::make(_trans('maia::resources.created_at'), 'created_at')
                         ->onlyOnIndex()
                         ->sortable()
                         ->displayUsing(function($date) {
                             return $date->diffForHumans();
                         }),
 
-                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                    DateTime::make(_trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
                         ->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.updated_at'), 'updated_at')
+                    Text::make(_trans('maia::resources.updated_at'), 'updated_at')
                         ->onlyOnIndex()
                         ->sortable()
                         ->displayUsing(function($date) {

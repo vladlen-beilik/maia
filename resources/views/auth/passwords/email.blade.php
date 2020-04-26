@@ -12,7 +12,7 @@
     {{ csrf_field() }}
 
     @component('nova::auth.partials.heading')
-        {{ trans('maia::resources.forgot.forgot') }}
+        {{ _trans('maia::resources.forgot.forgot') }}
     @endcomponent
 
     @if (session('status'))
@@ -24,12 +24,12 @@
     @include('nova::auth.partials.errors')
 
     <div class="mb-6 {{ $errors->has('email') ? ' has-error' : '' }}">
-        <label class="block font-bold mb-2" for="email">{{ trans('maia::resources.emailaddress') }}</label>
+        <label class="block font-bold mb-2" for="email">{{ _trans('maia::resources.emailaddress') }}</label>
         <input class="form-control form-input form-input-bordered w-full" id="email" type="email" name="email" value="{{ old('email') }}" required>
     </div>
 
     <button class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
-        {{ trans('maia::resources.forgot.send') }}
+        {{ _trans('maia::resources.forgot.send') }}
     </button>
 </form>
 @endsection

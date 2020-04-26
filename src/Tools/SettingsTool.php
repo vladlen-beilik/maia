@@ -44,109 +44,109 @@ class SettingsTool extends Tool
     public static function setSettingsFields()
     {
         SettingsTool::addSettingsFields([
-            (new Tabs(trans('maia::resources.settings'), [
-                trans('maia::resources.systemtitle') => [
-                    Text::make(trans('maia::resources.system.name'), 'system_name')
+            (new Tabs(_trans('maia::resources.settings'), [
+                _trans('maia::resources.systemtitle') => [
+                    Text::make(_trans('maia::resources.system.name'), 'system_name')
                         ->rules('required', function($attribute, $value, $fail) {
                             if ($value === 'Laravel') {
                                 return $fail('The field can\'t be `Laravel`, name it differently.');
                             }
                         }),
-                    Toggle::make(trans('maia::resources.system.debug'), 'system_debug'),
+                    Toggle::make(_trans('maia::resources.system.debug'), 'system_debug'),
                 ],
-                trans('maia::resources.sitetitle') => [
-                    Toggle::make(trans('maia::resources.site.index'), 'site_index'),
-                    Text::make(trans('maia::resources.site.url'), 'site_url')
+                _trans('maia::resources.sitetitle') => [
+                    Toggle::make(_trans('maia::resources.site.index'), 'site_index'),
+                    Text::make(_trans('maia::resources.site.url'), 'site_url')
                         ->rules('required', function($attribute, $value, $fail) {
                             if ($value === 'http://localhost') {
                                 return $fail('The field can\'t be `http://localhost`, name it differently.');
                             }
                         }),
-                    Text::make(trans('maia::resources.site.title'), 'site_title')
+                    Text::make(_trans('maia::resources.site.title'), 'site_title')
                         ->rules('required'),
-                    Text::make(trans('maia::resources.site.excerpt'), 'site_excerpt'),
-                    Text::make(trans('maia::resources.site.description'), 'site_description'),
-                    AdvancedImage::make(trans('maia::resources.site.logo'), 'site_logo')
+                    Text::make(_trans('maia::resources.site.excerpt'), 'site_excerpt'),
+                    Text::make(_trans('maia::resources.site.description'), 'site_description'),
+                    AdvancedImage::make(_trans('maia::resources.site.logo'), 'site_logo')
                         ->path('site')
                         ->deletable(false),
-                    AdvancedImage::make(trans('maia::resources.site.favicon'), 'site_favicon')
+                    AdvancedImage::make(_trans('maia::resources.site.favicon'), 'site_favicon')
                         ->path('site')
                         ->croppable(1/1)
                         ->resize(180)
                         ->deletable(false),
-                    Select::make(trans('maia::resources.site.timezone'), 'site_timezone')->options(timezoneList())->displayUsingLabels(),
+                    Select::make(_trans('maia::resources.site.timezone'), 'site_timezone')->options(timezoneList())->displayUsingLabels(),
                 ],
-                trans('maia::resources.resourcestitle') => [
-                    Toggle::make(trans('maia::resources.site.blog'), 'site_blog'),
+                _trans('maia::resources.resourcestitle') => [
+                    Toggle::make(_trans('maia::resources.site.blog'), 'site_blog'),
 
                     DependencyContainer::make([
-                        Heading::make(trans('maia::resources.commentsSettings.title')),
-                        Toggle::make(trans('maia::resources.commentsSettings.confirmation'), 'comments_confirmed')
+                        Heading::make(_trans('maia::resources.commentsSettings.title')),
+                        Toggle::make(_trans('maia::resources.commentsSettings.confirmation'), 'comments_confirmed')
                             ->stacked(),
-                        Toggle::make(trans('maia::resources.commentsSettings.authorization'), 'comments_userLoggedIn')
+                        Toggle::make(_trans('maia::resources.commentsSettings.authorization'), 'comments_userLoggedIn')
                             ->stacked(),
-                        Number::make(trans('maia::resources.commentsSettings.autoClose'), 'comments_autoClose')
+                        Number::make(_trans('maia::resources.commentsSettings.autoClose'), 'comments_autoClose')
                             ->min(7)
                             ->max(360)
                             ->step(1)
                             ->rules('required', 'numeric', 'min:7', 'max:360')
                             ->stacked(),
-                        Number::make(trans('maia::resources.commentsSettings.nested'), 'comments_nested')
+                        Number::make(_trans('maia::resources.commentsSettings.nested'), 'comments_nested')
                             ->min(1)
                             ->max(10)
                             ->step(1)
                             ->rules('required', 'numeric', 'min:1', 'max:10')
                             ->stacked(),
-                        Select::make(trans('maia::resources.commentsSettings.display'), 'comments_display')
-                            ->options(['older' => trans('maia::resources.commentsSettings.older'), 'newer' => trans('maia::resources.commentsSettings.newer')])
+                        Select::make(_trans('maia::resources.commentsSettings.display'), 'comments_display')
+                            ->options(['older' => _trans('maia::resources.commentsSettings.older'), 'newer' => _trans('maia::resources.commentsSettings.newer')])
                             ->stacked()
                     ])->dependsOn('site_blog', 1),
 
 
 
-                    //                    Toggle::make(trans('maia::resources.site.portfolio'), 'site_portfolio'),
-                    Toggle::make(trans('maia::resources.site.shop'), 'site_shop')
+                    //                    Toggle::make(_trans('maia::resources.site.portfolio'), 'site_portfolio'),
+                    Toggle::make(_trans('maia::resources.site.shop'), 'site_shop')
                 ],
-                trans('maia::resources.servicestitle') => [
-                    Heading::make(trans('maia::resources.services.mailgun.title')),
-                    Text::make(trans('maia::resources.services.mailgun.domain'), 'services_mailgun_domain'),
-                    Text::make(trans('maia::resources.services.mailgun.secret'), 'services_mailgun_secret'),
-                    Text::make(trans('maia::resources.services.mailgun.endpoint'), 'services_mailgun_endpoint'),
-                    Heading::make(trans('maia::resources.services.postmark.title')),
-                    Text::make(trans('maia::resources.services.postmark.token'), 'services_postmark_token'),
-                    Heading::make(trans('maia::resources.services.aws.title')),
-                    Text::make(trans('maia::resources.services.aws.key'), 'services_aws_key'),
-                    Text::make(trans('maia::resources.services.aws.secret'), 'services_aws_secret'),
-                    Text::make(trans('maia::resources.services.aws.region'), 'services_aws_region'),
-                    Heading::make(trans('maia::resources.services.pusher.title')),
-                    Text::make(trans('maia::resources.services.pusher.key'), 'services_pusher_key'),
-                    Text::make(trans('maia::resources.services.pusher.secret'), 'services_pusher_secret'),
-                    Text::make(trans('maia::resources.services.pusher.appID'), 'services_pusher_appID'),
-                    Text::make(trans('maia::resources.services.pusher.cluster'), 'services_pusher_cluster'),
-                    Heading::make(trans('maia::resources.services.memcached.title')),
-                    Text::make(trans('maia::resources.services.memcached.persistentID'), 'services_memcached_persistentID'),
-                    Text::make(trans('maia::resources.services.memcached.username'), 'services_memcached_username'),
-                    Text::make(trans('maia::resources.services.memcached.password'), 'services_memcached_password'),
-                    Text::make(trans('maia::resources.services.memcached.host'), 'services_memcached_host'),
-                    Text::make(trans('maia::resources.services.memcached.port'), 'services_memcached_port'),
-                    Heading::make(trans('maia::resources.services.dynamodb.title')),
-                    Text::make(trans('maia::resources.services.aws.key'), 'services_aws_key')->readonly(),
-                    Text::make(trans('maia::resources.services.aws.secret'), 'services_aws_secret')->readonly(),
-                    Text::make(trans('maia::resources.services.aws.region'), 'services_aws_region')->readonly(),
-                    Text::make(trans('maia::resources.services.dynamodb.table'), 'services_dynamodb_table'),
-                    Text::make(trans('maia::resources.services.dynamodb.endpoint'), 'services_dynamodb_endpoint'),
-                    Heading::make(trans('maia::resources.services.redis.title')),
-//                    Text::make(trans('maia::resources.services.redis.client'), 'services_redis_client'),
-                    Text::make(trans('maia::resources.services.redis.cluster'), 'services_redis_cluster'),
-                    Text::make(trans('maia::resources.services.redis.url'), 'services_redis_url'),
-                    Text::make(trans('maia::resources.services.redis.host'), 'services_redis_host'),
-                    Text::make(trans('maia::resources.services.redis.password'), 'services_redis_password'),
-                    Text::make(trans('maia::resources.services.redis.port'), 'services_redis_port'),
-                    Text::make(trans('maia::resources.services.redis.database'), 'services_redis_database'),
-                    Text::make(trans('maia::resources.services.redis.cachedatabase'), 'services_redis_cache_database'),
+                _trans('maia::resources.servicestitle') => [
+                    Heading::make(_trans('maia::resources.services.mailgun.title')),
+                    Text::make(_trans('maia::resources.services.mailgun.domain'), 'services_mailgun_domain'),
+                    Text::make(_trans('maia::resources.services.mailgun.secret'), 'services_mailgun_secret'),
+                    Text::make(_trans('maia::resources.services.mailgun.endpoint'), 'services_mailgun_endpoint'),
+                    Heading::make(_trans('maia::resources.services.postmark.title')),
+                    Text::make(_trans('maia::resources.services.postmark.token'), 'services_postmark_token'),
+                    Heading::make(_trans('maia::resources.services.aws.title')),
+                    Text::make(_trans('maia::resources.services.aws.key'), 'services_aws_key'),
+                    Text::make(_trans('maia::resources.services.aws.secret'), 'services_aws_secret'),
+                    Text::make(_trans('maia::resources.services.aws.region'), 'services_aws_region'),
+                    Heading::make(_trans('maia::resources.services.pusher.title')),
+                    Text::make(_trans('maia::resources.services.pusher.key'), 'services_pusher_key'),
+                    Text::make(_trans('maia::resources.services.pusher.secret'), 'services_pusher_secret'),
+                    Text::make(_trans('maia::resources.services.pusher.appID'), 'services_pusher_appID'),
+                    Text::make(_trans('maia::resources.services.pusher.cluster'), 'services_pusher_cluster'),
+                    Heading::make(_trans('maia::resources.services.memcached.title')),
+                    Text::make(_trans('maia::resources.services.memcached.persistentID'), 'services_memcached_persistentID'),
+                    Text::make(_trans('maia::resources.services.memcached.username'), 'services_memcached_username'),
+                    Text::make(_trans('maia::resources.services.memcached.password'), 'services_memcached_password'),
+                    Text::make(_trans('maia::resources.services.memcached.host'), 'services_memcached_host'),
+                    Text::make(_trans('maia::resources.services.memcached.port'), 'services_memcached_port'),
+                    Heading::make(_trans('maia::resources.services.dynamodb.title')),
+                    Text::make(_trans('maia::resources.services.aws.key'), 'services_aws_key')->readonly(),
+                    Text::make(_trans('maia::resources.services.aws.secret'), 'services_aws_secret')->readonly(),
+                    Text::make(_trans('maia::resources.services.aws.region'), 'services_aws_region')->readonly(),
+                    Text::make(_trans('maia::resources.services.dynamodb.table'), 'services_dynamodb_table'),
+                    Text::make(_trans('maia::resources.services.dynamodb.endpoint'), 'services_dynamodb_endpoint'),
+                    Heading::make(_trans('maia::resources.services.redis.title')),
+//                    Text::make(_trans('maia::resources.services.redis.client'), 'services_redis_client'),
+                    Text::make(_trans('maia::resources.services.redis.cluster'), 'services_redis_cluster'),
+                    Text::make(_trans('maia::resources.services.redis.url'), 'services_redis_url'),
+                    Text::make(_trans('maia::resources.services.redis.host'), 'services_redis_host'),
+                    Text::make(_trans('maia::resources.services.redis.password'), 'services_redis_password'),
+                    Text::make(_trans('maia::resources.services.redis.port'), 'services_redis_port'),
+                    Text::make(_trans('maia::resources.services.redis.database'), 'services_redis_database'),
+                    Text::make(_trans('maia::resources.services.redis.cachedatabase'), 'services_redis_cache_database'),
                 ],
-                trans('maia::resources.mailtitle') => [
-                    Select::make(trans('maia::resources.mail.driver'), 'mail_driver')->options([
+                _trans('maia::resources.mailtitle') => [
+                    Select::make(_trans('maia::resources.mail.driver'), 'mail_driver')->options([
                         'smtp' => 'SMTP',
                         'sendmail' => 'Sendmail',
                         'mailgun' => 'Mailgun',
@@ -155,25 +155,25 @@ class SettingsTool extends Tool
                         'log' => 'Log',
                         'array' => 'Array',
                     ])->displayUsingLabels(),
-                    Text::make(trans('maia::resources.mail.host'), 'mail_host'),
-                    Select::make(trans('maia::resources.mail.port'), 'mail_port')->options([
+                    Text::make(_trans('maia::resources.mail.host'), 'mail_host'),
+                    Select::make(_trans('maia::resources.mail.port'), 'mail_port')->options([
                         '25' => '25',
                         '465' => '465',
                         '587' => '587',
                         '2525' => '2525',
                     ])->displayUsingLabels(),
-                    Text::make(trans('maia::resources.mail.fromaddress'), 'mail_from_address'),
-                    Text::make(trans('maia::resources.mail.fromname'), 'mail_from_name'),
-                    Select::make(trans('maia::resources.mail.encryption'), 'mail_encryption')->options([
+                    Text::make(_trans('maia::resources.mail.fromaddress'), 'mail_from_address'),
+                    Text::make(_trans('maia::resources.mail.fromname'), 'mail_from_name'),
+                    Select::make(_trans('maia::resources.mail.encryption'), 'mail_encryption')->options([
                         'ssl' => 'SSL',
                         'tls' => 'TLS',
                         'starttls' => 'STARTTLS',
                     ])->displayUsingLabels(),
-                    Text::make(trans('maia::resources.mail.username'), 'mail_username'),
-                    Text::make(trans('maia::resources.mail.password'), 'mail_password'),
+                    Text::make(_trans('maia::resources.mail.username'), 'mail_username'),
+                    Text::make(_trans('maia::resources.mail.password'), 'mail_password'),
                 ],
-                trans('maia::resources.cachetitle') => [
-                    Select::make(trans('maia::resources.cache.driver'), 'cache_driver')->options([
+                _trans('maia::resources.cachetitle') => [
+                    Select::make(_trans('maia::resources.cache.driver'), 'cache_driver')->options([
                         'file' => 'File',
                         'apc' => 'Apc',
                         'array' => 'Array',
@@ -183,19 +183,19 @@ class SettingsTool extends Tool
                         'dynamodb' => 'Dynamodb'
                     ])->displayUsingLabels(),
                 ],
-                trans('maia::resources.tracking') => [
-                    Textarea::make(trans('maia::resources.gtm.head'), 'tracking_google_tag_manager_head'),
-                    Textarea::make(trans('maia::resources.gtm.body'), 'tracking_google_tag_manager_body'),
+                _trans('maia::resources.tracking') => [
+                    Textarea::make(_trans('maia::resources.gtm.head'), 'tracking_google_tag_manager_head'),
+                    Textarea::make(_trans('maia::resources.gtm.body'), 'tracking_google_tag_manager_body'),
                 ],
-//                trans('maia::resources.license') => [
-//                    Text::make(trans('maia::resources.lic.email'), 'license_email')
+//                _trans('maia::resources.license') => [
+//                    Text::make(_trans('maia::resources.lic.email'), 'license_email')
 //                        ->rules('required', 'max:255', 'email'),
-//                    Text::make(trans('maia::resources.lic.token'), 'license_token')
+//                    Text::make(_trans('maia::resources.lic.token'), 'license_token')
 //                        ->resolveUsing(function ($value) {
 //                            return trim($value);
 //                        })
 //                        ->rules('required', 'max:32', 'min:32'),
-//                    Textarea::make(trans('maia::resources.lic.key'), 'license_key')
+//                    Textarea::make(_trans('maia::resources.lic.key'), 'license_key')
 //                        ->resolveUsing(function ($value) {
 //                            return wordwrap(str_replace("\r\n", '', $value), 40, "\n", true);
 //                        })

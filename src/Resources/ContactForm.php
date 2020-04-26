@@ -38,7 +38,7 @@ class ContactForm extends Resource
      */
     public static function group()
     {
-        return trans('maia::navigation.sidebar-communication');
+        return _trans('maia::navigation.sidebar-communication');
     }
 
     /**
@@ -46,7 +46,7 @@ class ContactForm extends Resource
      */
     public static function label()
     {
-        return trans('maia::resources.contactForms');
+        return _trans('maia::resources.contactForms');
     }
 
     /**
@@ -54,7 +54,7 @@ class ContactForm extends Resource
      */
     public static function singularLabel()
     {
-        return trans('maia::resources.contactForm');
+        return _trans('maia::resources.contactForm');
     }
 
     /**
@@ -66,14 +66,14 @@ class ContactForm extends Resource
         return [
             ID::make()->asBigInt()->sortable(),
 
-            Text::make(trans('maia::resources.sender'), 'sender')
+            Text::make(_trans('maia::resources.sender'), 'sender')
                 ->sortable()
                 ->readonly(),
 
-            Text::make(trans('maia::resources.title'), 'title')
+            Text::make(_trans('maia::resources.title'), 'title')
                 ->readonly(),
 
-            Textarea::make(trans('maia::resources.contacts'), 'contacts')
+            Textarea::make(_trans('maia::resources.contacts'), 'contacts')
                 ->displayUsing(function () {
                     if (is_null($this->contacts)) {
                         return null;
@@ -88,7 +88,7 @@ class ContactForm extends Resource
                 })->hideFromIndex()
                 ->readonly(),
 
-            Textarea::make(trans('maia::resources.description'), 'description')
+            Textarea::make(_trans('maia::resources.description'), 'description')
                 ->displayUsing(function () {
                     if (is_null($this->description)) {
                         return null;

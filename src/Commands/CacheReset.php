@@ -14,9 +14,9 @@ class CacheReset extends Command
     public function handle()
     {
         if (app(PermissionRegistrar::class)->forgetCachedPermissions()) {
-            $this->info(trans('maia::commands.cache.flushed'));
+            $this->info(_trans('maia::commands.cache.flushed'));
         } else {
-            $this->error(trans('maia::commands.cache.unable'));
+            $this->error(_trans('maia::commands.cache.unable'));
         }
     }
 }

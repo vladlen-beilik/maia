@@ -8,6 +8,6 @@ class RoleAlreadyExists extends InvalidArgumentException
 {
     public static function create(string $name, string $guardName)
     {
-        return new static(trans('maia::exeptions.role.alreadyexist.create', ['name' => $name, 'guardName' => $guardName]));
+        return new static(_trans('maia::exeptions.role.alreadyexist.create', ['name' => $name, 'guardName' => $guardName]));
     }
 }

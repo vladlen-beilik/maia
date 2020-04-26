@@ -385,7 +385,7 @@ trait GetFiles
             }
             return [
                 'id'                => 'folder_back',
-                'name'              => trans('Go up'),
+                'name'              => _trans('Go up'),
                 'path'              => $this->cleanSlashes($folderPath),
                 'type'              => 'dir',
                 'mime'              => 'dir',

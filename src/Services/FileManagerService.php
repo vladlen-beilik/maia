@@ -125,7 +125,7 @@ class FileManagerService
         $folder = $this->fixDirname($this->fixFilename($folder));
         $path = $currentFolder.'/'.$folder;
         if ($this->storage->has($path)) {
-            return response()->json(['error' => trans('maia::error.folderexist')]);
+            return response()->json(['error' => _trans('maia::error.folderexist')]);
         }
         if ($this->storage->makeDirectory($path)) {
             return response()->json(true);

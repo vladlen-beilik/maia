@@ -56,86 +56,86 @@ class User extends Resource
     {
         return [
             (new Tabs($this->singularLabel(), [
-                trans('maia::resources.general') => [
+                _trans('maia::resources.general') => [
                     ID::make()->sortable(),
 
-                    Avatar::make(trans('maia::resources.avatar'), 'avatar')
+                    Avatar::make(_trans('maia::resources.avatar'), 'avatar')
                         ->disk(config('maia.filemanager.disk'))
                         ->path('avatars')
                         ->deletable(false)
                         ->prunable(),
 
-                    Text::make(trans('maia::resources.name'), 'name')
+                    Text::make(_trans('maia::resources.name'), 'name')
                         ->sortable()
                         ->rules('required', 'max:255', function ($attribute, $value, $fail) {
                             if (strtolower($value) !== $value) {
-                                return $fail(trans('maia::validation.name.lowercase', ['name' => $attribute]));
+                                return $fail(_trans('maia::validation.name.lowercase', ['name' => $attribute]));
                         }
                         })->creationRules('unique:users,name')
                         ->updateRules('unique:users,name,{{resourceId}}'),
 
-                    Text::make(trans('maia::resources.email'), 'email')
+                    Text::make(_trans('maia::resources.email'), 'email')
                         ->sortable()
                         ->rules('required', 'max:255', 'email', function ($attribute, $value, $fail) {
                             if (strtolower($value) !== $value) {
-                                return $fail(trans('maia::validation.email.lowercase', ['email' => $attribute]));
+                                return $fail(_trans('maia::validation.email.lowercase', ['email' => $attribute]));
                             }
                         })->creationRules('unique:users,email')
                         ->updateRules('unique:users,email,{{resourceId}}'),
 
-                    Password::make(trans('maia::resources.password'), 'password')
+                    Password::make(_trans('maia::resources.password'), 'password')
                         ->onlyOnForms()
                         ->creationRules('required', 'string', 'min:8', 'max:55')
                         ->updateRules('nullable', 'string', 'min:8', 'max:55'),
 
-                    PasswordConfirmation::make(trans('maia::resources.password_confirmation')),
+                    PasswordConfirmation::make(_trans('maia::resources.password_confirmation')),
 
-                    DateTime::make(trans('maia::resources.created_at'), 'created_at')
+                    DateTime::make(_trans('maia::resources.created_at'), 'created_at')
                         ->exceptOnForms()
                         ->sortable(),
 
-                    DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+                    DateTime::make(_trans('maia::resources.updated_at'), 'updated_at')
                         ->exceptOnForms()
                         ->sortable()
                 ],
-                trans('maia::resources.roles') => [
-                    RoleBooleanGroup::make(trans('maia::resources.roles'))
+                _trans('maia::resources.roles') => [
+                    RoleBooleanGroup::make(_trans('maia::resources.roles'))
                 ],
-                trans('maia::resources.permissions') => [
-                    PermissionBooleanGroup::make(trans('maia::resources.permissions'))
+                _trans('maia::resources.permissions') => [
+                    PermissionBooleanGroup::make(_trans('maia::resources.permissions'))
                 ],
-                trans('maia::resources.full_name') => [
-                    Text::make(trans('maia::resources.first_name'), 'fullName->firstName')->resolveUsing(function () {
+                _trans('maia::resources.full_name') => [
+                    Text::make(_trans('maia::resources.first_name'), 'fullName->firstName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'firstName')) ? null : json_decode($this->fullName)->firstName;
                     })->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.last_name'), 'fullName->lastName')->resolveUsing(function () {
+                    Text::make(_trans('maia::resources.last_name'), 'fullName->lastName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'lastName')) ? null : json_decode($this->fullName)->lastName;
                     })->hideFromIndex(),
 
-                    Text::make(trans('maia::resources.middle_name'), 'fullName->middleName')->resolveUsing(function () {
+                    Text::make(_trans('maia::resources.middle_name'), 'fullName->middleName')->resolveUsing(function () {
                         return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
                     })->displayUsing(function () {
                         return is_null(jsonProp($this->fullName, 'middleName')) ? null : json_decode($this->fullName)->middleName;
                     })->hideFromIndex()
                 ],
-                trans('maia::resources.applications') => [
-                    KeyValue::make(trans('maia::resources.socialnetworks'), 'apps->socials')
-                        ->keyLabel(trans('maia::resources.key'))
-                        ->valueLabel(trans('maia::resources.value'))
-                        ->actionText(trans('maia::resources.add'))
+                _trans('maia::resources.applications') => [
+                    KeyValue::make(_trans('maia::resources.socialnetworks'), 'apps->socials')
+                        ->keyLabel(_trans('maia::resources.key'))
+                        ->valueLabel(_trans('maia::resources.value'))
+                        ->actionText(_trans('maia::resources.add'))
                         ->resolveUsing(function () {
                             return is_null(jsonProp($this->apps, 'socials')) ? null : json_decode($this->apps)->socials;
                         }),
 
-                    KeyValue::make(trans('maia::resources.webhooks'), 'apps->webhooks')
-                        ->keyLabel(trans('maia::resources.key'))
-                        ->valueLabel(trans('maia::resources.value'))
-                        ->actionText(trans('maia::resources.add'))
+                    KeyValue::make(_trans('maia::resources.webhooks'), 'apps->webhooks')
+                        ->keyLabel(_trans('maia::resources.key'))
+                        ->valueLabel(_trans('maia::resources.value'))
+                        ->actionText(_trans('maia::resources.add'))
                         ->resolveUsing(function () {
                             return is_null(jsonProp($this->apps, 'webhooks')) ? null : json_decode($this->apps)->webhooks;
                         })

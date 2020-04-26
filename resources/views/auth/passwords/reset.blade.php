@@ -12,7 +12,7 @@
     {{ csrf_field() }}
 
     @component('nova::auth.partials.heading')
-        {{ trans('maia::resources.forgot.reset') }}
+        {{ _trans('maia::resources.forgot.reset') }}
     @endcomponent
 
     @include('nova::auth.partials.errors')
@@ -20,22 +20,22 @@
     <input type="hidden" name="token" value="{{ $token }}">
 
     <div class="mb-6 {{ $errors->has('email') ? ' has-error' : '' }}">
-        <label class="block font-bold mb-2" for="email">{{ trans('maia::resources.emailaddress') }}</label>
+        <label class="block font-bold mb-2" for="email">{{ _trans('maia::resources.emailaddress') }}</label>
         <input class="form-control form-input form-input-bordered w-full" id="email" type="email" name="email" value="{{ $email ?? old('email') }}" required autofocus>
     </div>
 
     <div class="mb-6 {{ $errors->has('password') ? ' has-error' : '' }}">
-        <label class="block font-bold mb-2" for="password">{{ trans('maia::resources.password') }}</label>
+        <label class="block font-bold mb-2" for="password">{{ _trans('maia::resources.password') }}</label>
         <input class="form-control form-input form-input-bordered w-full" id="password" type="password" name="password" required>
     </div>
 
     <div class="mb-6 {{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-        <label class="block font-bold mb-2" for="password-confirm">{{ trans('maia::resources.forgot.confirm') }}</label>
+        <label class="block font-bold mb-2" for="password-confirm">{{ _trans('maia::resources.forgot.confirm') }}</label>
         <input class="form-control form-input form-input-bordered w-full" id="password-confirm" type="password" name="password_confirmation" required>
     </div>
 
     <button class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
-        {{ trans('maia::resources.forgot.reset') }}
+        {{ _trans('maia::resources.forgot.reset') }}
     </button>
 </form>
 @endsection

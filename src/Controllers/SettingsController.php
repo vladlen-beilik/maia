@@ -24,8 +24,8 @@ class SettingsController extends Controller
 
     public function get(Request $request)
     {
-        $fields = $this->assignToPanels(trans('maia::resources.settings'), $this->availableFields());
-        $panels = $this->panelsWithDefaultLabel(trans('maia::resources.settings'), new NovaRequest);
+        $fields = $this->assignToPanels(_trans('maia::resources.settings'), $this->availableFields());
+        $panels = $this->panelsWithDefaultLabel(_trans('maia::resources.settings'), new NovaRequest);
 
         $addResolveCallback = function (&$field) {
             if($field->component === 'dependency-container-field') {

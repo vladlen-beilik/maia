@@ -7,7 +7,7 @@
         @endisset
     @endisset
     <span class="text-90">
-        {{ $user->name ?? $user->email ?? trans('maia::resources.user') }}
+        {{ $user->name ?? $user->email ?? _trans('maia::resources.user') }}
     </span>
 </dropdown-trigger>
 
@@ -15,7 +15,7 @@
     <ul class="list-reset">
         <li>
             <a href="{{ route('nova.logout') }}" class="block no-underline text-90 hover:bg-30 p-3">
-                {{ trans('maia::resources.logout') }}
+                {{ _trans('maia::resources.logout') }}
             </a>
         </li>
     </ul>

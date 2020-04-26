@@ -8,6 +8,6 @@ class InvalidConfig extends Exception
 {
     public static function driverNotSupported()
     {
-        return new static(trans('maia::exeptions.drivernotsupported'));
+        return new static(_trans('maia::exeptions.drivernotsupported'));
     }
 }

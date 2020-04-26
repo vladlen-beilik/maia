@@ -89,7 +89,7 @@ class NormalizeFile
                 if ($size < 350000) {
                     $data->put('source', $this->storage->get($this->storagePath));
                 } else {
-                    $data->put('source', trans('maia::error.onlyfiles'));
+                    $data->put('source', _trans('maia::error.onlyfiles'));
                 }
             }
         }

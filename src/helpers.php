@@ -1,6 +1,7 @@
 <?php
 
 use App\User;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Facades\Auth;
 use SpaceCode\Maia\Models;
 use Illuminate\Support\Facades\Cache;
@@ -87,7 +88,7 @@ if (! function_exists('timezoneList')) {
             $pretty_offset = "UTC${offset_prefix}${offset_formatted}";
             $pretty_group = explode('/', $timezone)[0];
             $pretty_label = str_replace('_', ' ', $timezone) . ' ' . $pretty_offset;
-            $timezone_list['UTC'] = ['label' => 'UTC', 'group' => trans('maia::resources.default')];
+            $timezone_list['UTC'] = ['label' => 'UTC', 'group' => _trans('maia::resources.default')];
             $timezone_list[$timezone] = ['label' => $pretty_label, 'group' => $pretty_group];
         }
         if (!Cache::has('timezoneList')) {
@@ -416,7 +417,7 @@ if (!function_exists('meta_title')) {
     {
         $global = seo('seo_' . $name . '_meta_title');
         if($name === 'home') {
-            $meta_title = is_null($global) ? trans('maia::resources.home') : str_replace(variables_array(), variables_result(null, null), $global);
+            $meta_title = is_null($global) ? _trans('maia::resources.home') : str_replace(variables_array(), variables_result(null, null), $global);
         } else {
             if(!is_null($item->meta_title)) {
                 $meta_title = str_replace(variables_array(), variables_result($item, $url), $item->meta_title);
@@ -520,12 +521,12 @@ if (!function_exists('jsonProp')) {
 if (!function_exists('put_session_view')) {
     function put_session_view($table, $item)
     {
-        if (\Request::session()->has('_session_view')) {
+        if (Request::session()->has('_session_view')) {
             if(!in_array($table . '_' . $item->id, session('_session_view'))) {
                 !is_null($item->view_unique) ? DB::table($table)->where('id', $item->id)->increment('view_unique') : DB::table($table)->where('id', $item->id)->update(['view_unique' => 1]);
             }
         } else {
-            \Request::session()->put('_session_view', [$table . '_' . $item->id]);
+            Request::session()->put('_session_view', [$table . '_' . $item->id]);
             !is_null($item->view_unique) ? DB::table($table)->where('id', $item->id)->increment('view_unique') : DB::table($table)->where('id', $item->id)->update(['view_unique' => 1]);
         }
         !is_null($item->view) ? DB::table($table)->where('id', $item->id)->increment('view') : DB::table($table)->where('id', $item->id)->update(['view' => 1]);
@@ -535,9 +536,9 @@ if (!function_exists('put_session_view')) {
 if (!function_exists('getTemplate')) {
     function getTemplate($type)
     {
-        if (\File::exists(resource_path('views/templates/' . $type))) {
-            $files = \File::allFiles(resource_path('views/templates/' . $type));
-            $templates = ['default' => trans('maia::resources.default')];
+        if (File::exists(resource_path('views/templates/' . $type))) {
+            $files = File::allFiles(resource_path('views/templates/' . $type));
+            $templates = ['default' => _trans('maia::resources.default')];
             foreach ($files as $file) {
                 if($file->getContents()[0] === '{') {
                     $contents = trim(str_replace('Template:', '', preg_split('/\{{--|\--}}(, *)?/', $file->getContents(), -1, PREG_SPLIT_NO_EMPTY)[0]));
@@ -548,7 +549,7 @@ if (!function_exists('getTemplate')) {
                 }
             }
         } else {
-            $templates = ['default' => trans('maia::resources.default')];
+            $templates = ['default' => _trans('maia::resources.default')];
         }
         return $templates;
     }
@@ -557,7 +558,7 @@ if (!function_exists('getTemplate')) {
 if (!function_exists('body_class')) {
     function body_class()
     {
-        $request = \Request::url();
+        $request = Request::url();
         $routeName = str_replace(['maia.', 'parent-'], '', Route::currentRouteName());
         $url = explode('/', $request)[sizeof(explode('/', $request)) - 1];
         return $routeName . ' ' . Str::slug($url, '-');
@@ -567,7 +568,7 @@ if (!function_exists('body_class')) {
 if (!function_exists('isNofollow')) {
     function isNofollow($path)
     {
-        return \Request::is($path) ? ' rel="nofollow"' : '';
+        return Request::is($path) ? ' rel="nofollow"' : '';
     }
 }
 
@@ -716,7 +717,7 @@ if (!function_exists('getVariableVue')) {
         if($user && !is_null($user->avatar)) {
             $avatar = !is_null($user->avatar) ? Maia::image($user->avatar) : $avatar . md5($user->email) .  '?size=512';
         }
-        \JavaScript::put([
+        JavaScript::put([
             'resource' => (object)[
                 'name' => get_class($item),
                 'id' => $item->id
@@ -728,5 +729,24 @@ if (!function_exists('getVariableVue')) {
                 'avatar' => $avatar
             ]
         ]);
+    }
+}
+
+if (! function_exists('_trans')) {
+    /**
+     * Translate the given message.
+     *
+     * @param  string|null  $key
+     * @param  array   $replace
+     * @param  string|null  $locale
+     * @return Translator|string|array|null
+     */
+    function _trans($key = null, $replace = [], $locale = null)
+    {
+        if (is_null($key)) {
+            return app('translator');
+        }
+
+        return app('translator')->trans($key, $replace, $locale);
     }
 }

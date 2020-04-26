@@ -20,8 +20,8 @@ class SeoController extends Controller
 
     public function get(Request $request)
     {
-        $fields = $this->assignToPanels(trans('maia::resources.seo'), $this->availableFields());
-        $panels = $this->panelsWithDefaultLabel(trans('maia::resources.seo'), new NovaRequest);
+        $fields = $this->assignToPanels(_trans('maia::resources.seo'), $this->availableFields());
+        $panels = $this->panelsWithDefaultLabel(_trans('maia::resources.seo'), new NovaRequest);
 
         $addResolveCallback = function (&$field) {
             if (!empty($field->attribute)) {

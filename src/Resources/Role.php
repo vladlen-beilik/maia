@@ -50,7 +50,7 @@ class Role extends Resource
      */
     public static function group()
     {
-        return trans('maia::navigation.sidebar-assignment');
+        return _trans('maia::navigation.sidebar-assignment');
     }
 
     /**
@@ -66,12 +66,12 @@ class Role extends Resource
 
     public static function label()
     {
-        return trans('maia::resources.roles');
+        return _trans('maia::resources.roles');
     }
 
     public static function singularLabel()
     {
-        return trans('maia::resources.role');
+        return _trans('maia::resources.role');
     }
 
     /**
@@ -89,42 +89,42 @@ class Role extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make(trans('maia::resources.name'), 'name')
+            Text::make(_trans('maia::resources.name'), 'name')
                 ->rules('required', 'string', 'max:255')
                 ->creationRules('unique:roles,name')
                 ->updateRules('unique:roles,name,{{resourceId}}')
                 ->sortable(),
 
-            Select::make(trans('maia::resources.guard_name'), 'guard_name')
+            Select::make(_trans('maia::resources.guard_name'), 'guard_name')
                 ->hideFromIndex()
                 ->options($guardOptions->toArray())
                 ->rules('required', Rule::in($guardOptions)),
 
-            DateTime::make(trans('maia::resources.created_at'), 'created_at')
+            DateTime::make(_trans('maia::resources.created_at'), 'created_at')
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
-            Text::make(trans('maia::resources.created_at'), 'created_at')
+            Text::make(_trans('maia::resources.created_at'), 'created_at')
                 ->onlyOnIndex()
                 ->sortable()
                 ->displayUsing(function($date) {
                     return $date->diffForHumans();
                 }),
 
-            DateTime::make(trans('maia::resources.updated_at'), 'updated_at')
+            DateTime::make(_trans('maia::resources.updated_at'), 'updated_at')
                 ->exceptOnForms()
                 ->hideFromIndex(),
 
-            Text::make(trans('maia::resources.updated_at'), 'updated_at')
+            Text::make(_trans('maia::resources.updated_at'), 'updated_at')
                 ->onlyOnIndex()
                 ->sortable()
                 ->displayUsing(function($date) {
                     return $date->diffForHumans();
                 }),
 
-            PermissionBooleanGroup::make(trans('maia::resources.permissions')),
+            PermissionBooleanGroup::make(_trans('maia::resources.permissions')),
 
-            MorphToMany::make(trans('maia::resources.' . strtolower($userResource::label())), 'users', $userResource)
+            MorphToMany::make(_trans('maia::resources.' . strtolower($userResource::label())), 'users', $userResource)
                 ->searchable()
                 ->singularLabel($userResource::singularLabel()),
         ];

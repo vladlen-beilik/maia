@@ -12,7 +12,7 @@
         {{ csrf_field() }}
 
         @component('nova::auth.partials.heading')
-            {{ trans('maia::resources.login.welcome') }}
+            {{ _trans('maia::resources.login.welcome') }}
         @endcomponent
 
         @if ($errors->any())
@@ -26,33 +26,33 @@
         @endif
 
         <div class="mb-6 {{ $errors->has('email') ? ' has-error' : '' }}">
-            <label class="block font-bold mb-2" for="email">{{ trans('maia::resources.email') }}</label>
+            <label class="block font-bold mb-2" for="email">{{ _trans('maia::resources.email') }}</label>
             <input class="form-control form-input form-input-bordered w-full" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
         </div>
 
         <div class="mb-6 {{ $errors->has('password') ? ' has-error' : '' }}">
-            <label class="block font-bold mb-2" for="password">{{ trans('maia::resources.password') }}</label>
+            <label class="block font-bold mb-2" for="password">{{ _trans('maia::resources.password') }}</label>
             <input class="form-control form-input form-input-bordered w-full" id="password" type="password" name="password" required>
         </div>
 
         <div class="flex mb-6">
             <label class="flex items-center block text-xl font-bold">
                 <input class="" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                <span class="text-base ml-2">{{ trans('maia::resources.login.remember') }}</span>
+                <span class="text-base ml-2">{{ _trans('maia::resources.login.remember') }}</span>
             </label>
 
 
             @if (\Laravel\Nova\Nova::resetsPasswords())
                 <div class="ml-auto">
                     <a class="text-primary dim font-bold no-underline" href="{{ route('nova.password.request') }}">
-                        {{ trans('maia::resources.login.forgot') }}
+                        {{ _trans('maia::resources.login.forgot') }}
                     </a>
                 </div>
             @endif
         </div>
 
         <button class="w-full btn btn-default btn-primary hover:bg-primary-dark" type="submit">
-            {{ trans('maia::resources.login.login') }}
+            {{ _trans('maia::resources.login.login') }}
         </button>
     </form>
 @endsection

@@ -9,6 +9,6 @@ class GuardDoesNotMatch extends InvalidArgumentException
 {
     public static function create(string $givenGuard, Collection $expectedGuards)
     {
-        return new static(trans('maia::exeptions.guard', ['expected' => $expectedGuards->implode(', '), 'given' => $givenGuard]));
+        return new static(_trans('maia::exeptions.guard', ['expected' => $expectedGuards->implode(', '), 'given' => $givenGuard]));
     }
 }
