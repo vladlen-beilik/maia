@@ -33,7 +33,6 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        $this->storageBuild();
         $this->novaBuild();
         $this->moveStubs();
         $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
@@ -48,6 +47,7 @@ class PublishCommand extends Command
         $dumpautoload = new Process(['/usr/local/bin/composer', 'dumpautoload']);
         $dumpautoload->setTimeout(null)->run();
         $this->seed('MaiaDatabaseSeeder');
+        $this->storageBuild();
     }
 
     public function moveStubs()

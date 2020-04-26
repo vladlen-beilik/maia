@@ -1,0 +1,7 @@
+1. product Attributes
+2. default currency Shop Setting
+3. currency list Shop Setting
+4. product galleries
+5. user language
+6. default language
+7. language list Setting
