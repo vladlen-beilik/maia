@@ -15,4 +15,9 @@ class PageConflict extends InvalidArgumentException
     {
         return new static(_trans('maia::exeptions.page.ban', ['slug' => $slug]));
     }
+
+    public static function reserved(string $slug)
+    {
+        return new static(_trans('maia::exeptions.page.reserved', ['slug' => $slug]));
+    }
 }

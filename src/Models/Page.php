@@ -32,6 +32,13 @@ class Page extends Model
         parent::boot();
 
         static::saving(function($model) {
+
+            $reserved = ['profile', 'admin', 'nova-api', 'maia-api', 'nova-vendor'];
+
+            if(is_null($model->parent_id) && in_array($model->getUrl(), $reserved)) {
+                throw PageConflict::reserved($model->getUrl());
+            }
+
             $prefixes = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
             if($prefixes->count() > 0 && !is_null($model->parent_id) && in_array($model->parent->slug, $prefixes->toArray())) {
                 throw PageConflict::ban($model->getUrl());

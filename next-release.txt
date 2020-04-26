@@ -5,3 +5,4 @@
 5. user language
 6. default language
 7. language list Setting
+8. reserved slug for _prefix seo settings

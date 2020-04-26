@@ -2,6 +2,7 @@
 return [
     'guard' => 'The given role or permission should use guard `:expected` instead of `:given`.',
     'page' => [
+        'reserved' => 'This page `:slug` reserved by System. Use another slug.',
         'url' => 'This page `:slug` is already exists for guard `:guardName`.',
         'ban' => 'This page `:slug` can\'t be child if the page with prefix like `post and etc.`. Choose another parent.'
     ],

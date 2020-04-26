@@ -12,6 +12,8 @@
 */
 
 if (
+    !\Request::is('profile') &&
+    !\Request::is('profile/*') &&
     !\Request::is('admin') &&
     !\Request::is('admin/*') &&
     !\Request::is('nova-api') &&
