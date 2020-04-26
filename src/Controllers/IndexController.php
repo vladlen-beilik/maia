@@ -35,7 +35,7 @@ class IndexController extends Controller
     public function homeIndex()
     {
         $home = collect();
-        $home->put('indexView', 'home');
+        $home->put('indexView', 'index.home.single');
         return (object)$home->toArray();
     }
 
@@ -46,7 +46,7 @@ class IndexController extends Controller
     public function pageIndex($slug)
     {
         $item = Models\Page::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'page' : 'templates.pages.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.page.single' : 'index.templates.pages.' . $item->template;
         return $item;
     }
 
@@ -59,7 +59,7 @@ class IndexController extends Controller
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\Page::whereSlug($slugs->shift())->where(['status' => 'published', 'deleted_at' => null])->with('children')->firstOrFail());
-        $item->indexView = $item->template === 'default' ? 'page' : 'templates.pages.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.page.single' : 'index.templates.pages.' . $item->template;
         return $item;
     }
 
@@ -70,7 +70,7 @@ class IndexController extends Controller
     public function postIndex($slug)
     {
         $item = Models\Post::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'post' : 'templates.posts.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.single' : 'index.templates.posts.' . $item->template;
         getVariableVue($item);
         put_session_view('posts', $item);
         return $item;
@@ -83,7 +83,7 @@ class IndexController extends Controller
     public function postCategoryIndex($slug)
     {
         $item = Models\PostCategory::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'postCategory' : 'templates.postCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.category' : 'index.templates.postCategories.' . $item->template;
         return $item;
     }
 
@@ -96,7 +96,7 @@ class IndexController extends Controller
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\PostCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
-        $item->indexView = $item->template === 'default' ? 'postCategory' : 'templates.postCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.category' : 'index.templates.postCategories.' . $item->template;
         return $item;
     }
 
@@ -107,7 +107,7 @@ class IndexController extends Controller
     public function postTagIndex($slug)
     {
         $item = Models\PostTag::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'postTag' : 'templates.postTags.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.tag' : 'index.templates.postTags.' . $item->template;
         return $item;
     }
 
@@ -118,7 +118,7 @@ class IndexController extends Controller
     public function portfolioIndex($slug)
     {
         $item = Models\Portfolio::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'portfolio' : 'templates.portfolio.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.portfolio.single' : 'index.templates.portfolio.' . $item->template;
         getVariableVue($item);
         put_session_view('portfolio', $item);
         return $item;
@@ -131,7 +131,7 @@ class IndexController extends Controller
     public function portfolioCategoryIndex($slug)
     {
         $item = Models\PortfolioCategory::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'portfolioCategory' : 'templates.portfolioCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.category' : 'index.templates.portfolioCategories.' . $item->template;
         return $item;
     }
 
@@ -144,7 +144,7 @@ class IndexController extends Controller
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\PortfolioCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
-        $item->indexView = $item->template === 'default' ? 'portfolioCategory' : 'templates.portfolioCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.category' : 'index.templates.portfolioCategories.' . $item->template;
         return $item;
     }
 
@@ -155,7 +155,7 @@ class IndexController extends Controller
     public function portfolioTagIndex($slug)
     {
         $item = Models\PortfolioTag::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'portfolioTag' : 'templates.portfolioTags.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.post.tag' : 'index.templates.portfolioTags.' . $item->template;
         return $item;
     }
 
@@ -166,7 +166,7 @@ class IndexController extends Controller
     public function shopIndex($slug)
     {
         $item = Models\Shop::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'shop' : 'templates.shops.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.shop' : 'index.templates.shops.' . $item->template;
         put_session_view('shops', $item);
         return $item;
     }
@@ -178,7 +178,7 @@ class IndexController extends Controller
     public function productIndex($slug)
     {
         $item = Models\Product::whereSlug($slug)->where(['status' => 'published', 'deleted_at' => null])->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'product' : 'templates.products.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.single' : 'index.templates.products.' . $item->template;
         getVariableVue($item);
         put_session_view('products', $item);
         return $item;
@@ -191,7 +191,7 @@ class IndexController extends Controller
     public function productCategoryIndex($slug)
     {
         $item = Models\ProductCategory::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'productCategory' : 'templates.productCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.category' : 'index.templates.productCategories.' . $item->template;
         return $item;
     }
 
@@ -202,7 +202,7 @@ class IndexController extends Controller
     public function productBrandIndex($slug)
     {
         $item = Models\ProductBrand::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'productBrand' : 'templates.productBrands.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.brand' : 'index.templates.productBrands.' . $item->template;
         return $item;
     }
 
@@ -215,7 +215,7 @@ class IndexController extends Controller
         $item = $slugs->reduce(function ($item, $slug) {
             return ($item->children()->where('slug', $slug)->firstOrFail());
         }, Models\ProductCategory::whereSlug($slugs->shift())->with('children')->firstOrFail());
-        $item->indexView = $item->template === 'default' ? 'productCategory' : 'templates.productCategories.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.category' : 'index.templates.productCategories.' . $item->template;
         return $item;
     }
 
@@ -226,7 +226,7 @@ class IndexController extends Controller
     public function productTagIndex($slug)
     {
         $item = Models\ProductTag::whereSlug($slug)->firstOrFail();
-        $item->indexView = $item->template === 'default' ? 'productTag' : 'templates.productTags.' . $item->template;
+        $item->indexView = $item->template === 'default' ? 'index.shop.tag' : 'index.templates.productTags.' . $item->template;
         return $item;
     }
 }
