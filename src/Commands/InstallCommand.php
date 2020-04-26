@@ -34,23 +34,17 @@ class InstallCommand extends Command
             'user_interrupted' => 'User creation process interrupted. Continue installation...',
         ];
         $this->novaFolder();
+
+        $this->info('CMS Maia installing...');
+        $this->info('Publishing...');
+        $this->callSilent('maia:publish');
+        $this->info('CMS Maia successfully installed');
+
         $this->appName($data);
         $this->appURL($data);
         $this->horizon();
         $this->appPath($data);
-        $this->info('CMS Maia install started');
-        $this->info('Download files...');
-        $req = new Process(['/usr/local/bin/composer', 'require', 'spacecode-dev/maia']);
-        $req->setTimeout(null)->run();
-        if($req->isSuccessful()) {
-            $this->info('All files successfully download');
-            $this->info('Publishing...');
-            $this->callSilent('maia:publish');
-            $this->info('CMS Maia successfully installed');
-            $this->createAdmin($data);
-        } else {
-            throw new ProcessFailedException($req);
-        }
+        $this->createAdmin($data);
     }
 
     public function novaFolder()
