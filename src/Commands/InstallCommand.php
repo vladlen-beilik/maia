@@ -33,25 +33,27 @@ class InstallCommand extends Command
             'interrupted' => 'The installation process interrupted.',
             'user_interrupted' => 'User creation process interrupted. Continue installation...',
         ];
-        $this->novaFolder();
+        if($this->novaFolder()) {
+            $this->info('CMS Maia installing...');
+            $this->info('Publishing...');
+            $this->call('maia:publish');
+            $this->info('CMS Maia successfully installed');
 
-        $this->info('CMS Maia installing...');
-        $this->info('Publishing...');
-        $this->callSilent('maia:publish');
-        $this->info('CMS Maia successfully installed');
-
-        $this->appName($data);
-        $this->appURL($data);
-        $this->horizon();
-        $this->appPath($data);
-        $this->createAdmin($data);
+            $this->appName($data);
+            $this->appURL($data);
+            $this->horizon();
+            $this->appPath($data);
+            $this->createAdmin($data);
+        }
     }
 
     public function novaFolder()
     {
         if (\File::exists(base_path('nova'))) {
             $this->error('Missing installation folder for Laravel Nova ("./nova").');
+            return false;
         }
+        return true;
     }
 
     public function createAdmin($data)
