@@ -51,7 +51,7 @@ class ToolServiceProvider extends ServiceProvider
             Commands\InstallCommand::class,
             Commands\PublishCommand::class,
             Commands\UpdateCommand::class,
-            Commands\DeveloperCommand::class
+//            Commands\DeveloperCommand::class
         ]);
         $this->aliases();
         $this->app->booted(function () {
