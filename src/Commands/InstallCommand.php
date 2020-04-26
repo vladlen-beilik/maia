@@ -36,7 +36,7 @@ class InstallCommand extends Command
         $this->novaFolder();
         $this->info('CMS Maia installing...');
         $this->info('Publishing...');
-        $this->callSilent('maia:publish');
+        $this->call('maia:publish');
         $this->info('CMS Maia successfully installed');
         $this->appName($data);
         $appUrl = $this->appURL($data);
@@ -100,12 +100,11 @@ class InstallCommand extends Command
             User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()]);
             $this->info('Admin user successfully created.');
             $this->info('You may login after several seconds.');
-            $this->info('Enjoy using CMS Maia. Have a nice day )))');
-            $this->info('Best regards, SpaceCode Team');
 
             return true;
         }
-        return false;
+        $this->info('Enjoy using CMS Maia. Have a nice day )))');
+        $this->info('Best regards, SpaceCode Team');
     }
 
     public function appPath($data)
