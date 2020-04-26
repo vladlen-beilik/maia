@@ -61,6 +61,7 @@ class PublishCommand extends Command
             $stubPath . '/app/Nova/User.php.stub' => app_path('Nova/User.php'),
             $stubPath . '/config/app.php.stub' => config_path('app.php'),
             $stubPath . '/config/nova.php.stub' => config_path('nova.php'),
+            $stubPath . '/config/session.php.stub' => config_path('session.php'),
             $stubPath . '/resources/views/vendor/nova/partials/footer.blade.php.stub' => resource_path('views/vendor/nova/partials/footer.blade.php'),
             $stubPath . '/resources/views/vendor/nova/partials/logo.blade.php.stub' => resource_path('views/vendor/nova/partials/logo.blade.php'),
             $stubPath . '/resources/views/vendor/nova/partials/meta.blade.php.stub' => resource_path('views/vendor/nova/partials/meta.blade.php'),
