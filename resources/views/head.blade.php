@@ -42,7 +42,7 @@
     <![endif]-->
 
     <!-- CSS -->
-    @include('inc.css')
+    @include('index.inc.css')
     @if (trim($__env->yieldContent('css')))@yield('css'){{"\n"}}@endif
 
     <!-- Metatags content -->

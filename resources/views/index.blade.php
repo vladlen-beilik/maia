@@ -1,5 +1,5 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
 @include('maia::head')
-@include('body')
+@include('index.body')
 </html>
