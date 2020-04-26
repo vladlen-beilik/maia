@@ -49,7 +49,7 @@ class InstallCommand extends Command
 
     public function novaFolder()
     {
-        if (\File::exists(base_path('nova'))) {
+        if (!\File::exists(base_path('nova'))) {
             $this->error('Missing installation folder for Laravel Nova ("./nova").');
             return false;
         }
