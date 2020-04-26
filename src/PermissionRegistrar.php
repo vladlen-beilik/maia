@@ -2,19 +2,23 @@
 
 namespace SpaceCode\Maia;
 
+use DateInterval;
 use Illuminate\Cache\CacheManager;
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Collection;
 use SpaceCode\Maia\Contracts\Role;
 use Illuminate\Contracts\Auth\Access\Gate;
 use SpaceCode\Maia\Contracts\Permission;
 use Illuminate\Contracts\Auth\Access\Authorizable;
+use function array_key_exists;
 
 class PermissionRegistrar
 {
-    /** @var \Illuminate\Contracts\Cache\Repository */
+    /** @var Repository */
     protected $cache;
 
-    /** @var \Illuminate\Cache\CacheManager */
+    /** @var CacheManager */
     protected $cacheManager;
 
     /** @var string */
@@ -23,7 +27,7 @@ class PermissionRegistrar
     /** @var string */
     protected $roleClass;
 
-    /** @var \Illuminate\Support\Collection */
+    /** @var Collection */
     protected $permissions;
 
     /** @var DateInterval|int */
@@ -38,12 +42,12 @@ class PermissionRegistrar
     /**
      * PermissionRegistrar constructor.
      *
-     * @param \Illuminate\Cache\CacheManager $cacheManager
+     * @param CacheManager $cacheManager
      */
     public function __construct(CacheManager $cacheManager)
     {
-        $this->permissionClass = \SpaceCode\Maia\Models\Permission::class;
-        $this->roleClass = \SpaceCode\Maia\Models\Role::class;
+        $this->permissionClass = Models\Permission::class;
+        $this->roleClass = Models\Role::class;
         $this->cacheManager = $cacheManager;
         $this->initializeCache();
     }
@@ -56,13 +60,13 @@ class PermissionRegistrar
         $this->cache = $this->getCacheStoreFromConfig();
     }
 
-    protected function getCacheStoreFromConfig(): \Illuminate\Contracts\Cache\Repository
+    protected function getCacheStoreFromConfig(): Repository
     {
         $cacheDriver = config('maia.permission.cache.store', 'default');
         if ($cacheDriver === 'default') {
             return $this->cacheManager->store();
         }
-        if (! \array_key_exists($cacheDriver, config('cache.stores'))) {
+        if (! array_key_exists($cacheDriver, config('cache.stores'))) {
             $cacheDriver = 'array';
         }
         return $this->cacheManager->store($cacheDriver);
@@ -98,7 +102,7 @@ class PermissionRegistrar
      *
      * @param array $params
      *
-     * @return \Illuminate\Support\Collection
+     * @return Collection
      */
     public function getPermissions(array $params = []): Collection
     {
@@ -119,7 +123,7 @@ class PermissionRegistrar
     /**
      * Get an instance of the permission class.
      *
-     * @return \SpaceCode\Maia\Contracts\Permission
+     * @return Permission
      */
     public function getPermissionClass(): Permission
     {
@@ -135,7 +139,7 @@ class PermissionRegistrar
     /**
      * Get an instance of the role class.
      *
-     * @return \SpaceCode\Maia\Contracts\Role
+     * @return Role
      */
     public function getRoleClass(): Role
     {
@@ -145,9 +149,9 @@ class PermissionRegistrar
     /**
      * Get the instance of the Cache Store.
      *
-     * @return \Illuminate\Contracts\Cache\Store
+     * @return Store
      */
-    public function getCacheStore(): \Illuminate\Contracts\Cache\Store
+    public function getCacheStore(): Store
     {
         return $this->cache->getStore();
     }

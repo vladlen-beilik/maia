@@ -3,11 +3,13 @@
 namespace SpaceCode\Maia\Controllers\Nova;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Password;
+use Illuminate\View\View;
 
 class ForgotPasswordController extends Controller
 {
@@ -31,7 +33,7 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function showLinkRequestForm()
     {

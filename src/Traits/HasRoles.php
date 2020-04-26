@@ -7,6 +7,7 @@ use SpaceCode\Maia\Contracts\Role;
 use Illuminate\Database\Eloquent\Builder;
 use SpaceCode\Maia\PermissionRegistrar;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use function get_class;
 
 trait HasRoles
 {
@@ -49,11 +50,11 @@ trait HasRoles
     /**
      * Scope the model query to certain roles only.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string|array|\SpaceCode\Maia\Contracts\Role|\Illuminate\Support\Collection $roles
+     * @param Builder $query
+     * @param string|array|Role|Collection $roles
      * @param string $guard
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopeRole(Builder $query, $roles, $guard = null): Builder
     {
@@ -83,7 +84,7 @@ trait HasRoles
     /**
      * Assign the given role to the model.
      *
-     * @param array|string|\SpaceCode\Maia\Contracts\Role ...$roles
+     * @param array|string|Role ...$roles
      *
      * @return $this
      */
@@ -110,7 +111,7 @@ trait HasRoles
             $this->roles()->sync($roles, false);
             $model->load('roles');
         } else {
-            $class = \get_class($model);
+            $class = get_class($model);
             $class::saved(
                 function ($object) use ($roles, $model) {
                     static $modelLastFiredOn;
@@ -129,7 +130,8 @@ trait HasRoles
     /**
      * Revoke the given role from the model.
      *
-     * @param string|\SpaceCode\Maia\Contracts\Role $role
+     * @param string|Role $role
+     * @return HasRoles
      */
     public function removeRole($role)
     {
@@ -142,7 +144,7 @@ trait HasRoles
     /**
      * Remove all current roles and set the given ones.
      *
-     * @param  array|\SpaceCode\Maia\Contracts\Role|string  ...$roles
+     * @param  array|Role|string  ...$roles
      *
      * @return $this
      */
@@ -155,7 +157,7 @@ trait HasRoles
     /**
      * Determine if the model has (one of) the given role(s).
      *
-     * @param string|int|array|\SpaceCode\Maia\Contracts\Role|\Illuminate\Support\Collection $roles
+     * @param string|int|array|Role|Collection $roles
      * @param string|null $guard
      * @return bool
      */
@@ -191,7 +193,7 @@ trait HasRoles
     /**
      * Determine if the model has any of the given role(s).
      *
-     * @param string|array|\SpaceCode\Maia\Contracts\Role|\Illuminate\Support\Collection $roles
+     * @param string|array|Role|Collection $roles
      *
      * @return bool
      */
@@ -203,7 +205,7 @@ trait HasRoles
     /**
      * Determine if the model has all of the given role(s).
      *
-     * @param  string|\SpaceCode\Maia\Contracts\Role|\Illuminate\Support\Collection  $roles
+     * @param  string|Role|Collection $roles
      * @param  string|null  $guard
      * @return bool
      */

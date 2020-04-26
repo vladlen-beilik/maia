@@ -1,6 +1,7 @@
 <?php
 namespace SpaceCode\Maia\Fields;
 
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Fields\FieldCollection;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -10,8 +11,8 @@ trait TabsOnEdit
     /**
      * Resolve the creation fields.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @param NovaRequest $request
+     * @return FieldCollection
      */
     public function creationFields(NovaRequest $request)
     {
@@ -29,8 +30,8 @@ trait TabsOnEdit
     /**
      * Fill a new model instance using the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
-     * @param  \Illuminate\Database\Eloquent\Model     $model
+     * @param NovaRequest $request
+     * @param  Model     $model
      * @return array
      */
     public static function fill(NovaRequest $request, $model)
@@ -44,6 +45,7 @@ trait TabsOnEdit
     /**
      * @param NovaRequest $request
      * @param $model
+     * @return
      */
     public static function fillForUpdate(NovaRequest $request, $model)
     {
@@ -55,6 +57,7 @@ trait TabsOnEdit
 
     /**
      * @param NovaRequest $request
+     * @return FieldCollection
      */
     public function parentCreationFields(NovaRequest $request)
     {
@@ -63,6 +66,7 @@ trait TabsOnEdit
 
     /**
      * @param NovaRequest $request
+     * @return FieldCollection
      */
     public function parentUpdateFields(NovaRequest $request)
     {
@@ -85,7 +89,8 @@ trait TabsOnEdit
     /**
      * Get the validation rules for a resource update request.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
+     * @param NovaRequest $request
+     * @param null $resource
      * @return array
      */
     public static function rulesForUpdate(NovaRequest $request, $resource = null)
@@ -100,8 +105,8 @@ trait TabsOnEdit
     /**
      * Resolve the update fields.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest $request
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @param NovaRequest $request
+     * @return FieldCollection
      */
     public function updateFields(NovaRequest $request)
     {
@@ -120,8 +125,8 @@ trait TabsOnEdit
      * Assign the fields with the given panels to their parent panel.
      *
      * @param  string  $label
-     * @param  \Laravel\Nova\Fields\FieldCollection  $fields
-     * @return \Laravel\Nova\Fields\FieldCollection
+     * @param FieldCollection $fields
+     * @return FieldCollection
      */
     protected function assignToPanels($label, FieldCollection $fields)
     {

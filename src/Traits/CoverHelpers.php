@@ -13,7 +13,7 @@ trait CoverHelpers
     /**
      * Display the image thumbnail with full-rounded edges.
      *
-     * @return void
+     * @return $this
      */
     public function rounded()
     {

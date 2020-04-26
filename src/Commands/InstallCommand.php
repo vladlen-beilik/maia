@@ -68,10 +68,18 @@ class InstallCommand extends Command
             }
 
             $email = $this->ask('What is your user email?');
+            $user = User::where('email', $email)->exists();
             if($email === '' || empty($email)) {
                 $this->info('User email is required.');
                 $email = $this->ask('What is your user email?');
                 if($email === '' || empty($email)) {
+                    $this->error($data['user_interrupted']);
+                    return false;
+                }
+            } elseif ($user) {
+                $this->info('User with such email is already exists.');
+                $email = $this->ask('What is your user email?');
+                if($user) {
                     $this->error($data['user_interrupted']);
                     return false;
                 }

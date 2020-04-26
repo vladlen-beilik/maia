@@ -2,6 +2,7 @@
 
 namespace SpaceCode\Maia\Traits;
 
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Laravel\Nova\Actions\Actionable;
 use Laravel\Nova\Contracts\Resolvable;
 use Laravel\Nova\Http\Requests\NovaRequest;

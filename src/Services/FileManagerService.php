@@ -44,8 +44,9 @@ class FileManagerService
      * @var AbstractNamingStrategy
      */
     protected $namingStrategy;
+
     /**
-     * @param Storage $storage
+     * @throws InvalidConfig
      */
     public function __construct()
     {
@@ -64,11 +65,13 @@ class FileManagerService
             ['storage' => $this->storage]
         );
     }
+
     /**
      * Get ajax request to load files and folders.
      *
      * @param Request $request
      *
+     * @param bool $filter
      * @return json
      */
     public function ajaxGetFilesAndFolders(Request $request, $filter = false)

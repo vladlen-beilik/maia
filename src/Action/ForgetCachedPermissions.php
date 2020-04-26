@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SpaceCode\Maia\Action;
 
+use Closure;
+use Illuminate\Http\Request;
 use Laravel\Nova\Nova;
 use SpaceCode\Maia\PermissionRegistrar;
 
@@ -12,8 +14,8 @@ class ForgetCachedPermissions
     /**
      * Handle the incoming request.
      *
-     * @param \Illuminate\Http\Request|mixed $request
-     * @param \Closure $next
+     * @param Request|mixed $request
+     * @param Closure $next
      *
      * @return mixed
      */

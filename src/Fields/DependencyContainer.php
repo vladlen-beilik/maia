@@ -56,7 +56,7 @@ class DependencyContainer extends Field
      * Adds a dependency for not empty
      *
      * @param $field
-     * @return NovaDependencyContainer
+     * @return DependencyContainer
      */
     public function dependsOnEmpty($field)
     {
@@ -71,7 +71,7 @@ class DependencyContainer extends Field
      * Adds a dependency for not empty
      *
      * @param $field
-     * @return NovaDependencyContainer
+     * @return DependencyContainer
      */
     public function dependsOnNotEmpty($field)
     {
@@ -86,7 +86,6 @@ class DependencyContainer extends Field
      * Adds a dependency for null or zero (0)
      *
      * @param $field
-     * @param $value
      * @return $this
      */
     public function dependsOnNullOrZero($field)

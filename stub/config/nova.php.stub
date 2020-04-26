@@ -88,7 +88,7 @@ return [
         DispatchServingNovaEvent::class,
         BootTools::class,
         Authorize::class,
-        \SpaceCode\Maia\ForgetCachedPermissions::class,
+        \SpaceCode\Maia\Action\ForgetCachedPermissions::class,
     ],
 
     /*

@@ -2,6 +2,8 @@
 
 namespace SpaceCode\Maia\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -11,7 +13,7 @@ class UploadController extends Controller
      * Store an attachment for a Trix field.
      *
      * @param NovaRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(NovaRequest $request)
     {
@@ -33,8 +35,8 @@ class UploadController extends Controller
     /**
      * Purge all pending attachments for a Trix field.
      *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param NovaRequest $request
+     * @return Response
      */
     public function destroyPending(NovaRequest $request)
     {

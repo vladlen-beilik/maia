@@ -16,7 +16,7 @@ class Multiselect extends Field
      * Sets the options available for select.
      *
      * @param  array|callable
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function options($options = [])
     {
@@ -76,7 +76,7 @@ class Multiselect extends Field
      * Allows the field to save an actual JSON array to a SQL JSON column.
      *
      * @param bool $saveAsJSON
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function saveAsJSON($saveAsJSON = true)
     {
@@ -88,7 +88,7 @@ class Multiselect extends Field
      * Sets the max number of options the user can select.
      *
      * @param int $max
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function max($max)
     {
@@ -99,7 +99,7 @@ class Multiselect extends Field
      * Sets the placeholder value displayed on the field.
      *
      * @param string $placeholder
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function placeholder($placeholder)
     {
@@ -110,7 +110,7 @@ class Multiselect extends Field
      * Sets the maximum number of options displayed at once.
      *
      * @param int $optionsLimit
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function optionsLimit($optionsLimit)
     {
@@ -121,7 +121,7 @@ class Multiselect extends Field
      * Enables or disables reordering of the field values.
      *
      * @param bool $reorderable
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function reorderable($reorderable = true)
     {
@@ -134,7 +134,7 @@ class Multiselect extends Field
      * This forces the value saved to be a single value and not an array.
      *
      * @param bool $singleSelect
-     * @return \SpaceCode\Maia\Fields\Multiselect
+     * @return Multiselect
      **/
     public function singleSelect($singleSelect = true)
     {
@@ -146,8 +146,8 @@ class Multiselect extends Field
      * user to select the whole group at once.
      *
      * @param bool $groupSelect
-     * @return \OptimistDigital\MultiselectField\Multiselect
-     **/
+     * @return Multiselect
+     */
     public function groupSelect($groupSelect = true)
     {
         return $this->withMeta(['groupSelect' => $groupSelect]);

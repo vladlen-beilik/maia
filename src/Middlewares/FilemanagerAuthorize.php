@@ -12,8 +12,9 @@ class FilemanagerAuthorize
     /**
      * @param Request $request
      * @param Closure $next
+     * @return Response|void
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         return app(FilemanagerTool::class)->authorize($request) ? $next($request) : abort(403);
     }

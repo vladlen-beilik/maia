@@ -31,7 +31,9 @@ class FilemanagerToolController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param $resource
+     * @param $attribute
+     * @param NovaRequest $request
      */
     public function getDataField($resource, $attribute, NovaRequest $request)
     {

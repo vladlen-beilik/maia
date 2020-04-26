@@ -2,6 +2,8 @@
 
 namespace SpaceCode\Maia\Traits;
 
+use Exception;
+use SpaceCode\Maia\Contracts\Role;
 use SpaceCode\Maia\Guard;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +12,7 @@ use SpaceCode\Maia\Contracts\Permission;
 use SpaceCode\Maia\Exceptions\GuardDoesNotMatch;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use SpaceCode\Maia\Exceptions\PermissionDoesNotExist;
+use function get_class;
 
 trait HasPermissions
 {
@@ -50,10 +53,10 @@ trait HasPermissions
     /**
      * Scope the model query to certain permissions only.
      *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string|array|\SpaceCode\Maia\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     * @param Builder $query
+     * @param string|array|Permission|Collection $permissions
      *
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return Builder
      */
     public function scopePermission(Builder $query, $permissions): Builder
     {
@@ -82,7 +85,7 @@ trait HasPermissions
     }
 
     /**
-     * @param string|array|\SpaceCode\Maia\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     * @param string|array|Permission|Collection $permissions
      *
      * @return array
      */
@@ -103,7 +106,7 @@ trait HasPermissions
     /**
      * Determine if the model may perform the given permission.
      *
-     * @param string|int|\SpaceCode\Maia\Contracts\Permission $permission
+     * @param string|int|Permission $permission
      * @param string|null $guardName
      *
      * @return bool
@@ -133,7 +136,7 @@ trait HasPermissions
     /**
      * An alias to hasPermissionTo(), but avoids throwing an exception.
      *
-     * @param string|int|\SpaceCode\Maia\Contracts\Permission $permission
+     * @param string|int|Permission $permission
      * @param string|null $guardName
      *
      * @return bool
@@ -153,7 +156,7 @@ trait HasPermissions
      * @param array ...$permissions
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function hasAnyPermission(...$permissions): bool
     {
@@ -174,7 +177,7 @@ trait HasPermissions
      * @param array ...$permissions
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function hasAllPermissions(...$permissions): bool
     {
@@ -192,7 +195,7 @@ trait HasPermissions
     /**
      * Determine if the model has, via roles, the given permission.
      *
-     * @param \SpaceCode\Maia\Contracts\Permission $permission
+     * @param Permission $permission
      *
      * @return bool
      */
@@ -204,7 +207,7 @@ trait HasPermissions
     /**
      * Determine if the model has the given permission.
      *
-     * @param string|int|\SpaceCode\Maia\Contracts\Permission $permission
+     * @param string|int|Permission $permission
      *
      * @return bool
      * @throws PermissionDoesNotExist
@@ -238,7 +241,7 @@ trait HasPermissions
     /**
      * Return all the permissions the model has, both directly and via roles.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAllPermissions(): Collection
     {
@@ -252,7 +255,7 @@ trait HasPermissions
     /**
      * Grant the given permission(s) to a role.
      *
-     * @param string|array|\SpaceCode\Maia\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     * @param string|array|Permission|Collection $permissions
      *
      * @return $this
      */
@@ -279,7 +282,7 @@ trait HasPermissions
             $this->permissions()->sync($permissions, false);
             $model->load('permissions');
         } else {
-            $class = \get_class($model);
+            $class = get_class($model);
             $class::saved(
                 function ($object) use ($permissions, $model) {
                     static $modelLastFiredOn;
@@ -299,7 +302,7 @@ trait HasPermissions
     /**
      * Remove all current permissions and set the given ones.
      *
-     * @param string|array|\SpaceCode\Maia\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     * @param string|array|Permission|Collection $permissions
      *
      * @return $this
      */
@@ -312,7 +315,7 @@ trait HasPermissions
     /**
      * Revoke the given permission.
      *
-     * @param \SpaceCode\Maia\Contracts\Permission|\SpaceCode\Maia\Contracts\Permission[]|string|string[] $permission
+     * @param Permission|Permission[]|string|string[] $permission
      *
      * @return $this
      */
@@ -330,9 +333,9 @@ trait HasPermissions
     }
 
     /**
-     * @param string|array|\SpaceCode\Maia\Contracts\Permission|\Illuminate\Support\Collection $permissions
+     * @param string|array|Permission|Collection $permissions
      *
-     * @return \SpaceCode\Maia\Contracts\Permission|\SpaceCode\Maia\Contracts\Permission[]|\Illuminate\Support\Collection
+     * @return Permission|Permission[]|Collection
      */
     protected function getStoredPermission($permissions)
     {
@@ -353,9 +356,9 @@ trait HasPermissions
     }
 
     /**
-     * @param \SpaceCode\Maia\Contracts\Permission|\SpaceCode\Maia\Contracts\Role $roleOrPermission
+     * @param Permission|Role $roleOrPermission
      *
-     * @throws \SpaceCode\Maia\Exceptions\GuardDoesNotMatch
+     * @throws GuardDoesNotMatch
      */
     protected function ensureModelSharesGuard($roleOrPermission)
     {

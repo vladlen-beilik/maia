@@ -22,7 +22,8 @@ class FolderUploaded
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param FilesystemAdapter $storage
+     * @param string $folderPath
      */
     public function __construct(FilesystemAdapter $storage, string $folderPath)
     {

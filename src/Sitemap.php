@@ -2,6 +2,9 @@
 
 namespace SpaceCode\Maia;
 
+use Carbon\Carbon;
+use DateTime;
+use Illuminate\Http\Response;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Filesystem\Filesystem as Filesystem;
@@ -58,6 +61,11 @@ class Sitemap
      * and loading dependencies.
      *
      * @param array $config
+     * @param CacheRepository $cache
+     * @param ConfigRepository $configRepository
+     * @param Filesystem $file
+     * @param ResponseFactory $response
+     * @param ViewFactory $view
      */
     public function __construct(array $config, CacheRepository $cache, ConfigRepository $configRepository, Filesystem $file, ResponseFactory $response, ViewFactory $view)
     {
@@ -263,9 +271,7 @@ class Sitemap
     /**
      * Add new sitemap to $sitemaps array.
      *
-     * @param string $loc
-     * @param string $lastmod
-     *
+     * @param array $sitemaps
      * @return void
      */
     public function resetSitemaps($sitemaps = [])
@@ -277,9 +283,9 @@ class Sitemap
      * Returns document with all sitemap items from $items array.
      *
      * @param string $format (options: xml, html, txt, ror-rss, ror-rdf, google-news)
-     * @param string $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
+     * @param string $style (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
      *
-     * @return View
+     * @return Response
      */
     public function render($format = 'xml', $style = null)
     {

@@ -11,6 +11,7 @@ class Guard
      * otherwise will return collection of guards names that exists in config/auth.php.
      * @param $model
      * @return Collection
+     * @throws \ReflectionException
      */
     public static function getNames($model) : Collection
     {

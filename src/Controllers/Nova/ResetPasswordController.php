@@ -2,12 +2,14 @@
 
 namespace SpaceCode\Maia\Controllers\Nova;
 
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
+use Illuminate\View\View;
 use Laravel\Nova\Nova;
 
 class ResetPasswordController extends Controller
@@ -26,7 +28,7 @@ class ResetPasswordController extends Controller
     /**
      * @param Request $request
      * @param null $token
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function showResetForm(Request $request, $token = null)
     {

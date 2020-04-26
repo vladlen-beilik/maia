@@ -1234,8 +1234,10 @@ class MimeTypes
         'zsh'          => ['text/x-script.zsh'],
         '123'          => ['application/vnd.lotus-1-2-3'],
     ];
+
     /**
      * @param $extension
+     * @return array|mixed
      */
     public static function checkMimeType($extension)
     {

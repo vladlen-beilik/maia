@@ -49,7 +49,7 @@ class Transformer
      * Translate the array of PHP variables to a JavaScript syntax.
      *
      * @param  array $variables
-     * @return array
+     * @return array|string
      */
     public function constructJavaScript($variables)
     {
@@ -75,9 +75,10 @@ class Transformer
     /**
      * Translate a single PHP var to JS.
      *
-     * @param  string $key
-     * @param  string $value
+     * @param string $key
+     * @param string $value
      * @return string
+     * @throws Exception
      */
     protected function initializeVariable($key, $value)
     {

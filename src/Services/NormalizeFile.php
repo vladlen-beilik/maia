@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Services;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ use ZipArchive;
 class NormalizeFile
 {
     use FileFunctions;
+
     /**
      * @var mixed
      */
@@ -25,8 +27,11 @@ class NormalizeFile
      * @var mixed
      */
     protected $storagePath;
+
     /**
+     * @param FilesystemAdapter $storage
      * @param string $path
+     * @param string $storagePath
      */
     public function __construct(FilesystemAdapter $storage, string $path, string $storagePath)
     {
@@ -51,9 +56,12 @@ class NormalizeFile
         $data = $this->setExtras($data);
         return $data->toArray();
     }
+
     /**
      * @param Collection $data
      * @return mixed
+     * @throws FileNotFoundException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     private function setExtras(Collection $data)
     {
@@ -128,8 +136,10 @@ class NormalizeFile
         $fileType = new FileTypesImages();
         return $fileType->getImage($mime);
     }
+
     /**
      * @param $mime
+     * @return bool|string
      */
     private function getDimensions($mime)
     {
@@ -144,8 +154,9 @@ class NormalizeFile
         }
         return false;
     }
+
     /**
-     * @param $timestamp
+     * @return bool|string
      */
     public function modificationDate()
     {
@@ -155,8 +166,10 @@ class NormalizeFile
             return false;
         }
     }
+
     /**
      * @return mixed
+     * @throws \League\Flysystem\FileNotFoundException
      */
     private function getCorrectMimeFileType()
     {

@@ -22,7 +22,8 @@ class FileRemoved
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param FilesystemAdapter $storage
+     * @param string $filePath
      */
     public function __construct(FilesystemAdapter $storage, string $filePath)
     {

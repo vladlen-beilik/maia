@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Fields;
 
 use Illuminate\Validation\Rule;
+use SpaceCode\Maia\Exceptions\InvalidConfig;
 use SpaceCode\Maia\Services\FileManagerService;
 use SpaceCode\Maia\Traits\CoverHelpers;
 use Laravel\Nova\Contracts\Cover;
@@ -116,8 +117,7 @@ class FilemanagerField extends Field implements Cover
     /**
      * Set filter for the field.
      *
-     * @param   string  $folderName
-     *
+     * @param $filter
      * @return  $this
      */
     public function filterBy($filter)
@@ -223,7 +223,8 @@ class FilemanagerField extends Field implements Cover
     /**
      * Resolve the thumbnail URL for the field.
      *
-     * @return string|null
+     * @return array
+     * @throws InvalidConfig
      */
     public function resolveInfo()
     {
@@ -242,6 +243,7 @@ class FilemanagerField extends Field implements Cover
      * Resolve the thumbnail URL for the field.
      *
      * @return string|null
+     * @throws InvalidConfig
      */
     public function resolveThumbnailUrl()
     {
@@ -259,6 +261,7 @@ class FilemanagerField extends Field implements Cover
      * Get additional meta information to merge with the element payload.
      *
      * @return array
+     * @throws InvalidConfig
      */
     public function meta()
     {

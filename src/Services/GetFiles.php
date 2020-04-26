@@ -4,6 +4,7 @@ namespace SpaceCode\Maia\Services;
 
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -18,10 +19,13 @@ trait GetFiles
     protected $cloudDisks = [
         's3', 'google', 's3-cached',
     ];
+
     /**
      * @param $folder
      * @param $order
-     * @param $filter
+     * @param bool $filter
+     * @return mixed
+     * @throws \Exception
      */
     public function getFiles($folder, $order, $filter = false)
     {
@@ -46,9 +50,11 @@ trait GetFiles
         }
         return $this->orderData($files, $order, config('maia.filemanager.direction', 'asc'));
     }
+
     /**
      * @param $file
      * @param $id
+     * @return bool|object
      */
     public function getFileData($file, $id)
     {
@@ -111,12 +117,14 @@ trait GetFiles
         }
         return $folders->merge($filtered);
     }
+
     /**
      * Order files and folders.
      *
      * @param $files
      * @param $order
      *
+     * @param string $direction
      * @return mixed
      */
     public function orderData($files, $order, $direction = 'asc')
@@ -145,8 +153,7 @@ trait GetFiles
                 })->values();
             }
         }
-        $result = $folders->merge($items);
-        return $result;
+        return $folders->merge($items);
     }
     /**
      * Generates an id based on file.
@@ -248,11 +255,13 @@ trait GetFiles
         }
         return false;
     }
+
     /**
      * Return the Type of file.
      *
      * @param $file
      *
+     * @param bool $folder
      * @return bool|string
      */
     public function getThumb($file, $folder = false)
@@ -274,10 +283,12 @@ trait GetFiles
         $fileType = new FileTypesImages();
         return $fileType->getImage($mime);
     }
+
     /**
      * Get image dimensions for files.
      *
      * @param $file
+     * @return array|bool|false
      */
     public function getImageDimesions($file)
     {
@@ -289,10 +300,12 @@ trait GetFiles
         }
         return false;
     }
+
     /**
      * Get image dimensions from cloud.
      *
      * @param $file
+     * @return array|bool
      */
     public function getImageDimesionsFromCloud($file)
     {
@@ -306,7 +319,6 @@ trait GetFiles
         } catch (\Exception $e) {
             return false;
         }
-        return false;
     }
     /**
      * @param $file
@@ -316,8 +328,10 @@ trait GetFiles
     {
         return $this->cleanSlashes($this->getThumb($file, $this->currentPath));
     }
+
     /**
      * @param $files
+     * @return mixed
      */
     public function normalizeFiles($files)
     {
@@ -355,8 +369,10 @@ trait GetFiles
         }
         return false;
     }
+
     /**
      * @param $folder
+     * @return array
      */
     public function generateParent($folder)
     {
@@ -385,8 +401,10 @@ trait GetFiles
             ];
         }
     }
+
     /**
      * @param $currentFolder
+     * @return Collection
      */
     public function getPaths($currentFolder)
     {
@@ -403,15 +421,20 @@ trait GetFiles
         }
         return $goodPaths->reverse();
     }
+
     /**
+     * @param $name
      * @param $pathCollection
+     * @return string
      */
     public function recursivePaths($name, $pathCollection)
     {
         return Str::before($pathCollection->implode('/'), $name).$name;
     }
+
     /**
-     * @param $timestamp
+     * @param $time
+     * @return bool|string
      */
     public function modificationDate($time)
     {
@@ -421,9 +444,11 @@ trait GetFiles
             return false;
         }
     }
+
     /**
      * Hide folders with .hide file.
-     * @param $oath
+     * @param $path
+     * @return bool
      */
     private function checkShouldHideFolder($path)
     {

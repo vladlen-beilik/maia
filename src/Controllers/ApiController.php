@@ -4,6 +4,9 @@ namespace SpaceCode\Maia\Controllers;
 
 use App\User;
 use Carbon\Carbon;
+use DateTime;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +20,7 @@ class ApiController extends Controller
     /**
      * @param Request $request
      * @param Maia $maia
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getComments(Request $request, Maia $maia)
     {
@@ -64,8 +67,8 @@ class ApiController extends Controller
     /**
      * @param Request $request
      * @param Maia $maia
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @return JsonResponse
+     * @throws Exception
      */
     public function postComments(Request $request, Maia $maia)
     {
@@ -96,8 +99,8 @@ class ApiController extends Controller
                 'parent_id' => $request->input('comment')['id'] === 0 ? null : $request->input('comment')['id'],
                 'body' => strip_tags($request->input('comment')['text'], ['<code>', '<br>', '<em>', '<strong>', '<b>']),
                 'status' => $status,
-                'created_at' => new \DateTime(),
-                'updated_at' => new \DateTime()
+                'created_at' => new DateTime(),
+                'updated_at' => new DateTime()
             ]);
             DB::table('comments_relationships')->insert(['comment_id' => $comment_id, 'item_id' => $request->input('viaResourceId'), 'type' => strtolower(class_basename($request->input('viaResource')))]);
 

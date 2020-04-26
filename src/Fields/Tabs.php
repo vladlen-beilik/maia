@@ -17,7 +17,8 @@ class Tabs extends Panel
      * Add fields to the Tab.
      *
      * @param string $tab
-     * @param array  $fields
+     * @param array $fields
+     * @return Tabs
      */
     public function addFields($tab, array $fields)
     {
@@ -42,6 +43,8 @@ class Tabs extends Panel
 
     /**
      * Add a new Tab
+     * @param $panel
+     * @return Tabs
      */
     public function addTab($panel): self
     {
@@ -64,6 +67,8 @@ class Tabs extends Panel
 
     /**
      * Show default Search if you need more space
+     * @param bool $value
+     * @return Tabs
      */
     public function defaultSearch($value = true)
     {
