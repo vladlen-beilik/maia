@@ -164,7 +164,7 @@ class Portfolio extends Resource
                         ->updateRules('unique:portfolio,slug,{{resourceId}}'),
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {
-                        return linkSvg($this->getUrl(true));
+                        return $this->id ? linkSvg($this->getUrl(true)) : null;
                     })->exceptOnForms()->asHtml(),
 
                     Textarea::make(trans('maia::resources.excerpt'), 'excerpt')

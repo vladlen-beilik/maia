@@ -1,6 +1,6 @@
 <?php
 
-namespace SpaceCode\Maia\JavaScript;
+namespace SpaceCode\Maia\Javascript;
 
 use Illuminate\Contracts\Events\Dispatcher;
 

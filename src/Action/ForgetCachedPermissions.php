@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace SpaceCode\Maia;
+namespace SpaceCode\Maia\Action;
 
 use Laravel\Nova\Nova;
+use SpaceCode\Maia\PermissionRegistrar;
 
 class ForgetCachedPermissions
 {

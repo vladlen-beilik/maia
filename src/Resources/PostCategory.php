@@ -127,7 +127,7 @@ class PostCategory extends Resource
 
                     Text::make(trans('maia::resources.site.url'), 'slug', function () {
                         if(seo('seo_post_categories_show_index')) {
-                            return linkSvg($this->getUrl(true));
+                            return $this->id ? linkSvg($this->getUrl(true)) : null;
                         } else {
                             return "<p>—</p>";
                         }
