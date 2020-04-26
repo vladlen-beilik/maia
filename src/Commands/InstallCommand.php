@@ -31,20 +31,18 @@ class InstallCommand extends Command
         $data = [
             'attention' => 'Answer the question or the installation process will be interrupted.',
             'interrupted' => 'The installation process interrupted.',
-            'user_interrupted' => 'User creation process interrupted. Continue installation...',
+            'user_interrupted' => 'User creation process interrupted. Continue installation...'
         ];
-        if($this->novaFolder()) {
-            $this->info('CMS Maia installing...');
-            $this->info('Publishing...');
-            $this->call('maia:publish');
-            $this->info('CMS Maia successfully installed');
-
-            $this->appName($data);
-            $this->appURL($data);
-            $this->horizon();
-            $this->appPath($data);
-            $this->createAdmin($data);
-        }
+        $this->novaFolder();
+        $this->info('CMS Maia installing...');
+        $this->info('Publishing...');
+        $this->callSilent('maia:publish');
+        $this->info('CMS Maia successfully installed');
+        $this->appName($data);
+        $appUrl = $this->appURL($data);
+        $this->horizon($appUrl);
+        $this->appPath($data);
+        $this->createAdmin($data);
     }
 
     public function novaFolder()
@@ -59,51 +57,47 @@ class InstallCommand extends Command
     public function createAdmin($data)
     {
         if ($this->confirm('You need to create an admin user. Do you wish to continue?')) {
-            $continue = false;
-            $email = '';
-            $password = '';
             $name = $this->ask('What is your user login? (ex: admin)');
             if($name === '' || empty($name)) {
                 $this->info('User login is required.');
                 $name = $this->ask('What is your user login?');
                 if($name === '' || empty($name)) {
-                    $this->info($data['user_interrupted']);
-                    $continue = true;
+                    $this->error($data['user_interrupted']);
+                    return false;
                 }
             }
-            if(!$continue) {
+
+            $email = $this->ask('What is your user email?');
+            if($email === '' || empty($email)) {
+                $this->info('User email is required.');
                 $email = $this->ask('What is your user email?');
                 if($email === '' || empty($email)) {
-                    $this->info('User email is required.');
-                    $email = $this->ask('What is your user email?');
-                    if($email === '' || empty($email)) {
-                        $this->info($data['user_interrupted']);
-                        $continue = true;
-                    }
+                    $this->error($data['user_interrupted']);
+                    return false;
                 }
             }
-            if(!$continue) {
+
+            $password = $this->secret('What is the password?');
+            $repeat = $this->secret('Repeat password');
+            if($password === '' || empty($password) || $repeat === '' || empty($repeat) || $repeat !== $password) {
+                $this->info('Let\'s try again!');
                 $password = $this->secret('What is the password?');
                 $repeat = $this->secret('Repeat password');
                 if($password === '' || empty($password) || $repeat === '' || empty($repeat) || $repeat !== $password) {
-                    $this->info('Let\'s try again!');
-                    $password = $this->secret('What is the password?');
-                    $repeat = $this->secret('Repeat password');
-                    if($password === '' || empty($password) || $repeat === '' || empty($repeat) || $repeat !== $password) {
-                        $this->info($data['user_interrupted']);
-                        $continue = true;
-                    }
+                    $this->error($data['user_interrupted']);
+                    return false;
                 }
             }
-            if($continue) {
-                User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()]);
-                $this->info('Admin user successfully created.');
-                $this->info('You may login after several seconds.');
-            }
-            $this->info('Enjoy using CMS Maia.');
-            $this->info('Have a nice day )))');
+
+            User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'created_at' => new \DateTime(), 'updated_at' => new \DateTime()]);
+            $this->info('Admin user successfully created.');
+            $this->info('You may login after several seconds.');
+            $this->info('Enjoy using CMS Maia. Have a nice day )))');
             $this->info('Best regards, SpaceCode Team');
+
+            return true;
         }
+        return false;
     }
 
     public function appPath($data)
@@ -114,10 +108,12 @@ class InstallCommand extends Command
             $appPath = $this->ask('What is your application full path? ' . $data['attention']);
             if($appPath === '' || empty($appPath)) {
                 $this->error($data['interrupted']);
+                return false;
             }
-            $this->putEnv('COMPOSER_HOME', $appPath);
-            $this->putEnv('HOME', $appPath);
         }
+        $this->putEnv('COMPOSER_HOME', $appPath);
+        $this->putEnv('HOME', $appPath);
+        return true;
     }
 
     public function appName($data)
@@ -128,18 +124,19 @@ class InstallCommand extends Command
             $appName = $this->ask('What is your application name? ' . $data['attention']);
             if($appName === '' || empty($appName) || $appName === 'Laravel') {
                 $this->error($data['interrupted']);
+                return false;
             }
-            $this->putEnv('APP_NAME', $appName);
-            $this->putSetting('system_name', $appName);
         } elseif ($appName === 'Laravel') {
             $this->info('Application name cannot be `Laravel`. Name the option differently.');
             $appName = $this->ask('What is your application name? ' . $data['attention']);
             if($appName === '' || empty($appName) || $appName === 'Laravel') {
                 $this->error($data['interrupted']);
+                return false;
             }
-            $this->putEnv('APP_NAME', $appName);
-            $this->putSetting('system_name', $appName);
         }
+        $this->putEnv('APP_NAME', $appName);
+        $this->putSetting('system_name', $appName);
+        return true;
     }
 
     public function appURL($data)
@@ -150,34 +147,34 @@ class InstallCommand extends Command
             $appURL = $this->ask('What is your application URL? ' . $data['attention']);
             if($appURL === '' || empty($appURL) || $appURL === 'http://localhost') {
                 $this->error($data['interrupted']);
+                return false;
             }
-            $this->putEnv('APP_URL', $appURL);
-            $this->putSetting('site_url', $appURL);
         } elseif ($appURL === 'http://localhost') {
             $this->info('Application URL cannot be `http://localhost`. Name the option differently.');
             $appURL = $this->ask('What is your application URL? ' . $data['attention']);
             if($appURL === '' || empty($appURL) || $appURL === 'Laravel') {
                 $this->error($data['interrupted']);
+                return false;
             }
-            $this->putEnv('APP_URL', $appURL);
-            $this->putSetting('site_url', $appURL);
         }
+        $this->putEnv('APP_URL', $appURL);
+        $this->putSetting('site_url', $appURL);
+        return $appURL;
     }
 
-    public function horizon()
+    public function horizon($appUrl)
     {
-        $this->putEnv('HORIZON_PREFIX', str_replace('.', '-', class_basename(setting('site_url'))) . '-horizon:');
+        $this->putEnv('HORIZON_PREFIX', str_replace('.', '-', class_basename($appUrl)) . '-horizon:');
     }
 
     public function putEnv($key, $value)
     {
         $env = file_get_contents(base_path() . '/.env');
         if(!Str::contains($env, $key)) {
-            if(Str::contains($value, ' ') || Str::contains($value, '{') && Str::contains($value, '}') && Str::contains($value, '$')) {
+            if(Str::contains($value, ' ') || Str::contains($value, '{') && Str::contains($value, '}') && Str::contains($value, '$'))
                 setEnv($key . '="' . $value . '"');
-            } else {
+            else
                 setEnv($key . '=' . $value);
-            }
         } else {
             changeEnv($key, $value);
         }
@@ -186,10 +183,9 @@ class InstallCommand extends Command
     public function putSetting($key, $value)
     {
         $set = Settings::where('key', $key)->first();
-        if(isset($set)) {
+        if(isset($set))
             $set->update(['value' => $value]);
-        } else {
+        else
             Settings::create(['key' => $key, 'value' => $value]);
-        }
     }
 }

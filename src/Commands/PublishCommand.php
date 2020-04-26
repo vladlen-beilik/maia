@@ -33,23 +33,21 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        if($this->storageBuild()) {
-            if($this->novaBuild()) {
-                $this->moveStubs();
-                $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
-                $this->call('vendor:publish', ['--tag' => 'maia-assets', '--force' => true]);
-                $this->call('vendor:publish', ['--tag' => 'maia-views', '--force' => $this->option('force')]);
-                $this->call('vendor:publish', ['--tag' => 'maia-migrations', '--force' => true]);
-                $this->call('vendor:publish', ['--tag' => 'maia-seeds', '--force' => true]);
-                $this->call('vendor:publish', ['--tag' => 'maia-lang', '--force' => true]);
-                $this->call('horizon:install');
-                $this->call('migrate', ['--force' => true]);
-                $this->call('optimize:clear');
-                $dumpautoload = new Process(['/usr/local/bin/composer', 'dumpautoload']);
-                $dumpautoload->setTimeout(null)->run();
-                $this->seed('MaiaDatabaseSeeder');
-            }
-        }
+        $this->storageBuild();
+        $this->novaBuild();
+        $this->moveStubs();
+        $this->call('vendor:publish', ['--tag' => 'maia-config', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-assets', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-views', '--force' => $this->option('force')]);
+        $this->call('vendor:publish', ['--tag' => 'maia-migrations', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-seeds', '--force' => true]);
+        $this->call('vendor:publish', ['--tag' => 'maia-lang', '--force' => true]);
+        $this->call('horizon:install');
+        $this->call('migrate', ['--force' => true]);
+        $this->call('optimize:clear');
+        $dumpautoload = new Process(['/usr/local/bin/composer', 'dumpautoload']);
+        $dumpautoload->setTimeout(null)->run();
+        $this->seed('MaiaDatabaseSeeder');
     }
 
     public function moveStubs()
@@ -70,9 +68,8 @@ class PublishCommand extends Command
         ];
         foreach ($array as $key => $value) {
             if($key === $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub') {
-                if(!\File::exists($value)) {
+                if(!\File::exists($value))
                     (new Filesystem)->copy($key, $value);
-                }
             } else {
                 (new Filesystem)->copy($key, $value);
             }
@@ -80,18 +77,16 @@ class PublishCommand extends Command
     }
 
     public function novaBuild() {
-        if(!\File::exists(app_path('Nova'))) {
+        if(!\File::exists(app_path('Nova')))
             $this->call('nova:install');
-        } else {
+        else
             $this->call('nova:publish');
-        }
         return true;
     }
 
     public function storageBuild() {
-        if (!\File::exists(public_path('storage'))) {
+        if (!\File::exists(public_path('storage')))
             $this->call('storage:link');
-        }
         return true;
     }
 }

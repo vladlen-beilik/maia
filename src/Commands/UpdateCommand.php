@@ -39,9 +39,8 @@ class UpdateCommand extends Command
             $current_version = $maia->getVersion();
             $composer_version = '0';
             foreach(array_filter(explode("\n", $latest->getOutput()), 'strlen') as $key => $value) {
-                if(str_contains($value, 'latest')) {
+                if(str_contains($value, 'latest'))
                     $composer_version = trim(explode(':', $value)[1]);
-                }
             }
             if ($current_version < $composer_version) {
                 $update = true;
