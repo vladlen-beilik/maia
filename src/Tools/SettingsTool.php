@@ -78,7 +78,6 @@ class SettingsTool extends Tool
                 ],
                 _trans('maia::resources.resourcestitle') => [
                     Toggle::make(_trans('maia::resources.site.blog'), 'site_blog'),
-
                     DependencyContainer::make([
                         Heading::make(_trans('maia::resources.commentsSettings.title')),
                         Toggle::make(_trans('maia::resources.commentsSettings.confirmation'), 'comments_confirmed')
@@ -89,22 +88,22 @@ class SettingsTool extends Tool
                             ->min(7)
                             ->max(360)
                             ->step(1)
-                            ->rules('required', 'numeric', 'min:7', 'max:360')
+                            ->rules('numeric', 'min:7', 'max:360')
+
                             ->stacked(),
                         Number::make(_trans('maia::resources.commentsSettings.nested'), 'comments_nested')
                             ->min(1)
                             ->max(10)
                             ->step(1)
-                            ->rules('required', 'numeric', 'min:1', 'max:10')
+                            ->rules('numeric', 'min:1', 'max:10')
                             ->stacked(),
                         Select::make(_trans('maia::resources.commentsSettings.display'), 'comments_display')
                             ->options(['older' => _trans('maia::resources.commentsSettings.older'), 'newer' => _trans('maia::resources.commentsSettings.newer')])
                             ->stacked()
                     ])->dependsOn('site_blog', 1),
 
+                    Toggle::make(_trans('maia::resources.site.portfolio'), 'site_portfolio'),
 
-
-                    //                    Toggle::make(_trans('maia::resources.site.portfolio'), 'site_portfolio'),
                     Toggle::make(_trans('maia::resources.site.shop'), 'site_shop')
                 ],
                 _trans('maia::resources.servicestitle') => [
