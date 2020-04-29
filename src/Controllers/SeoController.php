@@ -4,6 +4,7 @@ namespace SpaceCode\Maia\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use SpaceCode\Maia\Models\Seo;
 use SpaceCode\Maia\Tools\SeoTool;
 use Laravel\Nova\Contracts\Resolvable;
@@ -44,12 +45,22 @@ class SeoController extends Controller
     {
         $fields = $this->availableFields();
 
+        $collection = Seo::where('key', 'LIKE', '%_prefix')->pluck('value');
+        $merged = $collection->merge(['profile', 'admin', 'nova-api', 'maia-api', 'nova-vendor']);
+
         $rules = [];
         foreach ($fields as $field) {
-            $fakeResource = new \stdClass;
-            $fakeResource->{$field->attribute} = seo($field->attribute);
-            $field->resolve($fakeResource, $field->attribute); // For nova-translatable support
+//            $fakeResource = new \stdClass;
+//            $fakeResource->{$field->attribute} = seo($field->attribute);
+//            $field->resolve($fakeResource, $field->attribute); // For nova-translatable support
             $rules = array_merge($rules, $field->getUpdateRules($request));
+            if(strpos($field->attribute, '_prefix') !== false) {
+                $rules[$field->attribute] = Arr::prepend(
+                    $field->rules, 'not_in:' . implode(',', $merged->reject(function ($name) use ($field) {
+                        return $name === seo($field->attribute);
+                    })->all())
+                );
+            }
         }
 
         Validator::make($request->all(), $rules)->validate();
