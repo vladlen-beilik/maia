@@ -3,6 +3,7 @@
 namespace SpaceCode\Maia\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Illuminate\Support\Str;
@@ -28,6 +29,9 @@ class InstallCommand extends Command
 
     public function handle()
     {
+        $this->storageBuild();
+        $this->moveStubs();
+
         $data = [
             'attention' => 'Answer the question or the installation process will be interrupted.',
             'interrupted' => 'The installation process interrupted.',
@@ -194,5 +198,32 @@ class InstallCommand extends Command
             $set->update(['value' => $value]);
         else
             Settings::create(['key' => $key, 'value' => $value]);
+    }
+
+    public function moveStubs()
+    {
+        $stubPath = __DIR__.'/../../stub';
+        $array = [
+            $stubPath . '/app/Http/Controllers/MaiaIndexController.php.stub' => app_path('Http/Controllers/MaiaIndexController.php'),
+            $stubPath . '/app/Http/Controllers/MaiaRobotsController.php.stub' => app_path('Http/Controllers/MaiaRobotsController.php'),
+            $stubPath . '/app/Http/Controllers/MaiaSitemapController.php.stub' => app_path('Http/Controllers/MaiaSitemapController.php'),
+            $stubPath . '/app/User.php.stub' => app_path('User.php'),
+            $stubPath . '/app/Nova/User.php.stub' => app_path('Nova/User.php'),
+            $stubPath . '/config/app.php.stub' => config_path('app.php'),
+            $stubPath . '/config/nova.php.stub' => config_path('nova.php'),
+            $stubPath . '/resources/views/vendor/nova/partials/footer.blade.php.stub' => resource_path('views/vendor/nova/partials/footer.blade.php'),
+            $stubPath . '/resources/views/vendor/nova/partials/logo.blade.php.stub' => resource_path('views/vendor/nova/partials/logo.blade.php'),
+            $stubPath . '/resources/views/vendor/nova/partials/meta.blade.php.stub' => resource_path('views/vendor/nova/partials/meta.blade.php'),
+            $stubPath . '/resources/views/vendor/nova/partials/user.blade.php.stub' => resource_path('views/vendor/nova/partials/user.blade.php')
+        ];
+        foreach ($array as $key => $value) {
+            (new Filesystem)->copy($key, $value);
+        }
+    }
+
+    public function storageBuild() {
+        if (!\File::exists(public_path('storage')))
+            $this->call('storage:link');
+        return true;
     }
 }
